@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000000; color: #e5e5e5; font-family: 'JetBrains Mono', monospace;
+            min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            padding: 20px; position: relative; overflow-x: hidden;
+        }
+        body::before {
+            content: ''; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%),
+            url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23333333' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.4; z-index: 0;
+        }
+        .grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 1;}
+        .terminal-container {
+            max-width: 1000px; width: 100%; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); border-radius: 8px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8),inset 0 0 0 1px rgba(255,255,255,0.1);
+            overflow: hidden; position: relative; z-index: 10; animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: translateY(0);}}
+        .terminal-header {
+            background: rgba(10,10,10,0.95); padding: 12px 16px; display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .terminal-button { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.3); transition: all 0.2s; cursor: pointer; box-shadow: inset 0 1px 1px rgba(255,255,255,0.3);}
+        .terminal-button:hover { transform: scale(1.1); box-shadow: 0 0 8px rgba(255,255,255,0.3), inset 0 1px 1px rgba(255,255,255,0.3);}
+        .close { background: linear-gradient(135deg, #ff5f57 0%, #ff5f57 100%); border-color: #e0443e;}
+        .close:hover { background: linear-gradient(135deg, #ff6b63 0%, #ff6b63 100%);}
+        .minimize { background: linear-gradient(135deg, #ffbd2e 0%, #ffbd2e 100%); border-color: #dea123;}
+        .minimize:hover { background: linear-gradient(135deg, #ffc943 0%, #ffc943 100%);}
+        .maximize { background: linear-gradient(135deg, #28c840 0%, #28c840 100%); border-color: #1aab29;}
+        .maximize:hover { background: linear-gradient(135deg, #34d94c 0%, #34d94c 100%);}
+        .terminal-title {
+            flex: 1; text-align: center; color: #888; font-size: 12px; font-weight: 400; letter-spacing: 1px;
+        }
+        .terminal-body { padding: 40px; min-height: 500px; font-size: 13px; line-height: 1.6;}
+        .neofetch-container { display: grid; grid-template-columns: auto 1fr; gap: 40px; margin-bottom: 30px;}
+        .ascii-section { min-width: 280px;}
+        .ascii-art {
+            color: #ffffff;
+            font-size: 10px;
+            line-height: 1.1;
+            font-weight: 300;
+            letter-spacing: 0;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+            white-space: pre;
+            margin: 0 0 14px 0;
+            font-family: 'Courier New', monospace;
+            tab-size: 4;
+            -moz-tab-size: 4;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .info-section { display: flex; flex-direction: column; gap: 8px; padding-top: 10px;}
+        .info-line { display: flex; align-items: center; font-size: 13px; transition: all 0.3s ease; padding: 8px 12px; border-radius: 4px; border-left: 2px solid transparent;}
+        .info-line:hover { background: rgba(255,255,255,0.05); border-left-color: #fff; transform: translateX(5px);}
+        .info-label { color: #666; min-width: 120px; font-weight: 500; display: flex; align-items: center; gap: 10px;}
+        .info-separator { color: #444; margin: 0 10px;}
+        .info-value { color: #e5e5e5; flex: 1;}
+        .info-value a { color: #fff; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.3s; position: relative;}
+        .info-value a::before { content: ''; position: absolute; bottom: -1px; left: 0; width: 0; height: 1px; background: #fff; transition: width 0.3s;}
+        .info-value a:hover::before { width: 100%;}
+        .info-value a:hover { color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5);}
+        .icon { width: 16px; height: 16px; display: inline-block;}
+        .divider { height: 1px; background: linear-gradient(to right,transparent,rgba(255,255,255,0.1),transparent); margin: 20px 0;}
+        .color-bar { display: flex; gap: 8px; margin-top: 20px;}
+        .color-block { width: 40px; height: 20px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2);}
+        .cb-1 { background: #0a0a0a; } .cb-2 { background: #1a1a1a; } .cb-3 { background: #333333; } .cb-4 { background: #4d4d4d; } .cb-5 { background: #666666; } .cb-6 { background: #999999; } .cb-7 { background: #cccccc; } .cb-8 { background: #ffffff; }
+        .system-info { color: #888; font-size: 11px; margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 4px; border: 1px solid rgba(255,255,255,0.05);}
+        .command-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; position: relative;}
+        .prompt { color: #666; font-weight: 500; margin-right: 8px;}
+        .cursor { display: inline-block; width: 8px; height: 16px; background: #fff; animation: blink 1s infinite; position: absolute; pointer-events: none;}
+        @keyframes blink { 0%,50% {opacity:1;} 51%,100%{opacity:0;}}
+        @media (max-width:768px) {
+            .neofetch-container { grid-template-columns: 1fr; gap: 30px;}
+            .ascii-section { min-width: auto; text-align: center;}
+            .ascii-art { font-size: 8px;}
+            .terminal-body { padding: 20px;}
+            .info-label { min-width: 100px; font-size: 11px;}
+            .info-value { font-size: 11px;}
+        }
+        .output-line { margin-bottom: 12px;}
+        .help-command { color: #e5e5e5; margin: 4px 0;}
+        .help-desc { color: #aaa; margin-left: 20px;}
+        .error { color: #ff6b9d;}
+        .section-title { color: #fff; font-weight: 600; margin: 16px 0 8px 0; font-size: 14px;}
+        .skill-tag { display: inline-block; background: #242424; color: #e5e5e5; padding: 4px 12px; border-radius: 16px; margin: 4px 4px 4px 0; font-size: 12px; border: 1px solid #333;}
+        .project-item { background: #181818; padding: 12px; border-radius: 8px; margin: 8px 0; border-left: 3px solid #888;}
+        .project-title { color: #fff; font-weight: 600; margin-bottom: 4px;}
+        .link { color: #e5e5e5; text-decoration: none; border-bottom: 1px solid #999; transition: border-color 0.3s;}
+        .link:hover { border-bottom-color: #fff;}
+        .input-line { display: flex; align-items: center; margin-top: 8px;}
+        .input-prompt { color: #666; font-weight: 500; margin-right: 8px;}
+        #command-input { flex: 1; background: transparent; border: none; color: #e5e5e5; font-family: 'JetBrains Mono', monospace; font-size: 13px; outline: none;}
+
+        .pdf-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; animation: fadeIn 0.3s;}
+        .pdf-modal.active { display: flex; align-items: center; justify-content: center;}
+        .pdf-container { width: 90%; height: 90%; max-width: 1200px; background: #1a1a1a; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px rgba(0,0,0,0.8);}
+        .pdf-header { background: #0a0a0a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);}
+        .pdf-title { color: #e5e5e5; font-size: 14px; font-weight: 500;}
+        .pdf-close { background: transparent; border: none; color: #e5e5e5; font-size: 24px; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s;}
+        .pdf-close:hover { background: rgba(255,255,255,0.1);}
+        .pdf-viewer { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 20px;}
+        .pdf-viewer iframe { width: 100%; height: 100%; border: none; background: #fff;}
+
+        .project-link { display: inline-flex; align-items: center; gap: 6px; color: #e5e5e5; text-decoration: none; font-size: 12px; margin-top: 8px; padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;}
+        .project-link:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px);}
+        .arrow-icon { width: 14px; height: 14px; transition: transform 0.3s;}
+        .project-link:hover .arrow-icon { transform: translate(2px, -2px);}
+
+        .skills-category { margin-bottom: 16px;}
+        .category-title { color: #999; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600;}
+
+        .terminal-container.minimized {
+            animation: genieOut 1.4s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+            transform-origin: bottom left;
+        }
+        @keyframes genieOut {
+            0% { transform: scale(1) translate(0, 0) rotateZ(0deg); opacity: 1; filter: blur(0px); }
+            2% { transform: scale(0.99) translate(-0.3vw, 0.2vh) rotateZ(-0.1deg); opacity: 0.995; filter: blur(0px); }
+            4% { transform: scale(0.98) translate(-0.7vw, 0.4vh) rotateZ(-0.2deg); opacity: 0.99; filter: blur(0px); }
+            6% { transform: scale(0.96) translate(-1.3vw, 0.8vh) rotateZ(-0.4deg); opacity: 0.98; filter: blur(0px); }
+            8% { transform: scale(0.95) translate(-2vw, 1.2vh) rotateZ(-0.5deg); opacity: 0.975; filter: blur(0px); }
+            10% { transform: scale(0.93) translate(-2.5vw, 1.5vh) rotateZ(-0.6deg); opacity: 0.97; filter: blur(0px); }
+            12% { transform: scale(0.91) translate(-3.2vw, 2vh) rotateZ(-0.8deg); opacity: 0.96; filter: blur(0px); }
+            14% { transform: scale(0.89) translate(-3.7vw, 2.3vh) rotateZ(-0.9deg); opacity: 0.955; filter: blur(0px); }
+            16% { transform: scale(0.87) translate(-4.3vw, 2.7vh) rotateZ(-1.1deg); opacity: 0.945; filter: blur(0px); }
+            18% { transform: scale(0.85) translate(-5vw, 3.2vh) rotateZ(-1.3deg); opacity: 0.935; filter: blur(0px); }
+            20% { transform: scale(0.82) translate(-6vw, 4vh) rotateZ(-1.5deg); opacity: 0.92; filter: blur(0px); }
+            22% { transform: scale(0.8) translate(-6.8vw, 4.5vh) rotateZ(-1.7deg); opacity: 0.91; filter: blur(0.1px); }
+            24% { transform: scale(0.78) translate(-7.6vw, 5vh) rotateZ(-1.85deg); opacity: 0.9; filter: blur(0.2px); }
+            26% { transform: scale(0.76) translate(-8.2vw, 5.3vh) rotateZ(-1.95deg); opacity: 0.89; filter: blur(0.25px); }
+            28% { transform: scale(0.73) translate(-9.3vw, 6vh) rotateZ(-2.2deg); opacity: 0.87; filter: blur(0.4px); }
+            30% { transform: scale(0.68) translate(-11vw, 7.5vh) rotateZ(-2.7deg); opacity: 0.84; filter: blur(0.6px); }
+            32% { transform: scale(0.65) translate(-12vw, 8.5vh) rotateZ(-3deg); opacity: 0.82; filter: blur(0.7px); }
+            34% { transform: scale(0.62) translate(-13vw, 9.2vh) rotateZ(-3.3deg); opacity: 0.8; filter: blur(0.8px); }
+            36% { transform: scale(0.59) translate(-14.2vw, 10.2vh) rotateZ(-3.6deg); opacity: 0.77; filter: blur(0.95px); }
+            38% { transform: scale(0.56) translate(-15.8vw, 11.5vh) rotateZ(-4deg); opacity: 0.75; filter: blur(1.05px); }
+            40% { transform: scale(0.52) translate(-17.5vw, 13vh) rotateZ(-4.5deg); opacity: 0.72; filter: blur(1.2px); }
+            42% { transform: scale(0.49) translate(-19vw, 14.5vh) rotateZ(-4.9deg); opacity: 0.69; filter: blur(1.3px); }
+            44% { transform: scale(0.47) translate(-20vw, 15.5vh) rotateZ(-5.2deg); opacity: 0.67; filter: blur(1.4px); }
+            46% { transform: scale(0.44) translate(-21.5vw, 17vh) rotateZ(-5.6deg); opacity: 0.64; filter: blur(1.55px); }
+            48% { transform: scale(0.41) translate(-23vw, 18.5vh) rotateZ(-6deg); opacity: 0.61; filter: blur(1.65px); }
+            50% { transform: scale(0.36) translate(-25vw, 20vh) rotateZ(-6.5deg); opacity: 0.58; filter: blur(1.8px); }
+            52% { transform: scale(0.33) translate(-26.5vw, 21.5vh) rotateZ(-6.9deg); opacity: 0.55; filter: blur(1.9px); }
+            54% { transform: scale(0.31) translate(-28vw, 22.8vh) rotateZ(-7.2deg); opacity: 0.52; filter: blur(2px); }
+            56% { transform: scale(0.28) translate(-29.5vw, 24.2vh) rotateZ(-7.6deg); opacity: 0.49; filter: blur(2.15px); }
+            58% { transform: scale(0.26) translate(-31vw, 25.8vh) rotateZ(-8deg); opacity: 0.46; filter: blur(2.25px); }
+            60% { transform: scale(0.23) translate(-33vw, 28vh) rotateZ(-8.5deg); opacity: 0.42; filter: blur(2.4px); }
+            62% { transform: scale(0.21) translate(-34.5vw, 29.5vh) rotateZ(-8.8deg); opacity: 0.39; filter: blur(2.5px); }
+            64% { transform: scale(0.19) translate(-36vw, 31vh) rotateZ(-9.1deg); opacity: 0.36; filter: blur(2.6px); }
+            66% { transform: scale(0.175) translate(-37.3vw, 32.3vh) rotateZ(-9.4deg); opacity: 0.33; filter: blur(2.7px); }
+            68% { transform: scale(0.16) translate(-38.5vw, 33.8vh) rotateZ(-9.7deg); opacity: 0.3; filter: blur(2.85px); }
+            70% { transform: scale(0.14) translate(-40vw, 36vh) rotateZ(-10deg); opacity: 0.27; filter: blur(3px); }
+            72% { transform: scale(0.125) translate(-41vw, 37.5vh) rotateZ(-10.3deg); opacity: 0.24; filter: blur(3.1px); }
+            74% { transform: scale(0.11) translate(-41.8vw, 38.8vh) rotateZ(-10.55deg); opacity: 0.22; filter: blur(3.2px); }
+            76% { transform: scale(0.095) translate(-42.5vw, 40vh) rotateZ(-10.75deg); opacity: 0.19; filter: blur(3.35px); }
+            78% { transform: scale(0.08) translate(-43.5vw, 41.3vh) rotateZ(-10.95deg); opacity: 0.16; filter: blur(3.5px); }
+            80% { transform: scale(0.07) translate(-44.5vw, 42.5vh) rotateZ(-11.1deg); opacity: 0.14; filter: blur(3.6px); }
+            82% { transform: scale(0.06) translate(-45.2vw, 43.5vh) rotateZ(-11.25deg); opacity: 0.12; filter: blur(3.7px); }
+            84% { transform: scale(0.05) translate(-45.7vw, 44.3vh) rotateZ(-11.4deg); opacity: 0.1; filter: blur(3.8px); }
+            86% { transform: scale(0.042) translate(-46.2vw, 45vh) rotateZ(-11.52deg); opacity: 0.08; filter: blur(3.9px); }
+            88% { transform: scale(0.035) translate(-46.6vw, 45.7vh) rotateZ(-11.65deg); opacity: 0.065; filter: blur(4px); }
+            90% { transform: scale(0.025) translate(-46.8vw, 46.5vh) rotateZ(-11.8deg); opacity: 0.05; filter: blur(4px); }
+            92% { transform: scale(0.02) translate(-47vw, 46.9vh) rotateZ(-11.88deg); opacity: 0.04; filter: blur(4.1px); }
+            94% { transform: scale(0.015) translate(-47.2vw, 47.2vh) rotateZ(-11.93deg); opacity: 0.03; filter: blur(4.2px); }
+            96% { transform: scale(0.01) translate(-47.3vw, 47.3vh) rotateZ(-11.96deg); opacity: 0.02; filter: blur(4.3px); }
+            98% { transform: scale(0.005) translate(-47.4vw, 47.4vh) rotateZ(-11.98deg); opacity: 0.01; filter: blur(4.4px); }
+            100% { transform: scale(0.001) translate(-47.5vw, 47.5vh) rotateZ(-12deg); opacity: 0; filter: blur(4.5px); }
+        }
+        .terminal-container.restoring {
+            animation: genieIn 1.4s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+            transform-origin: bottom left;
+        }
+        @keyframes genieIn {
+            0% { transform: scale(0.001) translate(-47.5vw, 47.5vh) rotateZ(-12deg); opacity: 0; filter: blur(4.5px); }
+            2% { transform: scale(0.005) translate(-47.4vw, 47.4vh) rotateZ(-11.98deg); opacity: 0.01; filter: blur(4.4px); }
+            4% { transform: scale(0.01) translate(-47.3vw, 47.3vh) rotateZ(-11.96deg); opacity: 0.02; filter: blur(4.3px); }
+            6% { transform: scale(0.015) translate(-47.2vw, 47.2vh) rotateZ(-11.93deg); opacity: 0.03; filter: blur(4.2px); }
+            8% { transform: scale(0.02) translate(-47vw, 46.9vh) rotateZ(-11.88deg); opacity: 0.04; filter: blur(4.1px); }
+            10% { transform: scale(0.025) translate(-46.8vw, 46.5vh) rotateZ(-11.8deg); opacity: 0.05; filter: blur(4px); }
+            12% { transform: scale(0.035) translate(-46.6vw, 45.7vh) rotateZ(-11.65deg); opacity: 0.065; filter: blur(4px); }
+            14% { transform: scale(0.042) translate(-46.2vw, 45vh) rotateZ(-11.52deg); opacity: 0.08; filter: blur(3.9px); }
+            16% { transform: scale(0.05) translate(-45.7vw, 44.3vh) rotateZ(-11.4deg); opacity: 0.1; filter: blur(3.8px); }
+            18% { transform: scale(0.06) translate(-45.2vw, 43.5vh) rotateZ(-11.25deg); opacity: 0.12; filter: blur(3.7px); }
+            20% { transform: scale(0.07) translate(-44.5vw, 42.5vh) rotateZ(-11.1deg); opacity: 0.14; filter: blur(3.6px); }
+            22% { transform: scale(0.08) translate(-43.5vw, 41.3vh) rotateZ(-10.95deg); opacity: 0.16; filter: blur(3.5px); }
+            24% { transform: scale(0.095) translate(-42.5vw, 40vh) rotateZ(-10.75deg); opacity: 0.19; filter: blur(3.35px); }
+            26% { transform: scale(0.11) translate(-41.8vw, 38.8vh) rotateZ(-10.55deg); opacity: 0.22; filter: blur(3.2px); }
+            28% { transform: scale(0.125) translate(-41vw, 37.5vh) rotateZ(-10.3deg); opacity: 0.24; filter: blur(3.1px); }
+            30% { transform: scale(0.14) translate(-40vw, 36vh) rotateZ(-10deg); opacity: 0.27; filter: blur(3px); }
+            32% { transform: scale(0.16) translate(-38.5vw, 33.8vh) rotateZ(-9.7deg); opacity: 0.3; filter: blur(2.85px); }
+            34% { transform: scale(0.175) translate(-37.3vw, 32.3vh) rotateZ(-9.4deg); opacity: 0.33; filter: blur(2.7px); }
+            36% { transform: scale(0.19) translate(-36vw, 31vh) rotateZ(-9.1deg); opacity: 0.36; filter: blur(2.6px); }
+            38% { transform: scale(0.21) translate(-34.5vw, 29.5vh) rotateZ(-8.8deg); opacity: 0.39; filter: blur(2.5px); }
+            40% { transform: scale(0.23) translate(-33vw, 28vh) rotateZ(-8.5deg); opacity: 0.42; filter: blur(2.4px); }
+            42% { transform: scale(0.26) translate(-31vw, 25.8vh) rotateZ(-8deg); opacity: 0.46; filter: blur(2.25px); }
+            44% { transform: scale(0.28) translate(-29.5vw, 24.2vh) rotateZ(-7.6deg); opacity: 0.49; filter: blur(2.15px); }
+            46% { transform: scale(0.31) translate(-28vw, 22.8vh) rotateZ(-7.2deg); opacity: 0.52; filter: blur(2px); }
+            48% { transform: scale(0.33) translate(-26.5vw, 21.5vh) rotateZ(-6.9deg); opacity: 0.55; filter: blur(1.9px); }
+            50% { transform: scale(0.36) translate(-25vw, 20vh) rotateZ(-6.5deg); opacity: 0.58; filter: blur(1.8px); }
+            52% { transform: scale(0.41) translate(-23vw, 18.5vh) rotateZ(-6deg); opacity: 0.61; filter: blur(1.65px); }
+            54% { transform: scale(0.44) translate(-21.5vw, 17vh) rotateZ(-5.6deg); opacity: 0.64; filter: blur(1.55px); }
+            56% { transform: scale(0.47) translate(-20vw, 15.5vh) rotateZ(-5.2deg); opacity: 0.67; filter: blur(1.4px); }
+            58% { transform: scale(0.49) translate(-19vw, 14.5vh) rotateZ(-4.9deg); opacity: 0.69; filter: blur(1.3px); }
+            60% { transform: scale(0.52) translate(-17.5vw, 13vh) rotateZ(-4.5deg); opacity: 0.72; filter: blur(1.2px); }
+            62% { transform: scale(0.56) translate(-15.8vw, 11.5vh) rotateZ(-4deg); opacity: 0.75; filter: blur(1.05px); }
+            64% { transform: scale(0.59) translate(-14.2vw, 10.2vh) rotateZ(-3.6deg); opacity: 0.77; filter: blur(0.95px); }
+            66% { transform: scale(0.62) translate(-13vw, 9.2vh) rotateZ(-3.3deg); opacity: 0.8; filter: blur(0.8px); }
+            68% { transform: scale(0.65) translate(-12vw, 8.5vh) rotateZ(-3deg); opacity: 0.82; filter: blur(0.7px); }
+            70% { transform: scale(0.68) translate(-11vw, 7.5vh) rotateZ(-2.7deg); opacity: 0.84; filter: blur(0.6px); }
+            72% { transform: scale(0.73) translate(-9.3vw, 6vh) rotateZ(-2.2deg); opacity: 0.87; filter: blur(0.4px); }
+            74% { transform: scale(0.76) translate(-8.2vw, 5.3vh) rotateZ(-1.95deg); opacity: 0.89; filter: blur(0.25px); }
+            76% { transform: scale(0.78) translate(-7.6vw, 5vh) rotateZ(-1.85deg); opacity: 0.9; filter: blur(0.2px); }
+            78% { transform: scale(0.8) translate(-6.8vw, 4.5vh) rotateZ(-1.7deg); opacity: 0.91; filter: blur(0.1px); }
+            80% { transform: scale(0.82) translate(-6vw, 4vh) rotateZ(-1.5deg); opacity: 0.92; filter: blur(0px); }
+            82% { transform: scale(0.85) translate(-5vw, 3.2vh) rotateZ(-1.3deg); opacity: 0.935; filter: blur(0px); }
+            84% { transform: scale(0.87) translate(-4.3vw, 2.7vh) rotateZ(-1.1deg); opacity: 0.945; filter: blur(0px); }
+            86% { transform: scale(0.89) translate(-3.7vw, 2.3vh) rotateZ(-0.9deg); opacity: 0.955; filter: blur(0px); }
+            88% { transform: scale(0.91) translate(-3.2vw, 2vh) rotateZ(-0.8deg); opacity: 0.96; filter: blur(0px); }
+            90% { transform: scale(0.93) translate(-2.5vw, 1.5vh) rotateZ(-0.6deg); opacity: 0.97; filter: blur(0px); }
+            92% { transform: scale(0.95) translate(-2vw, 1.2vh) rotateZ(-0.5deg); opacity: 0.975; filter: blur(0px); }
+            94% { transform: scale(0.96) translate(-1.3vw, 0.8vh) rotateZ(-0.4deg); opacity: 0.98; filter: blur(0px); }
+            96% { transform: scale(0.98) translate(-0.7vw, 0.4vh) rotateZ(-0.2deg); opacity: 0.99; filter: blur(0px); }
+            98% { transform: scale(0.99) translate(-0.3vw, 0.2vh) rotateZ(-0.1deg); opacity: 0.995; filter: blur(0px); }
+            100% { transform: scale(1) translate(0, 0) rotateZ(0deg); opacity: 1; filter: blur(0px); }
+        }
+
+        .app-icon {
+            position: fixed; bottom: 20px;
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border-radius: 12px;
+            display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 100;
+            border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .app-icon:hover { transform: translateY(-8px) scale(1.05); box-shadow: 0 8px 25px rgba(0,0,0,0.7); border-color: rgba(255,255,255,0.5); }
+        .app-icon.active { display: flex; animation: iconBounce 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        @keyframes iconBounce {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .app-icon svg { width: 30px; height: 30px; fill: #e5e5e5; transition: transform 0.3s; }
+        .app-icon:hover svg { transform: scale(1.1); }
+        .terminal-icon { left: 20px; }
+        .logs-icon { left: 90px; }
+
+        .center-gif {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: none; z-index: 50; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8); border: 2px solid rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .center-gif.active {
+            display: block;
+            animation: gifFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .center-gif.hiding {
+            animation: gifFadeOut 0.5s ease-out forwards;
+        }
+        @keyframes gifFadeIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotateZ(-10deg); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotateZ(0deg); }
+        }
+        @keyframes gifFadeOut {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotateZ(0deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotateZ(10deg); }
+        }
+        .center-gif img { display: block; max-width: 400px; max-height: 400px; width: auto; height: auto; }
+
+        .blog-item {
+            background: #181818; padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 3px solid #888;
+        }
+        .blog-title { color: #fff; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+        .blog-subtitle { color: #aaa; font-size: 12px; margin-bottom: 12px; line-height: 1.5; }
+        .blog-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .blog-button {
+            display: inline-flex; align-items: center; gap: 6px; color: #e5e5e5; text-decoration: none;
+            font-size: 11px; padding: 6px 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05); cursor: pointer; transition: all 0.3s;
+        }
+        .blog-button:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px); }
+        .blog-content {
+            margin-top: 16px; padding: 16px; background: rgba(0,0,0,0.3); border-radius: 4px;
+            border-left: 2px solid #666; color: #ccc; line-height: 1.7; max-height: 400px; overflow-y: auto;
+        }
+        .blog-content h1, .blog-content h2, .blog-content h3 { color: #fff; margin: 16px 0 8px 0; }
+        .blog-content h1 { font-size: 18px; }
+        .blog-content h2 { font-size: 16px; }
+        .blog-content h3 { font-size: 14px; }
+        .blog-content p { margin: 8px 0; }
+        .blog-content code {
+            background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px;
+        }
+        .blog-content pre {
+            background: rgba(0,0,0,0.5); padding: 12px; border-radius: 4px; overflow-x: auto; margin: 12px 0;
+        }
+        .blog-content pre code { background: none; padding: 0; }
+        .blog-content ul, .blog-content ol { margin: 8px 0 8px 20px; }
+        .blog-content li { margin: 4px 0; }
+        .blog-content a { color: #fff; text-decoration: underline; }
+        .blog-content blockquote {
+            border-left: 3px solid #666; padding-left: 12px; margin: 12px 0; color: #999; font-style: italic;
+        }
+
+        .file-list { margin: 12px 0; }
+        .file-item {
+            padding: 4px 8px; margin: 2px 0; border-radius: 3px; transition: background 0.2s; cursor: default;
+        }
+        .file-item:hover { background: rgba(255,255,255,0.05); }
+        .file-dir { color: #6c9ef8; font-weight: 500; }
+        .file-md { color: #e5e5e5; }
+
+        .logs-container {
+            max-width: 600px; width: 100%; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); border-radius: 8px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8),inset 0 0 0 1px rgba(255,255,255,0.1);
+            overflow: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 200; display: none; animation: fadeIn 0.6s ease-out;
+        }
+        .logs-container.active { display: block; }
+        .logs-header {
+            background: rgba(10,10,10,0.95); padding: 12px 16px; display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logs-header .terminal-button { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.3); transition: all 0.2s; cursor: pointer; box-shadow: inset 0 1px 1px rgba(255,255,255,0.3);}
+        .logs-header .terminal-button:hover { transform: scale(1.1); box-shadow: 0 0 8px rgba(255,255,255,0.3), inset 0 1px 1px rgba(255,255,255,0.3);}
+        .logs-title {
+            flex: 1; text-align: center; color: #888; font-size: 12px; font-weight: 400; letter-spacing: 1px;
+        }
+        .logs-body { padding: 30px; max-height: 500px; overflow-y: auto; font-size: 13px; line-height: 1.6;}
+        .log-entry { margin-bottom: 16px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid #666; transition: all 0.3s;}
+        .log-entry:hover { background: rgba(255,255,255,0.05); border-left-color: #fff; transform: translateX(5px);}
+        .log-date { color: #666; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .log-content { color: #e5e5e5; line-height: 1.5;}
+        .logs-body::-webkit-scrollbar { width: 8px; }
+        .logs-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
+        .logs-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        .logs-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+        /* New Role Sections Styles */
+        .role-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .role-box {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+            border-radius: 14px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .role-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .role-box:hover::before {
+            opacity: 1;
+        }
+
+        .role-box-content {
+            color: #e5e5e5;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+<div class="grid-overlay"></div>
+
+<div class="app-icon terminal-icon" id="terminal-icon">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 18V8h16v10H4z"/>
+        <path d="M7 10l4 4-4 4v-8zm6 6h6v2h-6z"/>
+    </svg>
+</div>
+
+<div class="app-icon logs-icon" id="logs-icon">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+        <path d="M7 10h10v2H7zm0 4h10v2H7z"/>
+    </svg>
+</div>
+
+<div class="logs-container" id="logs-container">
+    <div class="logs-header">
+        <div class="terminal-button close" id="logs-close"></div>
+        <div class="terminal-button minimize"></div>
+        <div class="terminal-button maximize"></div>
+        <div class="logs-title">Updates & Logs</div>
+    </div>
+    <div class="logs-body" id="logs-body">
+        <div class="log-entry">
+            <div class="log-date">Loading...</div>
+            <div class="log-content">Fetching updates...</div>
+        </div>
+    </div>
+</div>
+
+<div class="center-gif" id="center-gif">
+    <img src="https://media.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif" alt="Terminal Animation">
+</div>
+
+<div class="terminal-container" id="terminal-container">
+    <div class="terminal-header">
+        <div class="terminal-button close" id="btn-prev" title="Previous ASCII"></div>
+        <div class="terminal-button minimize" id="btn-minimize" title="Minimize Terminal"></div>
+        <div class="terminal-button maximize" id="btn-next" title="Next ASCII"></div>
+        <div class="terminal-title">sayan@portfolio ~ $</div>
+    </div>
+    <div class="terminal-body" id="terminal-output">
+        <div class="neofetch-container">
+            <div class="ascii-section">
+                <pre class="ascii-art" id="ascii-art">Loading...</pre>
+            </div>
+            <div class="info-section">
+                <div class="info-line">
+                    <span class="info-label">
+                        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        github
+                    </span>
+                    <span class="info-separator">:</span>
+                    <span class="info-value"><a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a></span>
+                </div>
+                <div class="info-line">
+                    <span class="info-label">
+                        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+                        linkedin
+                    </span>
+                    <span class="info-separator">:</span>
+                    <span class="info-value"><a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a></span>
+                </div>
+                <div class="info-line">
+                    <span class="info-label">
+                        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/></svg>
+                        instagram
+                    </span>
+                    <span class="info-separator">:</span>
+                    <span class="info-value"><a href="https://instagram.com/yourhandle" target="_blank">instagram.com/yourhandle</a></span>
+                </div>
+                <div class="info-line">
+                    <span class="info-label">
+                        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 0 0-2.915 15.452c-.07-.633-.134-1.606.027-2.297.146-.625.938-3.977.938-3.977s-.239-.479-.239-1.187c0-1.113.645-1.943 1.448-1.943.682 0 1.012.512 1.012 1.127 0 .686-.437 1.712-.663 2.663-.188.796.4 1.446 1.185 1.446 1.422 0 2.515-1.5 2.515-3.664 0-1.915-1.377-3.254-3.342-3.254-2.276 0-3.612 1.707-3.612 3.471 0 .688.265 1.425.595 1.826a.24.24 0 0 1 .056.23c-.061.252-.196.796-.222.907-.035.146-.116.177-.268.107-1-.465-1.624-1.926-1.624-3.1 0-2.523 1.834-4.84 5.286-4.84 2.775 0 4.932 1.977 4.932 4.62 0 2.757-1.739 4.976-4.151 4.976-.811 0-1.573-.421-1.834-.919l-.498 1.902c-.181.695-.669 1.566-.995 2.097A8 8 0 1 0 8 0z"/></svg>
+                        pinterest
+                    </span>
+                    <span class="info-separator">:</span>
+                    <span class="info-value"><a href="https://pinterest.com/yourhandle" target="_blank">pinterest.com/yourhandle</a></span>
+                </div>
+                <div class="info-line">
+                    <span class="info-label">
+                        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M9.025 8c0 2.485-2.02 4.5-4.513 4.5A4.506 4.506 0 0 1 0 8c0-2.486 2.02-4.5 4.512-4.5A4.506 4.506 0 0 1 9.025 8zm4.95 0c0 2.34-1.01 4.236-2.256 4.236-1.246 0-2.256-1.897-2.256-4.236 0-2.34 1.01-4.236 2.256-4.236 1.246 0 2.256 1.897 2.256 4.236zM16 8c0 2.096-.355 3.795-.794 3.795-.438 0-.793-1.7-.793-3.795 0-2.096.355-3.795.794-3.795.438 0 .793 1.699.793 3.795z"/></svg>
+                        medium
+                    </span>
+                    <span class="info-separator">:</span>
+                    <span class="info-value"><a href="https://medium.com/@yourhandle" target="_blank">medium.com/@yourhandle</a></span>
+                </div>
+                <div class="info-line">
+                    <span class="info-label">
+                        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/></svg>
+                        email
+                    </span>
+                    <span class="info-separator">:</span>
+                    <span class="info-value"><a href="mailto:your.email@example.com">your.email@example.com</a></span>
+                </div>
+                <div class="info-line">
+                    <span class="info-label">
+                        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/><path d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/></svg>
+                        resume
+                    </span>
+                    <span class="info-separator">:</span>
+                    <span class="info-value"><a href="#" id="resume-link">view_resume.pdf</a></span>
+                </div>
+                
+                <!-- Role Sections Added Here -->
+                <div class="role-container">
+                    <div class="role-box">
+                        <div class="role-box-content">Python Developer</div>
+                    </div>
+                    <div class="role-box">
+                        <div class="role-box-content">AI Engineer</div>
+                    </div>
+                    <div class="role-box">
+                        <div class="role-box-content">Backend Developer</div>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                <div class="color-bar">
+                    <div class="color-block cb-1"></div>
+                    <div class="color-block cb-2"></div>
+                    <div class="color-block cb-3"></div>
+                    <div class="color-block cb-4"></div>
+                    <div class="color-block cb-5"></div>
+                    <div class="color-block cb-6"></div>
+                    <div class="color-block cb-7"></div>
+                    <div class="color-block cb-8"></div>
+                </div>
+            </div>
+        </div>
+        <div class="system-info">
+            OS: Portfolio v1.0.0 • Shell: bash • Terminal: xterm-256color • Uptime: ∞
+        </div>
+        <div class="command-section">
+            <span class="prompt">visitor@portfolio:~$</span>
+            <input type="text" id="command-input" autofocus autocomplete="off" placeholder="">
+            <span class="cursor" id="cursor"></span>
+        </div>
+    </div>
+</div>
+
+<div class="pdf-modal" id="pdf-modal">
+    <div class="pdf-container">
+        <div class="pdf-header">
+            <div class="pdf-title">Resume - Your Name</div>
+            <button class="pdf-close" id="pdf-close">&times;</button>
+        </div>
+        <div class="pdf-viewer">
+            <iframe id="pdf-iframe" src=""></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.terminal-container').style.opacity = '0';
+        setTimeout(() => {
+            document.querySelector('.terminal-container').style.transition = 'opacity 0.6s';
+            document.querySelector('.terminal-container').style.opacity = '1';
+        }, 100);
+    });
+
+    const asciiArtFiles = {
+        'ascii-1': '/ascii/ascii_1.txt',
+        'ascii-2': '/ascii/ascii_2.txt',
+        'ascii-3': '/ascii/ascii_3.txt',
+        'ascii-4': '/ascii/ascii_4.txt',
+        'ascii-5': '/ascii/ascii_5.txt',
+        'ascii-6': '/ascii/ascii_6.txt',
+        'ascii-7': '/ascii/ascii_7.txt',
+        'ascii-8': '/ascii/ascii_8.txt',
+        'ascii-9': '/ascii/ascii_9.txt',
+        'ascii-10': '/ascii/ascii_10.txt',
+        'ascii-11': '/ascii/ascii_11.txt',
+        'ascii-12': '/ascii/ascii_12.txt',
+        'default': '/ascii/ascii_1.txt'
+    };
+
+    let currentAsciiIndex = 1;
+    const asciiKeys = Object.keys(asciiArtFiles).filter(key => key !== 'default');
+
+    async function loadAsciiArt(name) {
+        let file = asciiArtFiles[name] || asciiArtFiles['default'];
+        try {
+            const response = await fetch(file);
+            if (!response.ok) throw new Error("Not found");
+            let art = await response.text();
+
+            art = art.replace(/\u00A0/g, ' ');
+            art = art.replace(/\t/g, '    ');
+
+            const asciiElement = document.getElementById('ascii-art');
+            asciiElement.style.opacity = '0';
+            setTimeout(() => {
+                asciiElement.textContent = art;
+                asciiElement.style.transition = 'opacity 0.3s';
+                asciiElement.style.opacity = '1';
+            }, 150);
+        } catch {
+            document.getElementById('ascii-art').textContent = 'ASCII art not found for: ' + name;
+        }
+    }
+
+    function loadAsciiByIndex(index) {
+        if (index < 1) index = asciiKeys.length;
+        if (index > asciiKeys.length) index = 1;
+        currentAsciiIndex = index;
+        loadAsciiArt(asciiKeys[index - 1]);
+    }
+
+    function nextAscii() {
+        loadAsciiByIndex(currentAsciiIndex + 1);
+    }
+
+    function prevAscii() {
+        loadAsciiByIndex(currentAsciiIndex - 1);
+    }
+
+    const blogsData = [
+        {
+            id: 1,
+            title: "Building Scalable APIs with FastAPI",
+            subtitle: "A deep dive into creating high-performance REST APIs with Python's fastest web framework",
+            mediumLink: "https://medium.com/@yourhandle/building-scalable-apis-fastapi",
+            mdFile: "/blogs/fastapi-guide.md"
+        },
+        {
+            id: 2,
+            title: "Understanding Prime Number Gaps",
+            subtitle: "Exploring patterns in the distribution of prime numbers and their mathematical significance",
+            mediumLink: "https://medium.com/@yourhandle/prime-number-gaps",
+            mdFile: "/blogs/prime-gaps.md"
+        },
+        {
+            id: 3,
+            title: "Docker Best Practices for Production",
+            subtitle: "Security, optimization, and deployment strategies for containerized applications",
+            mediumLink: "https://medium.com/@yourhandle/docker-best-practices",
+            mdFile: "/blogs/docker-production.md"
+        }
+    ];
+
+    const fileSystem = {
+        '/': ['blogs/', 'projects/', 'resume.pdf', 'logs/'],
+        '/blogs/': ['fastapi-guide.md', 'prime-gaps.md', 'docker-production.md'],
+        '/projects/': ['pingup/', 'primegap-ml/', 'video-scraper/'],
+        '/logs/': ['2024-12.txt', '2025-01.txt', '2025-02.txt']
+    };
+
+    const logsData = [
+        { file: '/logs/2025-02.txt', date: 'February 2025' },
+        { file: '/logs/2025-01.txt', date: 'January 2025' },
+        { file: '/logs/2024-12.txt', date: 'December 2024' }
+    ];
+
+    let currentPath = '/';
+
+    const commands = {
+        help: {
+            fn: () => `
+<div class="help-command">help</div><div class="help-desc">Show available commands</div>
+<div class="help-command">ascii [art_name]</div><div class="help-desc">Switch ASCII art (ascii-1, ascii-2, ascii-3, etc.)</div>
+<div class="help-command">about</div><div class="help-desc">Learn more about me</div>
+<div class="help-command">skills</div><div class="help-desc">View my technical skills</div>
+<div class="help-command">projects</div><div class="help-desc">Explore my projects</div>
+<div class="help-command">blogs</div><div class="help-desc">Read my blog posts</div>
+<div class="help-command">ls [path]</div><div class="help-desc">List files and directories</div>
+<div class="help-command">cat [file]</div><div class="help-desc">Display file contents</div>
+<div class="help-command">contact</div><div class="help-desc">Get in touch with me</div>
+<div class="help-command">clear</div><div class="help-desc">Clear the terminal display</div>`
+        },
+        ascii: {
+            fn: (input) => {
+                const parts = input.split(' ');
+                if (parts.length < 2)
+                    return `<span class="error">Usage: ascii [ascii-1/ascii-2/ascii-3]</span>`;
+                const artName = parts[1];
+                loadAsciiArt(artName);
+                return `<span class="section-title">→ Switched ASCII art: ${artName}</span>`;
+            }
+        },
+        about: {
+            fn: () => `<div class="section-title">→ About Me</div>
+<div>I'm a developer passionate about backend, AI, and building cool web tech. I also play guitar, write, and try new platforms!</div>
+<div style="margin-top: 8px;">Location: Kolkata, India <br> Education: MCA, Physics UG <br> Interests: Quant Dev, ML, Prime Numbers</div>`
+        },
+        skills: {
+            fn: () => `<div class="section-title">→ Technical Skills</div>
+<div class="skills-category">
+<div class="category-title">Languages</div>
+<span class="skill-tag">Python</span><span class="skill-tag">JavaScript</span><span class="skill-tag">TypeScript</span><span class="skill-tag">SQL</span><span class="skill-tag">Rust</span><span class="skill-tag">Go</span><span class="skill-tag">C++</span><span class="skill-tag">Java</span>
+</div>
+<div class="skills-category">
+<div class="category-title">Frameworks & Libraries</div>
+<span class="skill-tag">React</span><span class="skill-tag">Node.js</span><span class="skill-tag">Express</span><span class="skill-tag">FastAPI</span><span class="skill-tag">Django</span><span class="skill-tag">Flask</span><span class="skill-tag">TensorFlow</span><span class="skill-tag">PyTorch</span>
+</div>
+<div class="skills-category">
+<div class="category-title">Tools & Technologies</div>
+<span class="skill-tag">Docker</span><span class="skill-tag">Kubernetes</span><span class="skill-tag">Git</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">MongoDB</span><span class="skill-tag">Redis</span><span class="skill-tag">AWS</span><span class="skill-tag">Linux</span>
+</div>
+<div class="skills-category">
+<div class="category-title">IDEs & Editors</div>
+<span class="skill-tag">VS Code</span><span class="skill-tag">PyCharm</span><span class="skill-tag">IntelliJ IDEA</span><span class="skill-tag">Vim</span><span class="skill-tag">Jupyter</span>
+</div>`
+        },
+        projects: {
+            fn: () => `<div class="section-title">→ Projects</div>
+<div class="project-item">
+<div class="project-title">PingUp - Encrypted Chat</div>
+<div>Dockerized backend, WebSocket, Crypto, PostgreSQL</div>
+<a href="https://github.com/yourusername/pingup" target="_blank" class="project-link">
+Visit Repository
+<svg class="arrow-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg>
+</a>
+</div>
+<div class="project-item">
+<div class="project-title">PrimeGap ML</div>
+<div>ML modeling gaps of prime numbers</div>
+<a href="https://github.com/yourusername/primegap-ml" target="_blank" class="project-link">
+Visit Repository
+<svg class="arrow-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg>
+</a>
+</div>
+<div class="project-item">
+<div class="project-title">Video Scraper Suite</div>
+<div>Browser automation, segmented reassembly</div>
+<a href="https://github.com/yourusername/video-scraper" target="_blank" class="project-link">
+Visit Repository
+<svg class="arrow-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg>
+</a>
+</div>`
+        },
+        blogs: {
+            fn: () => {
+                let output = '<div class="section-title">→ Blog Posts</div>';
+                blogsData.forEach(blog => {
+                    output += `
+<div class="blog-item" data-blog-id="${blog.id}">
+<div class="blog-title">${blog.title}</div>
+<div class="blog-subtitle">${blog.subtitle}</div>
+<div class="blog-buttons">
+<span class="blog-button read-here-btn" data-blog-id="${blog.id}">
+<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/></svg>
+Read Here
+</span>
+<a href="${blog.mediumLink}" target="_blank" class="blog-button">
+<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M9.025 8c0 2.485-2.02 4.5-4.513 4.5A4.506 4.506 0 0 1 0 8c0-2.486 2.02-4.5 4.512-4.5A4.506 4.506 0 0 1 9.025 8zm4.95 0c0 2.34-1.01 4.236-2.256 4.236-1.246 0-2.256-1.897-2.256-4.236 0-2.34 1.01-4.236 2.256-4.236 1.246 0 2.256 1.897 2.256 4.236zM16 8c0 2.096-.355 3.795-.794 3.795-.438 0-.793-1.7-.793-3.795 0-2.096.355-3.795.794-3.795.438 0 .793 1.699.793 3.795z"/></svg>
+Visit Medium
+</a>
+</div>
+</div>`;
+                });
+
+                setTimeout(() => {
+                    document.querySelectorAll('.read-here-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            const blogId = parseInt(e.currentTarget.dataset.blogId);
+                            const blog = blogsData.find(b => b.id === blogId);
+                            if (blog) {
+                                await displayBlogContent(blog);
+                            }
+                        });
+                    });
+                }, 100);
+
+                return output;
+            }
+        },
+        ls: {
+            fn: (input) => {
+                const parts = input.trim().split(' ');
+                const path = parts.length > 1 ? parts[1] : currentPath;
+
+                let targetPath = path;
+                if (!targetPath.endsWith('/') && targetPath !== '/') {
+                    targetPath += '/';
+                }
+
+                if (!fileSystem[targetPath]) {
+                    return `<span class="error">ls: cannot access '${path}': No such file or directory</span>`;
+                }
+
+                let output = '<div class="file-list">';
+                fileSystem[targetPath].forEach(item => {
+                    const isDir = item.endsWith('/');
+                    const className = isDir ? 'file-dir' : 'file-md';
+                    output += `<div class="file-item ${className}">${item}</div>`;
+                });
+                output += '</div>';
+                return output;
+            }
+        },
+        cat: {
+            fn: async (input) => {
+                const parts = input.trim().split(' ');
+                if (parts.length < 2) {
+                    return `<span class="error">cat: missing file operand</span><br>Usage: cat [filename]`;
+                }
+
+                const filename = parts[1];
+                const blog = blogsData.find(b => b.mdFile.endsWith(filename));
+
+                if (!blog) {
+                    return `<span class="error">cat: ${filename}: No such file or directory</span>`;
+                }
+
+                try {
+                    const response = await fetch(blog.mdFile);
+                    if (!response.ok) throw new Error("File not found");
+                    const content = await response.text();
+                    return `<div class="blog-content">${parseMarkdown(content)}</div>`;
+                } catch (error) {
+                    return `<span class="error">cat: ${filename}: Unable to read file</span><br><span style="color:#999">Note: Create markdown files at ${blog.mdFile}</span>`;
+                }
+            }
+        },
+        contact: {
+            fn: () => `<div class="section-title">→ Contact</div>
+<div style="margin-top: 12px;">📧 <a href="mailto:sayan84c@gmail.com" class="link">sayan84c@gmail.com</a> | 🐙 <a href="https://github.com/yourusername" class="link" target="_blank">github.com/yourusername</a></div>`
+        },
+        clear: {
+            fn: () => {
+                const outputLines = [...document.querySelectorAll('.output-line')];
+                outputLines.forEach(line => line.parentNode.removeChild(line));
+                return null;
+            }
+        }
+    };
+
+    function parseMarkdown(md) {
+        let html = md;
+        html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+        html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+        html = html.replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>');
+        html = html.replace(/^\* (.*$)/gim, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        html = html.split('\n\n').map(para => {
+            if (!para.match(/^<[hupol]/)) {
+                return '<p>' + para + '</p>';
+            }
+            return para;
+        }).join('\n');
+        return html;
+    }
+
+    async function displayBlogContent(blog) {
+        try {
+            const response = await fetch(blog.mdFile);
+            if (!response.ok) throw new Error("File not found");
+            const content = await response.text();
+            const parsedContent = parseMarkdown(content);
+
+            addOutput(`<div class="section-title">→ ${blog.title}</div>
+<div class="blog-content">${parsedContent}</div>
+<div style="margin-top: 12px; color: #666; font-size: 11px;">
+Read the full article on <a href="${blog.mediumLink}" target="_blank" class="link">Medium</a>
+</div>`);
+        } catch (error) {
+            addOutput(`<span class="error">Error loading blog content</span><br><span style="color:#999">Note: Create a markdown file at ${blog.mdFile}</span>`);
+        }
+    }
+
+    function addOutput(content, isCommand = false) {
+        const div = document.createElement('div');
+        div.className = 'output-line';
+        div.innerHTML = isCommand
+            ? `<span class="prompt">visitor@portfolio:~$</span> <span class="command">${content}</span>`
+            : content;
+        const terminalBody = document.getElementById('terminal-output');
+        const commandSection = terminalBody.querySelector('.command-section');
+        terminalBody.insertBefore(div, commandSection);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+
+    function handleCommand(cmd) {
+        const trimmed = cmd.trim();
+        if (!trimmed) return;
+        addOutput(cmd, true);
+        const [cmdWord] = trimmed.split(' ');
+        if (commands[cmdWord]) {
+            const result = commands[cmdWord].fn(trimmed);
+            if (result instanceof Promise) {
+                result.then(output => {
+                    if (output) addOutput(output);
+                });
+            } else {
+                if (result) addOutput(result);
+            }
+        } else {
+            addOutput(`<span class="error">Unknown command: ${trimmed}</span><br>Type <span class="command">help</span> for all commands.`);
+        }
+    }
+
+    function initTerminalInput() {
+        const commandInput = document.getElementById('command-input');
+        const cursor = document.getElementById('cursor');
+        const commandSection = document.querySelector('.command-section');
+
+        function updateCursorPosition() {
+            const prompt = commandSection.querySelector('.prompt');
+            const promptWidth = prompt.offsetWidth;
+            const temp = document.createElement('span');
+            temp.style.visibility = 'hidden';
+            temp.style.position = 'absolute';
+            temp.style.font = window.getComputedStyle(commandInput).font;
+            temp.textContent = commandInput.value || '';
+            document.body.appendChild(temp);
+            const textWidth = temp.offsetWidth;
+            document.body.removeChild(temp);
+            cursor.style.left = (promptWidth + textWidth + 8) + 'px';
+        }
+
+        commandInput.addEventListener('input', updateCursorPosition);
+        commandInput.addEventListener('focus', updateCursorPosition);
+
+        commandInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                handleCommand(commandInput.value);
+                commandInput.value = '';
+                updateCursorPosition();
+            }
+        });
+
+        document.getElementById('terminal-output').addEventListener('click', () => {
+            commandInput.focus();
+            updateCursorPosition();
+        });
+
+        updateCursorPosition();
+    }
+
+    function initPDFViewer() {
+        const resumeLink = document.getElementById('resume-link');
+        const pdfModal = document.getElementById('pdf-modal');
+        const pdfClose = document.getElementById('pdf-close');
+        const pdfIframe = document.getElementById('pdf-iframe');
+        const pdfPath = '/path/to/your-resume.pdf';
+
+        resumeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            pdfIframe.src = pdfPath;
+            pdfModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        pdfClose.addEventListener('click', () => {
+            pdfModal.classList.remove('active');
+            pdfIframe.src = '';
+            document.body.style.overflow = 'auto';
+        });
+
+        pdfModal.addEventListener('click', (e) => {
+            if (e.target === pdfModal) {
+                pdfModal.classList.remove('active');
+                pdfIframe.src = '';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && pdfModal.classList.contains('active')) {
+                pdfModal.classList.remove('active');
+                pdfIframe.src = '';
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
+
+    async function loadLogs() {
+        const logsBody = document.getElementById('logs-body');
+        logsBody.innerHTML = '';
+
+        for (const log of logsData) {
+            try {
+                const response = await fetch(log.file);
+                if (!response.ok) throw new Error("File not found");
+                const content = await response.text();
+
+                const lines = content.split('\n').filter(line => line.trim());
+                lines.forEach(line => {
+                    const entry = document.createElement('div');
+                    entry.className = 'log-entry';
+                    entry.innerHTML = `
+                        <div class="log-date">${log.date}</div>
+                        <div class="log-content">• ${line.trim()}</div>
+                    `;
+                    logsBody.appendChild(entry);
+                });
+            } catch (error) {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.innerHTML = `
+                    <div class="log-date">${log.date}</div>
+                    <div class="log-content" style="color: #999;">No updates for this period. Create file at ${log.file}</div>
+                `;
+                logsBody.appendChild(entry);
+            }
+        }
+    }
+
+    function initLogsWindow() {
+        const logsIcon = document.getElementById('logs-icon');
+        const logsContainer = document.getElementById('logs-container');
+        const logsClose = document.getElementById('logs-close');
+
+        logsIcon.addEventListener('click', async () => {
+            logsContainer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            await loadLogs();
+        });
+
+        logsClose.addEventListener('click', () => {
+            logsContainer.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        logsContainer.addEventListener('click', (e) => {
+            if (e.target === logsContainer) {
+                logsContainer.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && logsContainer.classList.contains('active')) {
+                logsContainer.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
+
+    function initTerminalControls() {
+        const terminal = document.getElementById('terminal-container');
+        const terminalIcon = document.getElementById('terminal-icon');
+        const centerGif = document.getElementById('center-gif');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnMinimize = document.getElementById('btn-minimize');
+        const btnNext = document.getElementById('btn-next');
+
+        btnPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevAscii();
+        });
+
+        btnNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextAscii();
+        });
+
+        btnMinimize.addEventListener('click', (e) => {
+            e.stopPropagation();
+            terminal.classList.add('minimized');
+
+            setTimeout(() => {
+                centerGif.classList.add('active');
+            }, 300);
+
+            setTimeout(() => {
+                terminal.style.display = 'none';
+                terminalIcon.classList.add('active');
+            }, 1400);
+        });
+
+        terminalIcon.addEventListener('click', () => {
+            centerGif.classList.add('hiding');
+
+            setTimeout(() => {
+                centerGif.classList.remove('active', 'hiding');
+                centerGif.style.display = 'none';
+            }, 500);
+
+            setTimeout(() => {
+                terminal.style.display = 'block';
+                terminal.classList.remove('minimized');
+                terminal.classList.add('restoring');
+                terminalIcon.classList.remove('active');
+
+                setTimeout(() => {
+                    terminal.classList.remove('restoring');
+                }, 1400);
+            }, 200);
+        });
+    }
+
+    window.onload = function() {
+        loadAsciiArt('default');
+        initTerminalInput();
+        initPDFViewer();
+        initTerminalControls();
+        initLogsWindow();
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    const terminal = document.getElementById('terminal-container');
+                    const logsIcon = document.getElementById('logs-icon');
+                    if (terminal.classList.contains('minimized') || terminal.style.display === 'none') {
+                        logsIcon.classList.add('active');
+                    } else {
+                        logsIcon.classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.getElementById('terminal-container'), { attributes: true });
+    };
+</script>
+</body>
+</html>
