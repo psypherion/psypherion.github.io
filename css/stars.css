@@ -1,0 +1,191 @@
+/* Blinking Stars Background */
+.stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1; 
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    animation: starBlink 3s ease-in-out infinite;
+    box-shadow: 
+        0 0 2px rgba(255, 255, 255, 0.8),
+        0 0 4px rgba(255, 255, 255, 0.6),
+        0 0 6px rgba(255, 255, 255, 0.4);
+}
+
+/* Star sizes */
+.star.tiny {
+    width: 1px;
+    height: 1px;
+}
+
+.star.small {
+    width: 2px;
+    height: 2px;
+}
+
+.star.medium {
+    width: 3px;
+    height: 3px;
+}
+
+.star.large {
+    width: 4px;
+    height: 4px;
+}
+
+/* Multiple blink animations for variety */
+@keyframes starBlink {
+    0%, 100% {
+        opacity: 0.1;
+        transform: scale(0.8);
+    }
+    20%, 60% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    40%, 80% {
+        opacity: 0.3;
+        transform: scale(0.9);
+    }
+}
+
+@keyframes starBlink2 {
+    0%, 50%, 100% {
+        opacity: 0.2;
+        transform: scale(0.7);
+    }
+    25%, 75% {
+        opacity: 0.9;
+        transform: scale(1.3);
+    }
+}
+
+@keyframes starBlink3 {
+    0%, 33%, 66%, 100% {
+        opacity: 0.1;
+        transform: scale(0.6);
+    }
+    16%, 49%, 82% {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+}
+
+@keyframes starBlink4 {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        opacity: 0.3;
+        transform: scale(0.9);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+/* Random twinkle effect for some stars */
+@keyframes starTwinkle {
+    0%, 100% {
+        opacity: 0.1;
+        transform: scale(0.8) rotate(0deg);
+    }
+    25% {
+        opacity: 0.7;
+        transform: scale(1.1) rotate(90deg);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(0.9) rotate(180deg);
+    }
+    75% {
+        opacity: 0.9;
+        transform: scale(1.3) rotate(270deg);
+    }
+}
+
+/* Shooting stars */
+.shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: shootStar 4s ease-out infinite;
+}
+
+@keyframes shootStar {
+    0% {
+        opacity: 0;
+        transform: translateX(0) translateY(0);
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(100vw) translateY(100vh);
+    }
+}
+
+/* Constellation effects */
+.constellation {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: constellationPulse 8s ease-in-out infinite;
+}
+
+@keyframes constellationPulse {
+    0%, 100% {
+        opacity: 0.3;
+        box-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        opacity: 0.8;
+        box-shadow: 
+            0 0 4px rgba(255, 255, 255, 0.6),
+            0 0 8px rgba(255, 255, 255, 0.4);
+    }
+}
+
+/* Enhanced grid overlay - updated to work with stars */
+.grid-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); 
+    background-size: 50px 50px; 
+    pointer-events: none; 
+    z-index: 2; /* Above stars but below content */
+}
+
+/* Update body background to work with new stars */
+body::before {
+    content: ''; 
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+    opacity: 0.4; 
+    z-index: 0;
+}
