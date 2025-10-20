@@ -106,29 +106,134 @@ const AsciiManager = {
 };
 
 const BlogManager = {
-    blogsData: [
-        {
-            id: 1,
-            title: "Building Scalable APIs with FastAPI",
-            subtitle: "A deep dive into creating high-performance REST APIs with Python's fastest web framework",
-            mediumLink: "https://medium.com/@yourhandle/building-scalable-apis-fastapi",
-            mdFile: "/blogs/fastapi-guide.md"
-        },
-        {
-            id: 2,
-            title: "Understanding Prime Number Gaps",
-            subtitle: "Exploring patterns in the distribution of prime numbers and their mathematical significance",
-            mediumLink: "https://medium.com/@yourhandle/prime-number-gaps",
-            mdFile: "/blogs/prime-gaps.md"
-        },
-        {
-            id: 3,
-            title: "Docker Best Practices for Production",
-            subtitle: "Security, optimization, and deployment strategies for containerized applications",
-            mediumLink: "https://medium.com/@yourhandle/docker-best-practices",
-            mdFile: "/blogs/docker-production.md"
-        }
-    ],
+blogsData: [
+    {
+        id: 1,
+        title: "Heretic",
+        subtitle: "Were they really messengers of divine wisdom?",
+        mediumLink: "https://medium.com/@psypherion/heretic-d6b5569bc4e0",
+        mdFile: "/assets/blogs/heretic.md"
+    },
+    {
+        id: 2,
+        title: "Were they really messengers of divine wisdom?",
+        subtitle: "Exploring patterns in the distribution of prime numbers and their mathematical significance",
+        mediumLink: "https://medium.com/@psypherion/were-they-really-messengers-of-divine-wisdom-a95d62db8873",
+        mdFile: "/assets/blogs/messengers.md"
+    },
+    {
+        id: 3,
+        title: "Building a Google Cloud Skills Boost Tracker Backend",
+        subtitle: "Security, optimization, and deployment strategies for containerized applications",
+        mediumLink: "https://medium.com/@psypherion/building-a-google-cloud-skills-boost-tracker-backend-f14e2521c678",
+        mdFile: "/assets/blogs/google cloud skill boost tracker.md"
+    },
+    {
+        id: 4,
+        title: "Learning Rust",
+        subtitle: "A journey into systems programming with Rust",
+        mediumLink: "https://medium.com/@psypherion/learning-rust-488dfd459011",
+        mdFile: "/assets/blogs/rust-1.md"
+    },
+    {
+        id: 5,
+        title: "rant.",
+        subtitle: "Personal thoughts and reflections",
+        mediumLink: "https://medium.com/@psypherion/rant-f27ff7c1e669",
+        mdFile: "/assets/blogs/rant-2.md"
+    },
+    {
+        id: 6,
+        title: "rant.",
+        subtitle: "Personal thoughts and reflections",
+        mediumLink: "https://medium.com/@psypherion/rant-f487f95b615b",
+        mdFile: "/assets/blogs/rant-1.md"
+    },
+    {
+        id: 7,
+        title: "I Am Therefore I Must Torture",
+        subtitle: "Philosophical exploration of existence and suffering",
+        mediumLink: "https://medium.com/@psypherion/i-am-therefore-i-must-torture-e64a0c7c41d9",
+        mdFile: "/assets/blogs/i have no mouth.md"
+    },
+    {
+        id: 8,
+        title: "Understanding Love — 2",
+        subtitle: "Continuing the exploration of love and relationships",
+        mediumLink: "https://medium.com/@psypherion/understanding-love-2-01cfc4c7beb9",
+        mdFile: "/assets/blogs/understanding-love-2.md"
+    },
+    {
+        id: 9,
+        title: "envtool : create & manage python environments easily",
+        subtitle: "A tool for simplifying Python environment management",
+        mediumLink: "https://medium.com/@psypherion/envtool-create-manage-python-environments-easily-5d1d298c2e74",
+        mdFile: "/assets/blogs/envtool.md"
+    },
+    {
+        id: 10,
+        title: "chatX: A Real-Time Simple Text-Based Chat Server from Scratch",
+        subtitle: "Building a real-time chat application from the ground up",
+        mediumLink: "https://medium.com/@psypherion/chatx-a-real-time-simple-text-based-chat-server-from-scratch-d107b728e88b",
+        mdFile: "/assets/blogs/chatX.md"
+    },
+    {
+        id: 11,
+        title: "Simplifying GitHub Operations with autoGIT-cli",
+        subtitle: "A CLI tool for automating GitHub workflows",
+        mediumLink: "https://medium.com/@psypherion/simplifying-github-operations-with-autogit-cli-44534d3c2b50",
+        mdFile: "/assets/blogs/autoGIT.md"
+    },
+    {
+        id: 12,
+        title: "paperBot-CLI: Your Research Paper Assistant",
+        subtitle: "A command-line tool for research paper management",
+        mediumLink: "https://medium.com/@psypherion/paperbot-cli-your-research-paper-assistant-ae38929b193f",
+        mdFile: "/assets/blogs/paperBOT.md"
+    },
+    {
+        id: 13,
+        title: "Building a Simple Neural Network from Scratch in Python",
+        subtitle: "Understanding neural networks by building one from the ground up",
+        mediumLink: "https://medium.com/@psypherion/building-a-simple-neural-network-from-scratch-in-python-8fb722882e5a",
+        mdFile: "/assets/blogs/nn.md"
+    },
+    {
+        id: 14,
+        title: "Understanding Love",
+        subtitle: "Exploring the nature and meaning of love",
+        mediumLink: "https://medium.com/@psypherion/understanding-love-7da44523ec79",
+        mdFile: "/assets/blogs/understandingg-love.md"
+    },
+    {
+        id: 15,
+        title: "Three Body Problem",
+        subtitle: "Exploring the famous physics problem and its implications",
+        mediumLink: "https://medium.com/@psypherion/three-body-problem-b6731242116e",
+        mdFile: "/assets/blogs/threebody.md"
+    },
+    {
+        id: 16,
+        title: "Boyer-Moore Majority Vote Algorithm",
+        subtitle: "Understanding and implementing the efficient majority element algorithm",
+        mediumLink: "https://medium.com/@psypherion/boyer-moore-majority-vote-algorithm-2e6692dd670d",
+        mdFile: "/assets/blogs/boyermoore.md"
+    },
+    {
+        id: 17,
+        title: "Machine Learning (Self- Study) — 1",
+        subtitle: "Beginning the journey into machine learning through self-study",
+        mediumLink: "https://medium.com/@psypherion/machine-learning-self-study-1-7c6c8a7b0c5a",
+        mdFile: "/assets/blogs/statistics-1.md"
+    },
+    {
+        id: 18,
+        title: "The NLP Landscape from 1960s to 2020",
+        subtitle: "Historical overview of Natural Language Processing developments",
+        mediumLink: "https://medium.com/@psypherion/the-nlp-landscape-from-1960s-to-2020s-ec73e2efd095",
+        mdFile: "/assets/blogs/nlp.md"
+    }
+],
 
     initBlogButtons() {
         document.querySelectorAll('.read-here-btn').forEach(btn => {
@@ -163,7 +268,7 @@ Read the full article on <a href="${blog.mediumLink}" target="_blank" class="lin
 const FileSystem = {
     fileSystem: {
         '/': ['blogs/', 'projects/', 'resume.pdf', 'logs/'],
-        '/blogs/': ['fastapi-guide.md', 'prime-gaps.md', 'docker-production.md'],
+        '/assets/blogs/': ['fastapi-guide.md', 'prime-gaps.md', 'docker-production.md'],
         '/projects/': ['pingup/', 'primegap-ml/', 'video-scraper/'],
         '/logs/': ['2024-12.txt', '2025-01.txt', '2025-02.txt']
     },
