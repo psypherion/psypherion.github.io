@@ -1,0 +1,106 @@
+{
+  "personal_info": {
+    "name": "Sayan Sarkar",
+    "email": "sayan84c@gmail.com",
+    "github": "psypherion",
+    "linkedin": "sayansarkar24",
+    "medium": "psypherion",
+    "resume_file": "Resume_Sayan_Sarkar.pdf",
+    "location": "Kolkata, India",
+    "education": "MCA, Physics UG",
+    "interests": "Quant Dev, ML, Prime Numbers"
+  },
+  "roles": [
+    "Python Developer",
+    "AI Engineer", 
+    "Backend Developer"
+  ],
+  "skills": {
+    "languages": ["Python", "JavaScript", "TypeScript", "SQL", "Rust", "Go", "C++", "Java"],
+    "frameworks": ["React", "Node.js", "Express", "FastAPI", "Django", "Flask", "TensorFlow", "PyTorch"],
+    "tools": ["Docker", "Kubernetes", "Git", "PostgreSQL", "MongoDB", "Redis", "AWS", "Linux"],
+    "ides": ["VS Code", "PyCharm", "IntelliJ IDEA", "Vim", "Jupyter"]
+  },
+  "projects": [
+    {
+      "title": "PingUp - Encrypted Chat",
+      "description": "Dockerized backend, WebSocket, Crypto, PostgreSQL",
+      "github_link": "https://github.com/psypherion/pingup"
+    },
+    {
+      "title": "PrimeGap ML",
+      "description": "ML modeling gaps of prime numbers", 
+      "github_link": "https://github.com/psypherion/primegap-ml"
+    },
+    {
+      "title": "Video Scraper Suite",
+      "description": "Browser automation, segmented reassembly",
+      "github_link": "https://github.com/psypherion/video-scraper"
+    }
+  ],
+  "blogs": [
+    {
+      "id": "blog1",
+      "title": "Building a Real-time Chat Application with WebSockets and Docker",
+      "subtitle": "A deep dive into building scalable real-time applications",
+      "medium_link": "https://medium.com/@psypherion/building-a-real-time-chat-application-with-websockets-and-docker-1a2b3c4d5e6f",
+      "md_file": "/assets/md/chat-app.md"
+    },
+    {
+      "id": "blog2", 
+      "title": "Machine Learning on Prime Number Gaps",
+      "subtitle": "Exploring patterns in prime numbers using machine learning",
+      "medium_link": "https://medium.com/@psypherion/machine-learning-on-prime-number-gaps-1a2b3c4d5e6f",
+      "md_file": "/assets/md/prime-ml.md"
+    },
+    {
+      "id": "blog3",
+      "title": "The Art of Browser Automation", 
+      "subtitle": "Building a robust video scraper with segmented reassembly",
+      "medium_link": "https://medium.com/@psypherion/the-art-of-browser-automation-1a2b3c4d5e6f",
+      "md_file": "/assets/md/browser-automation.md"
+    }
+  ],
+  "ebooks": [
+    {
+      "title": "Professional Resume",
+      "author": "Sayan Sarkar",
+      "pdf_path": "/assets/pdf/Resume_Sayan_Sarkar.pdf",
+      "pages": "3 pages",
+      "cover_text": "RESUME"
+    },
+    {
+      "title": "Project Portfolio", 
+      "author": "Sayan Sarkar",
+      "pdf_path": "/pdfs/portfolio.pdf",
+      "pages": "12 pages",
+      "cover_text": "PORTFOLIO"
+    },
+    {
+      "title": "Python Development Guide",
+      "author": "Sayan Sarkar", 
+      "pdf_path": "/pdfs/python-guide.pdf",
+      "pages": "25 pages",
+      "cover_text": "PYTHON"
+    }
+  ],
+  "music": [
+    {
+      "title": "aste aste.mp3",
+      "artist": "Firoze Jong", 
+      "src": "/assets/audio/aste.mp3",
+      "duration": "2:45"
+    },
+    {
+      "title": "Coding Focus",
+      "artist": "Sayan Sarkar",
+      "src": "/audio/coding-focus.mp3", 
+      "duration": "3:20"
+    }
+  ],
+  "terminal": {
+    "username": "sayan",
+    "hostname": "portfolio",
+    "prompt": "visitor@myportfolio:~$"
+  }
+}

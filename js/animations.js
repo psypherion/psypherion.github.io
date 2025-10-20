@@ -106,36 +106,38 @@ const AnimationManager = {
         const pdfModal = document.getElementById('pdf-modal');
         const pdfClose = document.getElementById('pdf-close');
         const pdfIframe = document.getElementById('pdf-iframe');
-        const pdfPath = '/path/to/your-resume.pdf';
+        const pdfPath = 'assets/pdf/resume.pdf'; // Fixed path
 
-        resumeLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            pdfIframe.src = pdfPath;
-            pdfModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
+        if (resumeLink && pdfModal) {
+            resumeLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                pdfIframe.src = pdfPath;
+                pdfModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
 
-        pdfClose.addEventListener('click', () => {
-            pdfModal.classList.remove('active');
-            pdfIframe.src = '';
-            document.body.style.overflow = 'auto';
-        });
-
-        pdfModal.addEventListener('click', (e) => {
-            if (e.target === pdfModal) {
+            pdfClose.addEventListener('click', () => {
                 pdfModal.classList.remove('active');
                 pdfIframe.src = '';
                 document.body.style.overflow = 'auto';
-            }
-        });
+            });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && pdfModal.classList.contains('active')) {
-                pdfModal.classList.remove('active');
-                pdfIframe.src = '';
-                document.body.style.overflow = 'auto';
-            }
-        });
+            pdfModal.addEventListener('click', (e) => {
+                if (e.target === pdfModal) {
+                    pdfModal.classList.remove('active');
+                    pdfIframe.src = '';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && pdfModal.classList.contains('active')) {
+                    pdfModal.classList.remove('active');
+                    pdfIframe.src = '';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
     },
 
     initPixelCats() {
@@ -285,850 +287,192 @@ const AnimationManager = {
         return spaceCats[catType] || spaceCats[0];
     },
 
-    // PDF.js integration for eBook reader
+    // Fixed eBook Reader with proper PDF viewing
     initEBookReader() {
-        // Check if bookshelf element exists
         const bookshelf = document.querySelector('.bookshelf-container');
-        if (!bookshelf) {
-            console.error('Bookshelf container not found!');
-            return;
-        }
-
         const ebookModal = document.getElementById('ebook-modal');
         const ebookClose = document.querySelector('.ebook-close');
         const backToLibrary = document.querySelector('.back-to-library');
-        const ebookLibrary = document.getElementById('ebook-library');
-        const bookReader = document.getElementById('book-reader');
 
-        // Check if required elements exist
-        if (!ebookModal || !ebookClose || !backToLibrary || !ebookLibrary || !bookReader) {
-            console.error('Required eBook elements not found!');
+        if (!bookshelf || !ebookModal || !ebookClose || !backToLibrary) {
+            console.log('eBook elements not found, skipping eBook initialization');
             return;
         }
-        
-        // PDF.js configuration
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-        } else {
-            console.error('PDF.js library not loaded!');
-        }
-        
-        // Load PDF books from assets/pdf/ directory
-        this.pdfBooks = [
-            {
-                id: 1,
-                title: "JavaScript Guide",
-                author: "Mozilla Foundation",
-                filename: "javascript-guide.pdf",
-                color: "#000000ff"
-            },
-            {
-                id: 2,
-                title: "CSS Handbook",
-                author: "Web Standards",
-                filename: "css-handbook.pdf",
-                color: "#4ECDC4"
-            },
-            {
-                id: 3,
-                title: "HTML5 Reference",
-                author: "W3C Consortium",
-                filename: "html5-reference.pdf",
-                color: "#FFE66D"
-            },
-            {
-                id: 4,
-                title: "React Tutorial",
-                author: "Facebook Open Source",
-                filename: "react-tutorial.pdf",
-                color: "#95E1D3"
-            },
-            {
-                id: 5,
-                title: "Node.js Guide",
-                author: "Node.js Foundation",
-                filename: "nodejs-guide.pdf",
-                color: "#F8B195"
-            },
-            {
-                id: 6,
-                title: "Python Basics",
-                author: "Python Software",
-                filename: "python-basics.pdf",
-                color: "#6A89CC"
-            }
-        ];
 
-        // Initialize library
-        this.initLibrary(this.pdfBooks, ebookLibrary);
-
-        // Event listeners
+        // Event listeners for modal
         bookshelf.addEventListener('click', () => {
-            console.log('Bookshelf clicked!');
             ebookModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
 
         ebookClose.addEventListener('click', () => {
-            this.closeEBookModal(ebookModal, bookReader);
+            ebookModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
         });
 
         backToLibrary.addEventListener('click', () => {
-            this.showLibrary(bookReader);
+            this.showEBookLibrary();
         });
 
         ebookModal.addEventListener('click', (e) => {
             if (e.target === ebookModal) {
-                this.closeEBookModal(ebookModal, bookReader);
+                ebookModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && ebookModal.classList.contains('active')) {
-                this.closeEBookModal(ebookModal, bookReader);
-            }
-        });
-
-        // Book reader navigation
-        this.initBookReader();
+        // Book click handlers
+        this.initEBookLibrary();
     },
 
-    initLibrary(books, libraryElement) {
-        if (!libraryElement) {
-            console.error('Library element not found!');
-            return;
-        }
-
-        libraryElement.innerHTML = '';
+    initEBookLibrary() {
+        const bookItems = document.querySelectorAll('.book-item');
         
-        books.forEach(book => {
-            const bookElement = document.createElement('div');
-            bookElement.className = 'book-item';
-            bookElement.innerHTML = `
-                <div class="book-cover" style="background: linear-gradient(135deg, ${book.color}, ${this.darkenColor(book.color)})">
-                    ${book.title.split(' ').map(word => word[0]).join('')}
-                </div>
-                <div class="book-title">${book.title}</div>
-                <div class="book-author">by ${book.author}</div>
-                <div class="book-pages">PDF Document</div>
-            `;
-            
-            bookElement.addEventListener('click', () => {
-                console.log('Book clicked:', book.title);
-                this.openPDF(book);
+        bookItems.forEach(book => {
+            book.addEventListener('click', () => {
+                const pdfPath = book.getAttribute('data-pdf');
+                const title = book.getAttribute('data-title');
+                this.openEBook(pdfPath, title);
             });
-            
-            libraryElement.appendChild(bookElement);
         });
     },
 
-    darkenColor(color) {
-        // Simple function to darken a color for gradient
-        return color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) - 40)).toString(16)).substr(-2));
-    },
-
-    async openPDF(book) {
+    openEBook(pdfPath, title) {
+        const ebookLibrary = document.getElementById('ebook-library');
         const bookReader = document.getElementById('book-reader');
         const readerTitle = document.getElementById('reader-title');
-        const ebookLibrary = document.getElementById('ebook-library');
-        
-        readerTitle.textContent = book.title;
-        ebookLibrary.style.display = 'none';
-        bookReader.classList.add('active');
-        
-        // Show loading state
-        const leftPage = document.getElementById('left-page');
-        const rightPage = document.getElementById('right-page');
-        leftPage.innerHTML = '<div class="loading">Loading PDF</div>';
-        rightPage.innerHTML = '';
-        
-        try {
-            // Load PDF from assets/pdf/ directory
-            const pdfPath = `assets/pdf/${book.filename}`;
-            const loadingTask = pdfjsLib.getDocument(pdfPath);
-            const pdf = await loadingTask.promise;
-            
-            this.currentPDF = {
-                pdfDoc: pdf,
-                book: book,
-                currentPage: 1,
-                totalPages: pdf.numPages
-            };
-            
-            await this.renderPDFPages();
-        } catch (error) {
-            console.error('Error loading PDF:', error);
-            leftPage.innerHTML = '<div class="error">Error loading PDF. Please try again.</div>';
-            rightPage.innerHTML = '';
-        }
-    },
+        const pdfViewer = document.getElementById('pdf-viewer');
 
-    async renderPDFPages() {
-        if (!this.currentPDF) return;
-        
-        const leftPage = document.getElementById('left-page');
-        const rightPage = document.getElementById('right-page');
-        const leftPageNum = document.getElementById('left-page-number');
-        const rightPageNum = document.getElementById('right-page-number');
-        const currentPageEl = document.getElementById('current-page');
-        const totalPagesEl = document.getElementById('total-pages');
-        const prevBtn = document.getElementById('prev-page');
-        const nextBtn = document.getElementById('next-page');
-        
-        const { pdfDoc, currentPage, totalPages } = this.currentPDF;
-        
-        // Clear previous content
-        leftPage.innerHTML = '';
-        rightPage.innerHTML = '';
-        
-        // Render left page (current page)
-        if (currentPage <= totalPages) {
-            const page = await pdfDoc.getPage(currentPage);
-            await this.renderPage(page, leftPage);
-            leftPageNum.textContent = currentPage;
-        }
-        
-        // Render right page (next page, if exists)
-        if (currentPage + 1 <= totalPages) {
-            const page = await pdfDoc.getPage(currentPage + 1);
-            await this.renderPage(page, rightPage);
-            rightPageNum.textContent = currentPage + 1;
-        } else {
-            rightPageNum.textContent = '';
-        }
-        
-        // Update controls
-        currentPageEl.textContent = Math.ceil(currentPage / 2);
-        totalPagesEl.textContent = Math.ceil(totalPages / 2);
-        prevBtn.disabled = currentPage <= 1;
-        nextBtn.disabled = currentPage >= totalPages - 1;
-    },
-
-    async renderPage(page, container) {
-        const viewport = page.getViewport({ scale: 1.5 });
-        
-        // Prepare canvas for rendering
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        
-        // Render PDF page to canvas
-        const renderContext = {
-            canvasContext: context,
-            viewport: viewport
-        };
-        
-        await page.render(renderContext).promise;
-        
-        // Convert canvas to image and scale appropriately
-        const img = document.createElement('img');
-        img.src = canvas.toDataURL();
-        img.style.maxWidth = '100%';
-        img.style.height = 'auto';
-        
-        container.innerHTML = '';
-        container.appendChild(img);
-    },
-
-    initBookReader() {
-        const prevBtn = document.getElementById('prev-page');
-        const nextBtn = document.getElementById('next-page');
-        
-        if (!prevBtn || !nextBtn) {
-            console.error('Book reader buttons not found!');
+        if (!ebookLibrary || !bookReader || !readerTitle || !pdfViewer) {
+            console.error('eBook reader elements not found');
             return;
         }
 
-        prevBtn.addEventListener('click', () => {
-            this.previousPage();
-        });
+        // Show reader, hide library
+        ebookLibrary.style.display = 'none';
+        bookReader.classList.add('active');
+        readerTitle.textContent = title;
+
+        // Load PDF in iframe
+        pdfViewer.src = pdfPath;
+
+        // Initialize page navigation
+        this.initEBookNavigation();
+    },
+
+    initEBookNavigation() {
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const currentPageSpan = document.getElementById('current-page');
+        const totalPagesSpan = document.getElementById('total-pages');
+
+        if (!prevPageBtn || !nextPageBtn) return;
+
+        let currentPage = 1;
         
-        nextBtn.addEventListener('click', () => {
-            this.nextPage();
-        });
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (document.getElementById('ebook-modal').classList.contains('active') && 
-                document.getElementById('book-reader').classList.contains('active')) {
-                if (e.key === 'ArrowLeft') {
-                    this.previousPage();
-                } else if (e.key === 'ArrowRight') {
-                    this.nextPage();
-                }
+        // Simple page navigation for demo
+        prevPageBtn.onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                currentPageSpan.textContent = currentPage;
+                // In a real implementation, you'd use PDF.js to navigate pages
             }
-        });
+        };
+
+        nextPageBtn.onclick = () => {
+            currentPage++;
+            currentPageSpan.textContent = currentPage;
+            // In a real implementation, you'd use PDF.js to navigate pages
+        };
+
+        // Set initial values
+        currentPageSpan.textContent = currentPage;
+        totalPagesSpan.textContent = '?'; // Unknown without PDF.js
     },
 
-    // Update the page navigation methods for PDF
-    previousPage() {
-        if (this.currentPDF && this.currentPDF.currentPage > 1) {
-            this.currentPDF.currentPage -= 2;
-            if (this.currentPDF.currentPage < 1) {
-                this.currentPDF.currentPage = 1;
-            }
-            this.renderPDFPages();
-            this.animatePageTurn('prev');
-        }
-    },
-
-    nextPage() {
-        if (this.currentPDF && this.currentPDF.currentPage < this.currentPDF.totalPages - 1) {
-            this.currentPDF.currentPage += 2;
-            this.renderPDFPages();
-            this.animatePageTurn('next');
-        }
-    },
-
-    closeEBookModal(modal, reader) {
-        modal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-        this.showLibrary(reader);
-    },
-
-    showLibrary(reader) {
+    showEBookLibrary() {
         const ebookLibrary = document.getElementById('ebook-library');
-        ebookLibrary.style.display = 'grid';
-        reader.classList.remove('active');
+        const bookReader = document.getElementById('book-reader');
+        const pdfViewer = document.getElementById('pdf-viewer');
+
+        if (ebookLibrary) ebookLibrary.style.display = 'grid';
+        if (bookReader) bookReader.classList.remove('active');
+        if (pdfViewer) pdfViewer.src = '';
     },
 
-    animatePageTurn(direction) {
-        const pageTurn = document.getElementById('page-turn');
-        if (!pageTurn) return;
-
-        const pageTurnFront = pageTurn.querySelector('.page-turn-front');
-        const pageTurnBack = pageTurn.querySelector('.page-turn-back');
-        
-        // Trigger animation
-        pageTurn.classList.add('active');
-        
-        // Reset animation after completion
-        setTimeout(() => {
-            pageTurn.classList.remove('active');
-        }, 800);
-    },
-
-    // Enhanced Music Player functionality with background playback
+    // Music Player initialization
     initMusicPlayer() {
         const musicPlayer = document.querySelector('.music-player-container');
         const musicModal = document.getElementById('music-modal');
         const musicClose = document.querySelector('.music-close');
-        const playlist = document.getElementById('music-playlist');
-        const audioPlayer = document.getElementById('audio-player');
-        let fileInput = document.getElementById('music-file-input');
 
-        // Create file input if it doesn't exist
-        if (!fileInput) {
-            fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.id = 'music-file-input';
-            fileInput.accept = 'audio/*';
-            fileInput.multiple = true;
-            fileInput.style.display = 'none';
-            document.body.appendChild(fileInput);
+        if (!musicPlayer || !musicModal || !musicClose) {
+            console.log('Music player elements not found, skipping music initialization');
+            return;
         }
-        this.fileInput = fileInput;
-        
-        // Local playlist storage
-        this.localPlaylist = JSON.parse(localStorage.getItem('musicPlayerPlaylist')) || [];
-        this.currentTrack = null;
-        this.isPlaying = false;
-        this.audioContext = null;
-        this.analyser = null;
-        this.dataArray = null;
-        this.bufferLength = null;
-        
-        // Initialize playlist
-        this.initPlaylist(playlist);
-        
-        // Event listeners
-        musicPlayer.addEventListener('click', (e) => {
-            // Don't open modal if clicking on mini player
-            if (!e.target.closest('.mini-player')) {
-                musicModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+
+        // Basic music player functionality
+        musicPlayer.addEventListener('click', () => {
+            musicModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         });
-        
+
         musicClose.addEventListener('click', () => {
             musicModal.classList.remove('active');
             document.body.style.overflow = 'auto';
-            // Don't pause audio - allow background playback
         });
-        
+
         musicModal.addEventListener('click', (e) => {
             if (e.target === musicModal) {
                 musicModal.classList.remove('active');
                 document.body.style.overflow = 'auto';
-                // Don't pause audio - allow background playback
             }
         });
 
-        // Click on vinyl to play/pause
-        musicPlayer.addEventListener('dblclick', (e) => {
-            e.stopPropagation();
-            if (this.isPlaying) {
-                this.pauseAudio();
-            } else if (this.currentTrack) {
-                this.playAudio();
-            }
-        });
-        
-        // Initialize audio visualizer
-        this.initAudioVisualizer();
-        
-        // Initialize player controls
-        this.initPlayerControls();
-
-        // Initialize file upload
-        this.initFileUpload();
-
-        // Initialize mini player
-        this.initMiniPlayer();
-
-        // Load last played track
-        this.loadLastPlayedTrack();
+        // Initialize playlist
+        this.initMusicPlaylist();
     },
 
-    initFileUpload() {
-        const uploadButton = document.querySelector('.upload-button');
-        if (!uploadButton) return;
-        
-        uploadButton.addEventListener('click', () => {
-            this.fileInput.click();
-        });
-
-        this.fileInput.addEventListener('change', (e) => {
-            this.handleFileUpload(e.target.files);
-        });
-    },
-
-    handleFileUpload(files) {
-        for (let file of files) {
-            if (file.type.startsWith('audio/')) {
-                const track = {
-                    id: Date.now() + Math.random(),
-                    title: file.name.replace(/\.[^/.]+$/, ""), // Remove file extension
-                    artist: 'Local File',
-                    duration: '--:--',
-                    file: URL.createObjectURL(file),
-                    isLocal: true
-                };
-                
-                this.localPlaylist.push(track);
-                this.addTrackToPlaylist(track);
-            }
-        }
-        
-        // Save to localStorage
-        this.savePlaylistToStorage();
-    },
-
-    addTrackToPlaylist(track) {
-        const playlist = document.getElementById('music-playlist');
-        const trackElement = document.createElement('div');
-        trackElement.className = 'playlist-item';
-        trackElement.innerHTML = `
-            <div class="track-number">${this.localPlaylist.length}</div>
-            <div class="track-info">
-                <div class="track-title">${track.title}</div>
-                <div class="track-artist">${track.artist}</div>
-            </div>
-            <div class="track-duration">${track.duration}</div>
-        `;
-        
-        trackElement.addEventListener('click', () => {
-            this.playTrack(track);
-        });
-        
-        playlist.appendChild(trackElement);
-    },
-
-    initPlaylist(playlistElement) {
-        if (!playlistElement) {
-            console.error('Playlist element not found!');
-            return;
-        }
-
-        playlistElement.innerHTML = '';
-        
-        // Add upload area
-        const uploadArea = document.createElement('div');
-        uploadArea.className = 'file-upload-area';
-        uploadArea.innerHTML = `
-            <button class="upload-button">+ Add Local Music Files</button>
-            <div class="upload-info">Supports MP3, WAV, OGG files</div>
-        `;
-        playlistElement.appendChild(uploadArea);
-        
-        // Add local tracks
-        this.localPlaylist.forEach((track, index) => {
-            this.addTrackToPlaylist(track);
-        });
-    },
-
-    initMiniPlayer() {
-        // Create mini player if it doesn't exist
-        let miniPlayer = document.querySelector('.mini-player');
-        if (!miniPlayer) {
-            miniPlayer = document.createElement('div');
-            miniPlayer.className = 'mini-player';
-            miniPlayer.innerHTML = `
-                <div class="mini-player-info">
-                    <div class="mini-player-title" id="mini-player-title">No track selected</div>
-                    <div class="mini-player-artist" id="mini-player-artist">-</div>
-                </div>
-                <div class="mini-player-controls">
-                    <button class="mini-player-btn" id="mini-prev">⏮</button>
-                    <button class="mini-player-btn" id="mini-play">▶</button>
-                    <button class="mini-player-btn" id="mini-next">⏭</button>
-                    <button class="mini-player-btn" id="mini-close">×</button>
-                </div>
-            `;
-            document.body.appendChild(miniPlayer);
-        }
-
-        // Mini player event listeners
-        const miniPlayBtn = document.getElementById('mini-play');
-        const miniPrevBtn = document.getElementById('mini-prev');
-        const miniNextBtn = document.getElementById('mini-next');
-        const miniCloseBtn = document.getElementById('mini-close');
-
-        if (miniPlayBtn) {
-            miniPlayBtn.addEventListener('click', () => {
-                if (this.isPlaying) {
-                    this.pauseAudio();
-                } else if (this.currentTrack) {
-                    this.playAudio();
-                }
-            });
-        }
-
-        if (miniPrevBtn) {
-            miniPrevBtn.addEventListener('click', () => {
-                this.previousTrack();
-            });
-        }
-
-        if (miniNextBtn) {
-            miniNextBtn.addEventListener('click', () => {
-                this.nextTrack();
-            });
-        }
-
-        if (miniCloseBtn) {
-            miniCloseBtn.addEventListener('click', () => {
-                this.stopAudio();
-                miniPlayer.classList.remove('active');
-            });
-        }
-    },
-
-    updateMiniPlayer() {
-        const miniPlayer = document.querySelector('.mini-player');
-        const miniTitle = document.getElementById('mini-player-title');
-        const miniArtist = document.getElementById('mini-player-artist');
-        const miniPlayBtn = document.getElementById('mini-play');
-
-        if (miniPlayer && miniTitle && miniArtist && miniPlayBtn) {
-            if (this.currentTrack) {
-                miniTitle.textContent = this.currentTrack.title;
-                miniArtist.textContent = this.currentTrack.artist;
-                miniPlayBtn.textContent = this.isPlaying ? '⏸' : '▶';
-                miniPlayer.classList.add('active');
-            } else {
-                miniPlayer.classList.remove('active');
-            }
-        }
-    },
-
-    savePlaylistToStorage() {
-        // Only save metadata, not blob URLs
-        const playlistToSave = this.localPlaylist.map(track => ({
-            ...track,
-            file: track.isLocal ? null : track.file // Don't save blob URLs
-        }));
-        localStorage.setItem('musicPlayerPlaylist', JSON.stringify(playlistToSave));
-    },
-
-    loadLastPlayedTrack() {
-        const lastTrack = localStorage.getItem('lastPlayedTrack');
-        if (lastTrack) {
-            const track = JSON.parse(lastTrack);
-            // For local files, we can't restore blob URLs, so skip
-            if (!track.isLocal) {
-                this.currentTrack = track;
-                this.updateMiniPlayer();
-            }
-        }
-    },
-
-    async playTrack(track) {
-        // Save last played track
-        localStorage.setItem('lastPlayedTrack', JSON.stringify(track));
-        
-        // Update UI
-        document.querySelectorAll('.playlist-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        
+    initMusicPlaylist() {
         const playlistItems = document.querySelectorAll('.playlist-item');
-        const trackIndex = this.localPlaylist.findIndex(t => t.id === track.id);
-        if (playlistItems[trackIndex + 1]) { // +1 because of upload area
-            playlistItems[trackIndex + 1].classList.add('active');
-        }
-        
+        const audioPlayer = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-btn');
         const nowPlayingTitle = document.getElementById('now-playing-title');
         const nowPlayingArtist = document.getElementById('now-playing-artist');
-        
-        if (nowPlayingTitle) nowPlayingTitle.textContent = track.title;
-        if (nowPlayingArtist) nowPlayingArtist.textContent = track.artist;
-        
-        this.currentTrack = track;
-        
-        // Load and play audio
-        const audioPlayer = document.getElementById('audio-player');
-        if (audioPlayer) {
-            audioPlayer.src = track.file;
-        }
-        
-        await this.setupAudioVisualizer();
-        await this.playAudio();
-    },
 
-    initAudioVisualizer() {
-        const visualizer = document.getElementById('audio-visualizer');
-        if (!visualizer) return;
+        if (!playlistItems.length || !audioPlayer || !playBtn) return;
 
-        visualizer.innerHTML = '';
-        
-        // Create 64 bars for the visualizer
-        for (let i = 0; i < 64; i++) {
-            const bar = document.createElement('div');
-            bar.className = 'visualizer-bar';
-            bar.style.height = '2px';
-            visualizer.appendChild(bar);
-        }
-    },
+        playlistItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const src = item.getAttribute('data-src');
+                const title = item.querySelector('.track-title').textContent;
+                const artist = item.querySelector('.track-artist').textContent;
 
-    initPlayerControls() {
-        const playBtn = document.getElementById('play-btn');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const progressBar = document.getElementById('progress-bar');
-        const volumeBar = document.getElementById('volume-bar');
-        const audioPlayer = document.getElementById('audio-player');
+                // Update active state
+                playlistItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
 
-        if (!playBtn || !prevBtn || !nextBtn || !progressBar || !volumeBar || !audioPlayer) {
-            console.error('Player controls elements not found!');
-            return;
-        }
-        
+                // Set audio source and play
+                audioPlayer.src = src;
+                nowPlayingTitle.textContent = title;
+                nowPlayingArtist.textContent = artist;
+
+                // Play audio
+                audioPlayer.play();
+                playBtn.textContent = '⏸';
+            });
+        });
+
+        // Play/Pause button
         playBtn.addEventListener('click', () => {
-            if (this.isPlaying) {
-                this.pauseAudio();
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playBtn.textContent = '⏸';
             } else {
-                this.playAudio();
+                audioPlayer.pause();
+                playBtn.textContent = '▶';
             }
         });
-        
-        prevBtn.addEventListener('click', () => {
-            this.previousTrack();
-        });
-        
-        nextBtn.addEventListener('click', () => {
-            this.nextTrack();
-        });
-        
-        progressBar.addEventListener('click', (e) => {
-            if (!this.currentTrack) return;
-            
-            const rect = progressBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            audioPlayer.currentTime = percent * audioPlayer.duration;
-        });
-        
-        volumeBar.addEventListener('click', (e) => {
-            const rect = volumeBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            audioPlayer.volume = percent;
-            const volumeLevel = document.getElementById('volume-level');
-            if (volumeLevel) {
-                volumeLevel.style.width = `${percent * 100}%`;
-            }
-        });
-        
-        // Update progress
-        audioPlayer.addEventListener('timeupdate', () => {
-            this.updateProgress();
-        });
-        
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            this.updateDuration();
-        });
-        
-        audioPlayer.addEventListener('ended', () => {
-            this.nextTrack();
-        });
-    },
-
-    async setupAudioVisualizer() {
-        const audioPlayer = document.getElementById('audio-player');
-        if (!audioPlayer) return;
-        
-        // Create audio context if it doesn't exist
-        if (!this.audioContext) {
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        
-        if (this.audioContext.state === 'suspended') {
-            await this.audioContext.resume();
-        }
-        
-        // Create analyser
-        this.analyser = this.audioContext.createAnalyser();
-        const source = this.audioContext.createMediaElementSource(audioPlayer);
-        source.connect(this.analyser);
-        this.analyser.connect(this.audioContext.destination);
-        
-        this.analyser.fftSize = 256;
-        this.bufferLength = this.analyser.frequencyBinCount;
-        this.dataArray = new Uint8Array(this.bufferLength);
-        
-        // Start visualization
-        this.visualize();
-    },
-
-    visualize() {
-        if (!this.analyser || !this.isPlaying) return;
-        
-        requestAnimationFrame(() => this.visualize());
-        
-        this.analyser.getByteFrequencyData(this.dataArray);
-        
-        const visualizer = document.getElementById('audio-visualizer');
-        if (!visualizer) return;
-
-        const bars = visualizer.getElementsByClassName('visualizer-bar');
-        
-        for (let i = 0; i < bars.length; i++) {
-            const value = this.dataArray[i] / 255;
-            const height = Math.max(2, value * 100);
-            bars[i].style.height = `${height}px`;
-            bars[i].style.background = `hsl(${value * 120}, 70%, 50%)`;
-        }
-    },
-
-    playAudio() {
-        if (!this.currentTrack) return;
-        
-        const audioPlayer = document.getElementById('audio-player');
-        const playBtn = document.getElementById('play-btn');
-        
-        if (!audioPlayer || !playBtn) return;
-
-        audioPlayer.play().then(() => {
-            this.isPlaying = true;
-            playBtn.textContent = '⏸';
-            
-            // Update vinyl state
-            const musicPlayerContainer = document.querySelector('.music-player-container');
-            if (musicPlayerContainer) {
-                musicPlayerContainer.classList.add('playing');
-                musicPlayerContainer.classList.remove('paused');
-            }
-            
-            if (this.audioContext && this.audioContext.state === 'suspended') {
-                this.audioContext.resume();
-            }
-            
-            this.visualize();
-            this.updateMiniPlayer();
-        }).catch(error => {
-            console.error('Error playing audio:', error);
-        });
-    },
-
-    pauseAudio() {
-        const audioPlayer = document.getElementById('audio-player');
-        const playBtn = document.getElementById('play-btn');
-        
-        if (!audioPlayer || !playBtn) return;
-
-        audioPlayer.pause();
-        this.isPlaying = false;
-        playBtn.textContent = '▶';
-        
-        // Update vinyl state
-        const musicPlayerContainer = document.querySelector('.music-player-container');
-        if (musicPlayerContainer) {
-            musicPlayerContainer.classList.remove('playing');
-            musicPlayerContainer.classList.add('paused');
-        }
-        
-        this.updateMiniPlayer();
-    },
-
-    stopAudio() {
-        this.pauseAudio();
-        this.currentTrack = null;
-        const audioPlayer = document.getElementById('audio-player');
-        if (audioPlayer) {
-            audioPlayer.src = '';
-        }
-        
-        // Reset vinyl state
-        const musicPlayerContainer = document.querySelector('.music-player-container');
-        if (musicPlayerContainer) {
-            musicPlayerContainer.classList.remove('playing', 'paused');
-        }
-        this.updateMiniPlayer();
-    },
-
-    previousTrack() {
-        if (!this.currentTrack || this.localPlaylist.length === 0) return;
-        
-        const currentIndex = this.localPlaylist.findIndex(t => t.id === this.currentTrack.id);
-        const prevIndex = (currentIndex - 1 + this.localPlaylist.length) % this.localPlaylist.length;
-        this.playTrack(this.localPlaylist[prevIndex]);
-    },
-
-    nextTrack() {
-        if (!this.currentTrack || this.localPlaylist.length === 0) return;
-        
-        const currentIndex = this.localPlaylist.findIndex(t => t.id === this.currentTrack.id);
-        const nextIndex = (currentIndex + 1) % this.localPlaylist.length;
-        this.playTrack(this.localPlaylist[nextIndex]);
-    },
-
-    updateProgress() {
-        const audioPlayer = document.getElementById('audio-player');
-        const progress = document.getElementById('progress');
-        const currentTime = document.getElementById('current-time');
-        
-        if (audioPlayer && audioPlayer.duration) {
-            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-            if (progress) progress.style.width = `${percent}%`;
-            
-            // Update time display
-            if (currentTime) currentTime.textContent = this.formatTime(audioPlayer.currentTime);
-        }
-    },
-
-    updateDuration() {
-        const audioPlayer = document.getElementById('audio-player');
-        const duration = document.getElementById('duration');
-        
-        if (duration && audioPlayer) duration.textContent = this.formatTime(audioPlayer.duration);
-    },
-
-    formatTime(seconds) {
-        if (isNaN(seconds)) return '0:00';
-        
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 };
 
@@ -1136,3 +480,140 @@ const AnimationManager = {
 document.addEventListener('DOMContentLoaded', function() {
     AnimationManager.init();
 });
+
+// eBook functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const ebookModal = document.getElementById('ebook-modal');
+    const bookReader = document.getElementById('book-reader');
+    const pdfViewer = document.getElementById('pdf-viewer');
+    const readerTitle = document.getElementById('reader-title');
+    const backToLibraryBtn = document.querySelector('.back-to-library');
+    const ebookCloseBtn = document.querySelector('.ebook-close');
+    const bookshelfContainer = document.querySelector('.bookshelf-container');
+    
+    // Tab functionality
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const ebookLibraries = document.querySelectorAll('.ebook-library');
+    
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            
+            // Update active tab
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding library
+            ebookLibraries.forEach(lib => {
+                lib.classList.remove('active');
+                if (lib.id === `${category}-library`) {
+                    lib.classList.add('active');
+                }
+            });
+        });
+    });
+    
+    // Open eBook modal
+    bookshelfContainer.addEventListener('click', function() {
+        ebookModal.classList.add('active');
+    });
+    
+    // Close eBook modal
+    ebookCloseBtn.addEventListener('click', function() {
+        ebookModal.classList.remove('active');
+        bookReader.classList.remove('active');
+    });
+    
+    // Back to library from reader
+    backToLibraryBtn.addEventListener('click', function() {
+        bookReader.classList.remove('active');
+    });
+    
+    // Book item click handler
+    document.querySelectorAll('.book-item').forEach(book => {
+        book.addEventListener('click', function() {
+            const pdfPath = this.getAttribute('data-pdf');
+            const title = this.getAttribute('data-title');
+            const author = this.getAttribute('data-author');
+            
+            if (pdfPath) {
+                // Show the book reader
+                bookReader.classList.add('active');
+                readerTitle.textContent = title;
+                
+                // Load the PDF
+                pdfViewer.src = pdfPath;
+                
+                // Add loading state
+                pdfViewer.classList.add('loading');
+                
+                pdfViewer.onload = function() {
+                    pdfViewer.classList.remove('loading');
+                };
+                
+                pdfViewer.onerror = function() {
+                    pdfViewer.classList.remove('loading');
+                    pdfViewer.src = 'about:blank';
+                    pdfViewer.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100%; flex-direction: column; color: #666;">
+                            <div style="font-size: 18px; margin-bottom: 10px;">PDF Not Found</div>
+                            <div style="font-size: 12px;">Unable to load: ${title}</div>
+                            <div style="font-size: 10px; margin-top: 5px;">Path: ${pdfPath}</div>
+                        </div>
+                    `;
+                };
+            } else {
+                // Show message for books without PDF
+                bookReader.classList.add('active');
+                readerTitle.textContent = title;
+                pdfViewer.src = 'about:blank';
+                pdfViewer.innerHTML = `
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100%; flex-direction: column; color: #666;">
+                        <div style="font-size: 18px; margin-bottom: 10px;">No PDF Available</div>
+                        <div style="font-size: 12px;">${title} by ${author}</div>
+                        <div style="font-size: 10px; margin-top: 10px;">This book doesn't have a PDF version yet.</div>
+                    </div>
+                `;
+            }
+        });
+    });
+    
+    // PDF navigation controls
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const currentPageSpan = document.getElementById('current-page');
+    const totalPagesSpan = document.getElementById('total-pages');
+    
+    // Simple PDF navigation (for basic iframe PDF viewing)
+    let currentPage = 1;
+    
+    prevPageBtn.addEventListener('click', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePdfPage();
+        }
+    });
+    
+    nextPageBtn.addEventListener('click', function() {
+        currentPage++;
+        updatePdfPage();
+    });
+    
+    function updatePdfPage() {
+        // This is a simple implementation for iframe PDF viewing
+        // For full PDF.js implementation, you'd need more complex code
+        currentPageSpan.textContent = currentPage;
+        
+        // Note: This basic page navigation might not work with all PDF viewers
+        // For proper PDF navigation, consider integrating PDF.js
+    }
+    
+    // Close modal when clicking outside
+    ebookModal.addEventListener('click', function(e) {
+        if (e.target === ebookModal) {
+            ebookModal.classList.remove('active');
+            bookReader.classList.remove('active');
+        }
+    });
+});
+

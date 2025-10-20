@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blinking Dots Background</title>
+    <title>Interactive PDF Book Viewer</title>
     <style>
         * {
             margin: 0;
@@ -12,579 +12,392 @@
         }
 
         body {
-            background: #000;
-            color: #fff;
-            font-family: 'Courier New', monospace;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
             min-height: 100vh;
-            overflow: hidden;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
 
-        body::before {
-            content: ''; 
-            position: fixed;
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
-            opacity: 0.4; 
-            z-index: 0;
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* Blinking dots grid */
-        .dots-container {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
+            max-width: 1200px;
         }
 
-        .dot {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            animation: blink 1.5s infinite;
-        }
-
-        /* Random blink animation */
-        @keyframes blink {
-            0%, 100% {
-                opacity: 0.1;
-                transform: scale(0.8);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-        }
-
-        /* Terminal container */
-        .terminal-container {
-            max-width: 1000px;
+        .book-container {
             width: 90%;
             height: 600px;
-            background: rgba(15,15,15,0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8),inset 0 0 0 1px rgba(255,255,255,0.1);
-            overflow: hidden;
             position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            margin: 50px auto;
-        }
-
-        /* Terminal Header */
-        .terminal-header {
-            background: rgba(10,10,10,0.95);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            flex-shrink: 0;
-        }
-
-        .terminal-button {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 1px solid rgba(0,0,0,0.3);
-            transition: all 0.2s;
-            cursor: pointer;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.3);
-        }
-
-        .terminal-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 8px rgba(255,255,255,0.3), inset 0 1px 1px rgba(255,255,255,0.3);
-        }
-
-        .close {
-            background: linear-gradient(135deg, #ff5f57 0%, #ff5f57 100%);
-            border-color: #e0443e;
-        }
-
-        .close:hover {
-            background: linear-gradient(135deg, #ff6b63 0%, #ff6b63 100%);
-        }
-
-        .minimize {
-            background: linear-gradient(135deg, #ffbd2e 0%, #ffbd2e 100%);
-            border-color: #dea123;
-        }
-
-        .minimize:hover {
-            background: linear-gradient(135deg, #ffc943 0%, #ffc943 100%);
-        }
-
-        .maximize {
-            background: linear-gradient(135deg, #28c840 0%, #28c840 100%);
-            border-color: #1aab29;
-        }
-
-        .maximize:hover {
-            background: linear-gradient(135deg, #34d94c 0%, #34d94c 100%);
-        }
-
-        .terminal-title {
-            flex: 1;
-            text-align: center;
-            color: #888;
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
-
-        /* Make terminal body scrollable */
-        .terminal-body {
-            padding: 20px;
-            flex: 1;
-            overflow-y: auto;
-            font-size: 13px;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Neofetch Layout */
-        .neofetch-container {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 40px;
+            perspective: 1500px;
             margin-bottom: 30px;
-            flex-shrink: 0;
         }
 
-        .ascii-section {
-            min-width: 280px;
+        #flipbook {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
         }
 
-        .ascii-art {
-            color: #ffffff;
-            font-size: 10px;
-            line-height: 1.1;
-            font-weight: 300;
-            letter-spacing: 0;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
-            white-space: pre;
-            margin: 0 0 14px 0;
-            font-family: 'Courier New', monospace;
-            tab-size: 4;
-            -moz-tab-size: 4;
-            word-break: keep-all;
-            overflow-wrap: normal;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        .page {
+            width: 100%;
+            height: 100%;
+            background-color: #f9f9f9;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
+            backface-visibility: hidden;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
         }
 
-        .info-section {
+        .page-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            background: white;
+        }
+
+        .page img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .page-counter {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .loading {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding-top: 10px;
-        }
-
-        .info-line {
-            display: flex;
             align-items: center;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            padding: 8px 12px;
-            border-radius: 4px;
-            border-left: 2px solid transparent;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            height: 100%;
         }
 
-        .info-line:hover {
-            background: rgba(255,255,255,0.05);
-            border-left-color: #fff;
-            transform: translateX(5px);
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid white;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
 
-        .info-label {
-            color: #666;
-            min-width: 120px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .info-separator {
-            color: #444;
-            margin: 0 10px;
-        }
-
-        .info-value {
-            color: #e5e5e5;
-            flex: 1;
-        }
-
-        .info-value a {
-            color: #fff;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .info-value a::before {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: #fff;
-            transition: width 0.3s;
-        }
-
-        .info-value a:hover::before {
-            width: 100%;
-        }
-
-        .info-value a:hover {
-            color: #fff;
-            text-shadow: 0 0 8px rgba(255,255,255,0.5);
-        }
-
-        .icon {
-            width: 16px;
-            height: 16px;
-            display: inline-block;
-        }
-
-        /* Role Container */
-        .role-container {
-            display: flex;
-            gap: 12px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .role-box {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 6px;
-            padding: 8px 16px;
-            transition: all 0.3s;
-        }
-
-        .role-box:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .role-box-content {
-            color: #fff;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right,transparent,rgba(255,255,255,0.1),transparent);
-            margin: 20px 0;
-        }
-
-        .color-bar {
-            display: flex;
-            gap: 8px;
+        .instructions {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
             margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .color-block {
-            width: 40px;
-            height: 20px;
-            border-radius: 2px;
-            border: 1px solid rgba(255,255,255,0.2);
+        .instructions h3 {
+            color: #4a00e0;
+            margin-bottom: 10px;
         }
 
-        .cb-1 { background: #0a0a0a; }
-        .cb-2 { background: #1a1a1a; }
-        .cb-3 { background: #333333; }
-        .cb-4 { background: #4d4d4d; }
-        .cb-5 { background: #666666; }
-        .cb-6 { background: #999999; }
-        .cb-7 { background: #cccccc; }
-        .cb-8 { background: #ffffff; }
-
-        .system-info {
-            color: #888;
-            font-size: 11px;
-            margin: 20px 0;
-            padding: 8px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            flex-shrink: 0;
+        .instructions ul {
+            padding-left: 20px;
         }
 
-        .command-section {
-            display: flex;
-            align-items: center;
-            background: rgba(0,0,0,0.3);
-            padding: 12px;
-            border-radius: 4px;
-            margin-top: auto;
-            flex-shrink: 0;
+        .instructions li {
+            margin-bottom: 8px;
         }
 
-        .prompt {
-            color: #0f0;
-            margin-right: 8px;
-            font-weight: 500;
-        }
-
-        #command-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-family: monospace;
-            outline: none;
-            font-size: 13px;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background: #0f0;
-            margin-left: 2px;
-            animation: blink 1s infinite;
-        }
-
-        /* Custom scrollbar for terminal */
-        .terminal-body::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .terminal-body::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.2);
-            border-radius: 4px;
-        }
-
-        .terminal-body::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-        }
-
-        .terminal-body::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.3);
+        @media (max-width: 768px) {
+            .book-container {
+                height: 400px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            button {
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Blinking Dots Background -->
-    <div class="dots-container" id="dots-container"></div>
-
-    <!-- Main Terminal -->
-    <div class="terminal-container" id="terminal-container">
-        <div class="terminal-header">
-            <div class="terminal-button close" id="btn-prev" title="Previous ASCII"></div>
-            <div class="terminal-button minimize" id="btn-minimize" title="Minimize Terminal"></div>
-            <div class="terminal-button maximize" id="btn-next" title="Next ASCII"></div>
-            <div class="terminal-title">sayan@portfolio ~ $</div>
+    <div class="container">
+        <div class="header">
+            <h1>Interactive PDF Book Viewer</h1>
+            <p>Turn pages with buttons or by clicking on the edges of the book</p>
         </div>
-        <div class="terminal-body" id="terminal-output">
-            <div class="neofetch-container">
-                <div class="ascii-section">
-                    <pre class="ascii-art" id="ascii-art">
- _           _        
-| |__   __ _| |_ __ _ 
-| '_ \ / _` | __/ _` |
-| | | | (_| | || (_| |
-|_| |_|\__,_|\__\__,_|
-                    </pre>
-                </div>
-                <div class="info-section">
-                    <!-- Social Links -->
-                    <div class="info-line">
-                        <span class="info-label">
-                            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                            github
-                        </span>
-                        <span class="info-separator">:</span>
-                        <span class="info-value"><a href="https://github.com/sayan" target="_blank">github.com/sayan</a></span>
-                    </div>
-                    <div class="info-line">
-                        <span class="info-label">
-                            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
-                            linkedin
-                        </span>
-                        <span class="info-separator">:</span>
-                        <span class="info-value"><a href="https://linkedin.com/in/sayan" target="_blank">linkedin.com/in/sayan</a></span>
-                    </div>
-                    <div class="info-line">
-                        <span class="info-label">
-                            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/></svg>
-                            email
-                        </span>
-                        <span class="info-separator">:</span>
-                        <span class="info-value"><a href="mailto:sayan@example.com">sayan@example.com</a></span>
-                    </div>
-                    <div class="info-line">
-                        <span class="info-label">
-                            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/><path d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/></svg>
-                            resume
-                        </span>
-                        <span class="info-separator">:</span>
-                        <span class="info-value"><a href="#" id="resume-link">view_resume.pdf</a></span>
-                    </div>
-
-                    <!-- Role Sections -->
-                    <div class="role-container">
-                        <div class="role-box">
-                            <div class="role-box-content">Python Developer</div>
-                        </div>
-                        <div class="role-box">
-                            <div class="role-box-content">AI Engineer</div>
-                        </div>
-                        <div class="role-box">
-                            <div class="role-box-content">Backend Developer</div>
-                        </div>
-                    </div>
-                    
-                    <div class="divider"></div>
-                    <div class="color-bar">
-                        <div class="color-block cb-1"></div>
-                        <div class="color-block cb-2"></div>
-                        <div class="color-block cb-3"></div>
-                        <div class="color-block cb-4"></div>
-                        <div class="color-block cb-5"></div>
-                        <div class="color-block cb-6"></div>
-                        <div class="color-block cb-7"></div>
-                        <div class="color-block cb-8"></div>
-                    </div>
+        
+        <div class="controls">
+            <button id="prev-btn">Previous Page</button>
+            <button id="next-btn">Next Page</button>
+        </div>
+        
+        <div class="page-counter">
+            Page: <span id="current-page">1</span> of <span id="total-pages">-</span>
+        </div>
+        
+        <div class="book-container">
+            <div id="flipbook">
+                <!-- Pages will be dynamically added here -->
+                <div class="page loading">
+                    <div class="spinner"></div>
+                    <div>Loading PDF...</div>
                 </div>
             </div>
-            
-            <!-- Additional content to demonstrate scroll -->
-            <div class="system-info">
-                OS: Portfolio v1.0.0 • Shell: bash • Terminal: xterm-256color • Uptime: ∞
-            </div>
-            
-            <div class="command-section">
-                <span class="prompt">visitor@portfolio:~$</span>
-                <input type="text" id="command-input" autofocus autocomplete="off" placeholder="type 'help' for commands">
-                <span class="cursor" id="cursor"></span>
-            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ul>
+                <li>Use the Previous/Next buttons to navigate</li>
+                <li>Click on the right edge of a page to turn to the next page</li>
+                <li>Click on the left edge of a page to go back to the previous page</li>
+                <li>Use the page counter to track your progress</li>
+            </ul>
         </div>
     </div>
 
+    <!-- PDF.js libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    
     <script>
-        // Create blinking dots
-        function createBlinkingDots() {
-            const container = document.getElementById('dots-container');
-            const dotCount = 200; // Number of dots
+        // Set up PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        
+        // Sample PDF URL - replace with your own PDF
+        const pdfUrl = 'assets/pdf/US_Options_BOE_Specification.pdf';
+        
+        // Global variables
+        let pdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        let isPageTurning = false;
+        
+        // DOM elements
+        const flipbook = document.getElementById('flipbook');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentPageSpan = document.getElementById('current-page');
+        const totalPagesSpan = document.getElementById('total-pages');
+        
+        // Load the PDF
+        pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+            pdfDoc = pdf;
+            totalPages = pdf.numPages;
+            totalPagesSpan.textContent = totalPages;
             
-            for (let i = 0; i < dotCount; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                
-                // Random position
-                const left = Math.random() * 100;
-                const top = Math.random() * 100;
-                
-                // Random animation properties
-                const duration = 1 + Math.random() * 3; // 1-4 seconds
-                const delay = Math.random() * 5; // 0-5 seconds delay
-                const opacity = 0.1 + Math.random() * 0.9; // 0.1-1 opacity
-                
-                dot.style.left = `${left}%`;
-                dot.style.top = `${top}%`;
-                dot.style.animationDuration = `${duration}s`;
-                dot.style.animationDelay = `${delay}s`;
-                dot.style.opacity = opacity;
-                
-                // Add multiple blinks for some dots
-                if (Math.random() > 0.7) {
-                    dot.style.animationIterationCount = 'infinite, infinite';
-                }
-                
-                container.appendChild(dot);
-            }
-        }
-
-        // Focus on command input
-        document.getElementById('command-input').focus();
-        
-        // Basic terminal functionality
-        const commandInput = document.getElementById('command-input');
-        const terminalOutput = document.getElementById('terminal-output');
-        
-        commandInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const command = commandInput.value.trim();
-                if (command) {
-                    // Add command to output
-                    const commandLine = document.createElement('div');
-                    commandLine.className = 'command-line';
-                    commandLine.innerHTML = `<span class="prompt">visitor@portfolio:~$</span> ${command}`;
-                    terminalOutput.insertBefore(commandLine, terminalOutput.querySelector('.command-section'));
-                    
-                    // Process command
-                    processCommand(command);
-                    
-                    // Clear input
-                    commandInput.value = '';
-                    
-                    // Scroll to bottom
-                    terminalOutput.scrollTop = terminalOutput.scrollHeight;
-                }
-            }
+            // Clear loading message
+            flipbook.innerHTML = '';
+            
+            // Create pages for the flipbook
+            createPages();
+            
+            // Render the first page
+            renderPage(currentPage);
+        }).catch(error => {
+            console.error('Error loading PDF:', error);
+            flipbook.innerHTML = '<div class="page"><div class="page-content">Error loading PDF. Please check the console for details.</div></div>';
         });
         
-        function processCommand(command) {
-            let output = '';
-            
-            switch(command.toLowerCase()) {
-                case 'help':
-                    output = `Available commands:
-help - Show this help message
-about - About me
-skills - My technical skills
-projects - My projects
-clear - Clear terminal`;
-                    break;
-                case 'about':
-                    output = `I'm a passionate developer with expertise in Python, AI, and backend development.
-I love creating efficient, scalable solutions to complex problems.`;
-                    break;
-                case 'skills':
-                    output = `Python • JavaScript • Node.js • React • SQL • MongoDB
-Machine Learning • AI • Data Science • Docker • Git`;
-                    break;
-                case 'projects':
-                    output = `Project 1: AI-powered recommendation system
-Project 2: Scalable backend API
-Project 3: Data visualization dashboard`;
-                    break;
-                case 'clear':
-                    // Remove all command lines
-                    const commandLines = document.querySelectorAll('.command-line');
-                    commandLines.forEach(line => line.remove());
-                    return; // Don't add output for clear
-                default:
-                    output = `Command not found: ${command}. Type 'help' for available commands.`;
+        // Create page elements for the flipbook
+        function createPages() {
+            for (let i = 1; i <= totalPages; i++) {
+                const pageElement = document.createElement('div');
+                pageElement.className = 'page';
+                pageElement.dataset.pageNumber = i;
+                
+                const pageContent = document.createElement('div');
+                pageContent.className = 'page-content';
+                pageContent.innerHTML = `<div class="loading">
+                                            <div class="spinner"></div>
+                                            <div>Loading page ${i}...</div>
+                                        </div>`;
+                
+                pageElement.appendChild(pageContent);
+                flipbook.appendChild(pageElement);
+                
+                // Add click event for page turning
+                pageElement.addEventListener('click', function(e) {
+                    if (isPageTurning) return;
+                    
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    
+                    // If click is on the right 20% of the page, go to next page
+                    if (x > rect.width * 0.8 && currentPage < totalPages) {
+                        nextPage();
+                    }
+                    // If click is on the left 20% of the page, go to previous page
+                    else if (x < rect.width * 0.2 && currentPage > 1) {
+                        prevPage();
+                    }
+                });
             }
-            
-            const outputLine = document.createElement('div');
-            outputLine.className = 'command-output';
-            outputLine.textContent = output;
-            terminalOutput.insertBefore(outputLine, terminalOutput.querySelector('.command-section'));
         }
-
-        // Initialize the blinking dots
-        createBlinkingDots();
+        
+        // Render a specific page
+        function renderPage(pageNum) {
+            pdfDoc.getPage(pageNum).then(page => {
+                const viewport = page.getViewport({ scale: 1.5 });
+                
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                
+                page.render(renderContext).promise.then(() => {
+                    const pageElement = document.querySelector(`.page[data-page-number="${pageNum}"] .page-content`);
+                    pageElement.innerHTML = '';
+                    pageElement.appendChild(canvas);
+                    
+                    // Update current page display
+                    currentPageSpan.textContent = pageNum;
+                    
+                    // Update button states
+                    prevBtn.disabled = pageNum <= 1;
+                    nextBtn.disabled = pageNum >= totalPages;
+                });
+            });
+        }
+        
+        // Go to next page with animation
+        function nextPage() {
+            if (currentPage >= totalPages || isPageTurning) return;
+            
+            isPageTurning = true;
+            const currentPageElement = document.querySelector(`.page[data-page-number="${currentPage}"]`);
+            currentPageElement.style.transform = 'rotateY(-180deg)';
+            
+            setTimeout(() => {
+                currentPage++;
+                renderPage(currentPage);
+                
+                // Reset transform for previous page after animation
+                setTimeout(() => {
+                    currentPageElement.style.transform = '';
+                    isPageTurning = false;
+                }, 100);
+            }, 700);
+        }
+        
+        // Go to previous page with animation
+        function prevPage() {
+            if (currentPage <= 1 || isPageTurning) return;
+            
+            isPageTurning = true;
+            const prevPageElement = document.querySelector(`.page[data-page-number="${currentPage - 1}"]`);
+            prevPageElement.style.transform = '';
+            
+            setTimeout(() => {
+                currentPage--;
+                renderPage(currentPage);
+                isPageTurning = false;
+            }, 700);
+        }
+        
+        // Event listeners for buttons
+        prevBtn.addEventListener('click', prevPage);
+        nextBtn.addEventListener('click', nextPage);
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
     </script>
 </body>
 </html>

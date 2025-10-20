@@ -178,3 +178,676 @@
 .cursor {
     animation: blink 1s infinite;
 }
+
+/* ===== PDF.JS VIEWER STYLES ===== */
+#pdf-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+    overflow: auto;
+}
+
+#pdf-canvas {
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 2px;
+}
+
+#pdf-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    font-size: 16px;
+    font-style: italic;
+}
+
+/* PDF navigation controls */
+.pdf-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    background: rgba(0,0,0,0.8);
+    padding: 10px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.pdf-nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.pdf-nav-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.pdf-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Zoom controls */
+.pdf-zoom-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    background: rgba(0,0,0,0.8);
+    padding: 8px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.zoom-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.zoom-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.1);
+}
+
+.zoom-level {
+    color: white;
+    font-size: 12px;
+    margin: 0 8px;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* ===== SCROLLABLE PDF.JS VIEWER STYLES ===== */
+#pdf-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #f5f5f5;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+#pdf-canvas {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 2px;
+    display: block;
+}
+
+#pdf-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    font-size: 16px;
+    font-style: italic;
+}
+
+/* Enhanced PDF navigation controls */
+.pdf-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    background: rgba(0,0,0,0.9);
+    padding: 12px 24px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 100;
+}
+
+.pdf-nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.pdf-nav-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.pdf-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Enhanced zoom controls */
+.pdf-zoom-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    background: rgba(0,0,0,0.9);
+    padding: 10px 15px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 100;
+}
+
+.zoom-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.zoom-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.1);
+}
+
+.zoom-level {
+    color: white;
+    font-size: 12px;
+    margin: 0 8px;
+    min-width: 50px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Page info display */
+.pdf-page-info {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 100;
+}
+
+/* Make book pages container scrollable */
+.book-pages-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Changed from center to flex-start */
+    perspective: 1000px;
+    padding: 0; /* Remove padding */
+    position: relative;
+    min-height: 0;
+    overflow: hidden; /* Container doesn't scroll, but content inside does */
+}
+
+.book-spread {
+    display: flex;
+    gap: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: none; /* Remove max width constraint */
+    max-height: none; /* Remove max height constraint */
+}
+
+.book-page {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    background: #fff;
+    border-radius: 0; /* Remove border radius for full screen */
+    box-shadow: none; /* Remove shadow for cleaner look */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.page-content {
+    flex: 1;
+    padding: 0;
+    color: #333;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden; /* Content will be scrollable via #pdf-container */
+    background: #fefefe;
+    display: flex;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pdf-controls {
+        bottom: 20px;
+        padding: 10px 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .pdf-nav-btn {
+        min-width: 70px;
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+    
+    .pdf-zoom-controls {
+        top: 10px;
+        right: 10px;
+        padding: 8px 12px;
+    }
+    
+    .zoom-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+    
+    .pdf-page-info {
+        bottom: 80px;
+        right: 10px;
+        font-size: 11px;
+    }
+    
+    #pdf-container {
+        padding: 10px;
+    }
+}
+
+/* Custom scrollbar for PDF container */
+#pdf-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#pdf-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+}
+
+#pdf-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+#pdf-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.5);
+}
+
+/* ===== ENHANCED PDF CONTROLS ===== */
+.pdf-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    background: rgba(0,0,0,0.95);
+    padding: 12px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.pdf-nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 80px;
+    letter-spacing: 0.5px;
+}
+
+.pdf-nav-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.pdf-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Enhanced zoom controls with download */
+.pdf-zoom-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 6px;
+    background: rgba(0,0,0,0.95);
+    padding: 10px 12px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.zoom-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.zoom-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.download-btn {
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-left: 4px;
+}
+
+.download-btn:hover {
+    background: linear-gradient(135deg, #1ed760, #4cd964);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4);
+}
+
+.zoom-level {
+    color: white;
+    font-size: 12px;
+    margin: 0 10px;
+    min-width: 50px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+}
+
+/* Page info display */
+.pdf-page-info {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    background: rgba(0,0,0,0.95);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* Scroll position indicator */
+.pdf-scroll-info {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.95);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    display: none;
+}
+
+/* Enhanced PDF container with smooth scrolling */
+#pdf-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #f5f5f5;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    scroll-behavior: smooth;
+}
+
+#pdf-canvas {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+/* Scrollbar styling */
+#pdf-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+#pdf-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 6px;
+}
+
+#pdf-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+#pdf-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.5);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+#pdf-container::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Loading animation */
+#pdf-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    font-size: 16px;
+    font-style: italic;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #666;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pdf-controls {
+        bottom: 20px;
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .pdf-nav-btn {
+        min-width: 70px;
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+    
+    .pdf-zoom-controls {
+        top: 10px;
+        right: 10px;
+        padding: 8px 10px;
+        gap: 4px;
+    }
+    
+    .zoom-btn, .download-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .pdf-page-info {
+        bottom: 80px;
+        right: 10px;
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
+    .pdf-scroll-info {
+        top: 10px;
+        left: 10px;
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
+    #pdf-container {
+        padding: 10px;
+    }
+}
+
+/* Quick scroll buttons */
+.quick-scroll {
+    position: fixed;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+}
+
+.quick-scroll-btn {
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.quick-scroll-btn:hover {
+    background: rgba(0,0,0,0.9);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.quick-scroll-up {
+    bottom: 120px;
+}
+
+.quick-scroll-down {
+    bottom: 70px;
+}
+
+#pdf-container {
+    display: block;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    background: #f5f5f5;
+    position: relative;
+}
+

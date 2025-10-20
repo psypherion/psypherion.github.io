@@ -2367,3 +2367,870 @@ body::before {
 .pixel-cats-container::before {
     display: none;
 }
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #666;
+    font-style: italic;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #ff6b6b;
+    text-align: center;
+    padding: 20px;
+}
+
+.page-content canvas {
+    max-width: 100%;
+    height: auto;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* When the book reader is active, we want to maximize the PDF viewer */
+.book-reader.active .book-pages-container {
+  padding: 0; /* Remove padding */
+}
+
+.book-reader.active .book-spread {
+  width: 100%;
+  height: 100%;
+}
+
+.book-reader.active .book-page {
+  width: 100%;
+  height: 100%;
+  border-radius: 0; /* Remove border radius if needed */
+}
+
+.book-reader.active .page-content {
+  padding: 0; /* Remove padding inside the page */
+}
+
+/* ===== EBOOK CATEGORY TABS ===== */
+.ebook-categories-nav {
+    display: flex;
+    padding: 0 20px;
+    border-bottom: 1px solid #333;
+    background: #242424;
+    gap: 0;
+}
+
+.category-btn {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    padding: 12px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.category-btn:hover::before {
+    left: 100%;
+}
+
+.category-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+.category-btn.active {
+    color: #fff;
+    border-bottom-color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
+/* eBook Library Containers */
+.ebook-library {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    display: none;
+}
+
+.ebook-library.active {
+    display: grid;
+}
+
+/* Book Items with Enhanced Styling */
+.book-item {
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #333;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.book-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.book-item:hover::before {
+    opacity: 1;
+}
+
+.book-item:hover {
+    transform: translateY(-5px);
+    border-color: #666;
+    box-shadow: 
+        0 10px 20px rgba(0,0,0,0.3),
+        0 0 20px rgba(255,255,255,0.1);
+}
+
+.book-cover {
+    width: 120px;
+    height: 160px;
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    margin: 0 auto 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #5D4037;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.book-cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 90%, rgba(255,255,255,0.1) 100%);
+}
+
+/* Different colors for writing projects */
+.book-item[data-title*="Genealogy"] .book-cover {
+    background: linear-gradient(135deg, #2c5530, #4a7c59);
+}
+
+.book-item[data-title*="Die"] .book-cover {
+    background: linear-gradient(135deg, #5d4037, #8d6e63);
+}
+
+.book-item[data-title*="Poems"] .book-cover {
+    background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+}
+
+.book-title {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    z-index: 2;
+    position: relative;
+}
+
+.book-author {
+    color: #aaa;
+    font-size: 12px;
+    z-index: 2;
+    position: relative;
+}
+
+.book-pages {
+    color: #888;
+    font-size: 11px;
+    margin-top: 5px;
+    z-index: 2;
+    position: relative;
+}
+
+/* ===== GLOWING OUTLINED ROLE BOXES ===== */
+.role-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.role-box {
+    flex: 1;
+    min-width: 120px;
+    background: transparent;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.role-box::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        rgba(255,255,255,0.8) 0%,
+        rgba(255,255,255,0.4) 25%,
+        rgba(255,255,255,0.1) 50%,
+        rgba(255,255,255,0.4) 75%,
+        rgba(255,255,255,0.8) 100%);
+    border-radius: 14px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.role-box::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 26, 26, 0.9);
+    border-radius: 10px;
+    z-index: -1;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.role-box:hover::before {
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.role-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 5px 25px rgba(255, 255, 255, 0.2),
+        0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.role-box-content {
+    color: #e5e5e5;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    position: relative;
+    z-index: 1;
+}
+
+/* Individual role box colors */
+.role-box:nth-child(1)::before {
+    background: linear-gradient(45deg, 
+        rgba(255,255,255,0.8) 0%,
+        rgba(97, 218, 251, 0.6) 25%,
+        rgba(97, 218, 251, 0.3) 50%,
+        rgba(97, 218, 251, 0.6) 75%,
+        rgba(255,255,255,0.8) 100%);
+}
+
+.role-box:nth-child(2)::before {
+    background: linear-gradient(45deg, 
+        rgba(255,255,255,0.8) 0%,
+        rgba(255, 193, 7, 0.6) 25%,
+        rgba(255, 193, 7, 0.3) 50%,
+        rgba(255, 193, 7, 0.6) 75%,
+        rgba(255,255,255,0.8) 100%);
+}
+
+.role-box:nth-child(3)::before {
+    background: linear-gradient(45deg, 
+        rgba(255,255,255,0.8) 0%,
+        rgba(0, 230, 118, 0.6) 25%,
+        rgba(0, 230, 118, 0.3) 50%,
+        rgba(0, 230, 118, 0.6) 75%,
+        rgba(255,255,255,0.8) 100%);
+}
+
+.role-box:nth-child(4)::before {
+    background: linear-gradient(45deg, 
+        rgba(255,255,255,0.8) 0%,
+        rgba(186, 104, 200, 0.6) 25%,
+        rgba(186, 104, 200, 0.3) 50%,
+        rgba(186, 104, 200, 0.6) 75%,
+        rgba(255,255,255,0.8) 100%);
+}
+
+/* ===== ENHANCED EBOOK READER ===== */
+.book-reader {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    background: #1a1a1a;
+}
+
+.book-reader.active {
+    display: flex;
+}
+
+.reader-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #242424;
+    flex-shrink: 0;
+}
+
+.reader-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    flex: 1;
+    margin: 0 20px;
+    text-align: center;
+}
+
+.reader-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.reader-btn {
+    background: #333;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.reader-btn:hover:not(:disabled) {
+    background: #444;
+    border-color: #666;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.reader-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.page-indicator {
+    color: #aaa;
+    font-size: 14px;
+    margin: 0 15px;
+    font-weight: 500;
+}
+
+/* Enhanced Book Pages Container */
+.book-pages-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    padding: 20px;
+    position: relative;
+    min-height: 0;
+}
+
+.book-spread {
+    display: flex;
+    gap: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    max-height: 800px;
+}
+
+.book-page {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.page-content {
+    flex: 1;
+    padding: 0;
+    color: #333;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden;
+    background: #fefefe;
+    display: flex;
+}
+
+.pdf-view {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    color: #666;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(255,255,255,0.9);
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+/* Back to Library Button */
+.back-to-library {
+    background: #333;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    margin-right: 15px;
+    font-weight: 500;
+}
+
+.back-to-library:hover {
+    background: #444;
+    border-color: #666;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Responsive Design for Tabs and Roles */
+@media (max-width: 768px) {
+    .ebook-categories-nav {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    .category-btn {
+        text-align: center;
+        border-bottom: 1px solid #333;
+        border-right: none;
+    }
+    
+    .category-btn.active {
+        border-bottom: 2px solid #fff;
+        border-right: none;
+    }
+    
+    .role-container {
+        gap: 10px;
+    }
+    
+    .role-box {
+        min-width: calc(50% - 10px);
+        padding: 12px 8px;
+    }
+    
+    .role-box-content {
+        font-size: 12px;
+    }
+    
+    .ebook-library {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .book-cover {
+        width: 100px;
+        height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .role-box {
+        min-width: 100%;
+    }
+    
+    .ebook-library {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .category-btn {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+}
+
+/* Fullscreen PDF enhancements */
+.book-page.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3000;
+    border-radius: 0;
+    max-width: none;
+    max-height: none;
+}
+
+/* Loading state for large PDFs */
+.pdf-view.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+}
+
+.pdf-view.loading::before {
+    content: 'Loading PDF...';
+    color: #666;
+    font-size: 16px;
+    font-style: italic;
+}
+
+/* ===== ENHANCED PDF CONTROLS ===== */
+.pdf-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    background: rgba(0,0,0,0.95);
+    padding: 12px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.pdf-nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 80px;
+    letter-spacing: 0.5px;
+}
+
+.pdf-nav-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.pdf-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Enhanced zoom controls with download */
+.pdf-zoom-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 6px;
+    background: rgba(0,0,0,0.95);
+    padding: 10px 12px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.zoom-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.zoom-btn:hover {
+    background: rgba(255,255,255,0.25);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.download-btn {
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-left: 4px;
+}
+
+.download-btn:hover {
+    background: linear-gradient(135deg, #1ed760, #4cd964);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4);
+}
+
+.zoom-level {
+    color: white;
+    font-size: 12px;
+    margin: 0 10px;
+    min-width: 50px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+}
+
+/* Page info display */
+.pdf-page-info {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    background: rgba(0,0,0,0.95);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* Scroll position indicator */
+.pdf-scroll-info {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.95);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    display: none;
+}
+
+/* Enhanced PDF container with smooth scrolling and mouse wheel support */
+#pdf-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #f5f5f5;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    scroll-behavior: smooth;
+}
+
+#pdf-canvas {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+/* Enhanced scrollbar styling for better mouse wheel experience */
+#pdf-container::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+#pdf-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin: 4px;
+}
+
+#pdf-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+    transition: background 0.3s ease;
+}
+
+#pdf-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.6);
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+#pdf-container::-webkit-scrollbar-thumb:active {
+    background: rgba(0,0,0,0.7);
+}
+
+#pdf-container::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Loading animation */
+#pdf-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    font-size: 16px;
+    font-style: italic;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #666;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pdf-controls {
+        bottom: 20px;
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .pdf-nav-btn {
+        min-width: 70px;
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+    
+    .pdf-zoom-controls {
+        top: 10px;
+        right: 10px;
+        padding: 8px 10px;
+        gap: 4px;
+    }
+    
+    .zoom-btn, .download-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .pdf-page-info {
+        bottom: 80px;
+        right: 10px;
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
+    .pdf-scroll-info {
+        top: 10px;
+        left: 10px;
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
+    #pdf-container {
+        padding: 10px;
+    }
+}
+
+/* Remove quick scroll buttons styles - they are no longer needed */
+
