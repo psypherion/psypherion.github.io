@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tools — psypherion</title>
+
+  <!-- Fonts – same as main site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.0/dist/browser-image-compression.js"></script>
+
+  <style>
+    /* ── RESET & ROOT (identical to your main site) ────── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --paper:#f4f0e8;--paper-warm:#ede7d9;--paper-dark:#dfd7c5;
+      --ink:#1b1814;--ink-mid:#4a443c;--ink-muted:#7a7068;--ink-faint:#aaa090;
+      --accent:#8c6d46;--accent-light:#c4a87e;--accent-pale:#f0e8dc;
+      --border:#cec2ae;--border-light:#e0d8ca;--red:#9a4a3a;--green:#4a6f56;
+    }
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--paper);color:var(--ink);
+      font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.75;font-weight:300;
+    }
+    h1,h2,h3,h4{
+      font-family:'Playfair Display',Georgia,serif;font-weight:400;line-height:1.25;
+    }
+    a{
+      color:var(--accent);text-decoration:none;transition:color .2s;
+    }
+    a:hover{color:var(--ink)}
+    .mono{font-family:'IBM Plex Mono',monospace;font-size:.82em;font-weight:300;color:var(--ink-mid)}
+
+    /* ── NAV (like the main site) ───────────────────────── */
+    nav{
+      position:sticky;top:0;z-index:200;
+      background:var(--paper);border-bottom:1px solid var(--border);
+      padding:1rem 2rem;
+    }
+    .nav-inner{
+      max-width:1080px;margin:0 auto;
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      flex-wrap:wrap;
+    }
+    .nav-brand{
+      font-family:'Playfair Display',serif;font-size:1.05rem;font-style:italic;color:var(--ink);
+    }
+    .nav-back{
+      font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.14em;
+      text-transform:uppercase;color:var(--ink-muted);
+      border:1px solid var(--border);padding:.35rem .7rem;
+      transition:all .2s;
+    }
+    .nav-back:hover{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+
+    /* ── PAGE LAYOUT ────────────────────────────────────── */
+    .container{max-width:1080px;margin:0 auto;padding:0 2rem}
+    section{padding:4rem 0}
+    section + section{border-top:1px solid var(--border-light)}
+
+    .section-label{
+      font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+      letter-spacing:.22em;text-transform:uppercase;
+      color:var(--ink-faint);margin-bottom:.5rem;display:block;
+    }
+    .section-title{
+      font-size:2rem;font-weight:400;color:var(--ink);
+      margin-bottom:2rem;font-style:italic;
+    }
+
+    /* ── TOOL CARD ──────────────────────────────────────── */
+    .tool-card{
+      background:var(--paper-warm);border:1px solid var(--border);
+      padding:2rem;margin-bottom:2rem;position:relative;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .tool-card:hover{
+      transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.06);
+    }
+    .tool-card h3{
+      font-family:'Playfair Display',serif;font-size:1.3rem;
+      font-weight:500;color:var(--ink);margin-bottom:.4rem;
+      display:flex;align-items:center;gap:.6rem;
+    }
+    .tool-card h3::before{
+      content:'▹';color:var(--accent);font-size:1.2rem;
+    }
+    .tool-desc{
+      font-size:.95rem;color:var(--ink-muted);margin-bottom:1.5rem;
+      max-width:65ch;
+    }
+    .tool-controls{
+      display:flex;flex-wrap:wrap;gap:1rem;align-items:center;
+    }
+    input[type="file"]{
+      font-family:'IBM Plex Mono',monospace;font-size:.75rem;
+      color:var(--ink-mid);background:var(--paper);
+      border:1px solid var(--border);padding:.5rem .8rem;
+      width:100%;max-width:350px;
+    }
+    button.tool-action{
+      font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+      letter-spacing:.12em;text-transform:uppercase;
+      color:var(--paper);background:var(--accent);
+      border:none;padding:.7rem 1.4rem;
+      cursor:pointer;transition:background .2s;
+      border-radius:2px;
+    }
+    button.tool-action:hover{
+      background:var(--ink);
+    }
+    button.tool-action:disabled{
+      background:var(--border);cursor:not-allowed;color:var(--ink-faint);
+    }
+    .tool-message{
+      font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+      color:var(--ink-muted);margin-top:.8rem;
+      min-height:1.2em;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media(max-width:760px){
+      body{font-size:16px}
+      .tool-card{padding:1.5rem}
+      .tool-controls{flex-direction:column;align-items:stretch}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">Tools · psypherion</span>
+    <a href="home.html" class="nav-back">← Back to Site</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  TOOLS START HERE                                      -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="container" style="padding-top:3rem;">
+
+  <!-- ── IMAGE TO PDF ──────────────────────────────────── -->
+  <section id="img2pdf">
+    <span class="section-label">Convert</span>
+    <h2 class="section-title">Image → PDF</h2>
+    <div class="tool-card">
+      <h3>Combine images into a PDF</h3>
+      <p class="tool-desc">Select multiple images (JPEG, PNG). They will be placed each on a new page and downloaded as a single PDF.</p>
+      <div class="tool-controls">
+        <input type="file" id="img2pdfInput" multiple accept="image/*" />
+        <button class="tool-action" id="img2pdfBtn">Create PDF</button>
+      </div>
+      <p class="tool-message" id="img2pdfMsg"></p>
+    </div>
+  </section>
+
+  <!-- ── IMAGE COMPRESSOR ──────────────────────────────── -->
+  <section id="imgcompress">
+    <span class="section-label">Optimise</span>
+    <h2 class="section-title">Image Compressor</h2>
+    <div class="tool-card">
+      <h3>Compress images (lossy)</h3>
+      <p class="tool-desc">Reduce file size while keeping good quality. You can set a target size (in MB) or use the default smart compression.</p>
+      <div class="tool-controls" style="flex-wrap:wrap;align-items:flex-end;">
+        <input type="file" id="imgCompInput" multiple accept="image/*" />
+        <label style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--ink-muted);">
+          Max size (MB):
+          <input type="number" id="maxSizeMB" value="1" min="0.1" step="0.1"
+                 style="width:80px;font-family:inherit;font-size:.7rem;padding:.3rem;" />
+        </label>
+        <button class="tool-action" id="imgCompBtn">Compress</button>
+      </div>
+      <p class="tool-message" id="imgCompMsg"></p>
+    </div>
+  </section>
+
+  <!-- ── PDF MERGER ────────────────────────────────────── -->
+  <section id="pdfmerge">
+    <span class="section-label">Combine</span>
+    <h2 class="section-title">PDF Merger</h2>
+    <div class="tool-card">
+      <h3>Merge multiple PDFs</h3>
+      <p class="tool-desc">Select two or more PDF files. They will be concatenated in the order you choose (first selected = first page).</p>
+      <div class="tool-controls">
+        <input type="file" id="mergeInput" multiple accept="application/pdf" />
+        <button class="tool-action" id="mergeBtn">Merge PDFs</button>
+      </div>
+      <p class="tool-message" id="mergeMsg"></p>
+    </div>
+  </section>
+
+  <!-- ── PDF SPLITTER ──────────────────────────────────── -->
+  <section id="pdfsplit">
+    <span class="section-label">Extract</span>
+    <h2 class="section-title">PDF Splitter</h2>
+    <div class="tool-card">
+      <h3>Split a PDF into individual pages</h3>
+      <p class="tool-desc">Upload a PDF and download a ZIP file containing each page as a separate PDF.</p>
+      <p class="tool-desc" style="font-size:.85rem;color:var(--ink-faint);">
+        (Uses <a href="https://stuk.github.io/jszip/" target="_blank">JSZip</a> to bundle the pages.)
+      </p>
+      <div class="tool-controls">
+        <input type="file" id="splitInput" accept="application/pdf" />
+        <button class="tool-action" id="splitBtn">Split PDF</button>
+      </div>
+      <p class="tool-message" id="splitMsg"></p>
+    </div>
+  </section>
+
+  <!-- ── PDF COMPRESSOR ────────────────────────────────── -->
+  <section id="pdfcompress">
+    <span class="section-label">Optimise</span>
+    <h2 class="section-title">PDF Compressor</h2>
+    <div class="tool-card">
+      <h3>Reduce PDF file size (basic)</h3>
+      <p class="tool-desc">
+        Tries to compress a PDF by removing unused objects and re-saving.
+        <em style="color:var(--ink-faint);">Note: True heavy compression may require a server‑side tool; this method works well for files with redundant data.</em>
+      </p>
+      <div class="tool-controls">
+        <input type="file" id="compressInput" accept="application/pdf" />
+        <button class="tool-action" id="compressBtn">Compress PDF</button>
+      </div>
+      <p class="tool-message" id="compressMsg"></p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ── FOOTER (tiny) ───────────────────────────────────── -->
+<footer style="border-top:1px solid var(--border-light);padding:2rem;text-align:center;margin-top:2rem;">
+  <p class="mono" style="font-size:.65rem;color:var(--ink-faint);">
+    All processing happens in your browser — no files are uploaded anywhere.
+  </p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  SCRIPTS                                               -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<script>
+  // ─── Utility: show message in a tool card ────────────────
+  function setMsg(el, text, isError = false) {
+    el.textContent = text;
+    el.style.color = isError ? 'var(--red)' : 'var(--ink-muted)';
+  }
+
+  // ═══════════════ 1. IMAGE TO PDF ═════════════════════════
+  document.getElementById('img2pdfBtn').addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf;
+    const files = document.getElementById('img2pdfInput').files;
+    const msgEl = document.getElementById('img2pdfMsg');
+
+    if (files.length === 0) return setMsg(msgEl, 'Please select at least one image.', true);
+
+    const pdf = new jsPDF();
+    setMsg(msgEl, 'Processing...');
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const imgData = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(files[i]);
+        });
+
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 10, 10, 190, 250); // A4-ish size
+      }
+      pdf.save('converted.pdf');
+      setMsg(msgEl, 'PDF downloaded.');
+    } catch (err) {
+      console.error(err);
+      setMsg(msgEl, 'Error converting images.', true);
+    }
+  });
+
+  // ═══════════════ 2. IMAGE COMPRESSOR ════════════════════
+  document.getElementById('imgCompBtn').addEventListener('click', async () => {
+    const files = document.getElementById('imgCompInput').files;
+    const msgEl = document.getElementById('imgCompMsg');
+    const maxSizeMB = parseFloat(document.getElementById('maxSizeMB').value) || 1;
+
+    if (files.length === 0) return setMsg(msgEl, 'Please select at least one image.', true);
+
+    setMsg(msgEl, 'Compressing...');
+    const imageCompression = window.imageCompression;
+
+    try {
+      for (const file of files) {
+        const options = {
+          maxSizeMB: maxSizeMB,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+        };
+        const compressedBlob = await imageCompression(file, options);
+
+        // Download each compressed image
+        const url = URL.createObjectURL(compressedBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `compressed_${file.name}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+      setMsg(msgEl, `Done – ${files.length} file(s) compressed and downloaded.`);
+    } catch (err) {
+      console.error(err);
+      setMsg(msgEl, 'Compression failed.', true);
+    }
+  });
+
+  // ═══════════════ 3. PDF MERGER ═══════════════════════════
+  document.getElementById('mergeBtn').addEventListener('click', async () => {
+    const files = document.getElementById('mergeInput').files;
+    const msgEl = document.getElementById('mergeMsg');
+
+    if (files.length < 2) return setMsg(msgEl, 'Please select at least two PDF files.', true);
+
+    setMsg(msgEl, 'Merging...');
+    const { PDFDocument } = PDFLib;
+
+    try {
+      const mergedPdf = await PDFDocument.create();
+
+      for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFDocument.load(arrayBuffer);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach(page => mergedPdf.addPage(page));
+      }
+
+      const mergedPdfBytes = await mergedPdf.save();
+      downloadBlob(mergedPdfBytes, 'merged.pdf', 'application/pdf');
+      setMsg(msgEl, 'Merged PDF downloaded.');
+    } catch (err) {
+      console.error(err);
+      setMsg(msgEl, 'Error merging PDFs.', true);
+    }
+  });
+
+  // ═══════════════ 4. PDF SPLITTER ═════════════════════════
+  // We'll need JSZip; add it dynamically
+  function loadJSZip(callback) {
+    if (window.JSZip) return callback();
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    script.onload = callback;
+    document.head.appendChild(script);
+  }
+
+  document.getElementById('splitBtn').addEventListener('click', function() {
+    loadJSZip(async () => {
+      const file = document.getElementById('splitInput').files[0];
+      const msgEl = document.getElementById('splitMsg');
+
+      if (!file) return setMsg(msgEl, 'Please select a PDF file.', true);
+
+      setMsg(msgEl, 'Splitting...');
+      const { PDFDocument } = PDFLib;
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const srcPdf = await PDFDocument.load(arrayBuffer);
+        const totalPages = srcPdf.getPageCount();
+        const zip = new JSZip();
+
+        for (let i = 0; i < totalPages; i++) {
+          const newPdf = await PDFDocument.create();
+          const [copiedPage] = await newPdf.copyPages(srcPdf, [i]);
+          newPdf.addPage(copiedPage);
+          const newBytes = await newPdf.save();
+          zip.file(`page_${i+1}.pdf`, newBytes);
+        }
+
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        downloadBlob(zipBlob, `split_pages.zip`, 'application/zip');
+        setMsg(msgEl, `ZIP with ${totalPages} pages downloaded.`);
+      } catch (err) {
+        console.error(err);
+        setMsg(msgEl, 'Error splitting PDF.', true);
+      }
+    });
+  });
+
+  // ═══════════════ 5. PDF COMPRESSOR (basic) ═══════════════
+  document.getElementById('compressBtn').addEventListener('click', async () => {
+    const file = document.getElementById('compressInput').files[0];
+    const msgEl = document.getElementById('compressMsg');
+
+    if (!file) return setMsg(msgEl, 'Please select a PDF file.', true);
+
+    setMsg(msgEl, 'Compressing...');
+    const { PDFDocument } = PDFLib;
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer, {
+        ignoreEncryption: true,
+        updateMetadata: false,
+      });
+
+      // pdf-lib's save() already strips some metadata.
+      // For a stronger effect you'd need to re-compress images (not possible here).
+      const compressedBytes = await pdfDoc.save();
+      const originalSize = file.size;
+      const newSize = compressedBytes.byteLength;
+
+      downloadBlob(compressedBytes, `compressed_${file.name}`, 'application/pdf');
+
+      const reduction = ((1 - newSize / originalSize) * 100).toFixed(1);
+      setMsg(msgEl, `Downloaded. Size reduced by ${reduction}% (${(originalSize/1024).toFixed(0)} KB → ${(newSize/1024).toFixed(0)} KB).`);
+    } catch (err) {
+      console.error(err);
+      setMsg(msgEl, 'Error compressing PDF. The file may be protected.', true);
+    }
+  });
+
+  // ─── Helper: download a Blob ─────────────────────────────
+  function downloadBlob(bytes, filename, mimeType = 'application/pdf') {
+    const blob = new Blob([bytes], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>

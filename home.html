@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sayan Sarkar — psypherion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── RESET & ROOT ──────────────────────────────────────── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --paper:#f4f0e8;--paper-warm:#ede7d9;--paper-dark:#dfd7c5;
+      --ink:#1b1814;--ink-mid:#4a443c;--ink-muted:#7a7068;--ink-faint:#aaa090;
+      --accent:#8c6d46;--accent-light:#c4a87e;--accent-pale:#f0e8dc;
+      --border:#cec2ae;--border-light:#e0d8ca;--red:#9a4a3a;--green:#4a6f56;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--paper);color:var(--ink);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.75;font-weight:300}
+    ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--paper-warm)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;font-weight:400;line-height:1.25}
+    a{color:var(--accent);text-decoration:none;transition:color .2s}a:hover{color:var(--ink)}
+    .mono{font-family:'IBM Plex Mono',monospace;font-size:.82em;font-weight:300;color:var(--ink-mid)}
+    .container{max-width:1080px;margin:0 auto;padding:0 2rem}
+    section{padding:5rem 0}section+section{border-top:1px solid var(--border-light)}
+    .section-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.5rem;display:block}
+    .section-title{font-size:2rem;font-weight:400;color:var(--ink);margin-bottom:.5rem;font-style:italic}
+    .section-desc{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--ink-faint);letter-spacing:.08em;margin-bottom:3rem}
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    nav{position:sticky;top:0;z-index:200;background:var(--paper);border-bottom:1px solid var(--border);padding:1rem 2rem}
+    .nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .nav-brand{font-family:'Playfair Display',serif;font-size:1.05rem;font-style:italic;color:var(--ink);flex-shrink:0}.nav-brand:hover{color:var(--accent)}
+    .nav-links{display:flex;gap:1.6rem;list-style:none;flex-wrap:wrap}
+    .nav-links a{font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted)}.nav-links a:hover{color:var(--ink)}
+    .nav-map-btn{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:none;border:1px solid var(--border);padding:.35rem .7rem;cursor:pointer;transition:all .2s;flex-shrink:0}.nav-map-btn:hover{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+    .nav-toggle{
+      display:none;
+      background:none;
+      border:none;
+      color:var(--ink);
+      font-size:1.4rem;
+      cursor:pointer;
+    }
+
+    .nav-menu{
+      display:flex;
+      align-items:center;
+      gap:1rem;
+    }
+
+    .nav-actions{
+      display:flex;
+      gap:.25rem;
+    }
+
+    @media (max-width:768px){
+
+      .nav-toggle{
+        display:block;
+      }
+
+      .nav-menu{
+        display:none;
+        position:absolute;
+        top:100%;
+        left:0;
+        right:0;
+        background:var(--paper);
+        border-top:1px solid var(--border);
+        padding:1rem;
+      }
+
+      .nav-menu.open{
+        display:block;
+      }
+
+      .nav-inner{
+        position:relative;
+      }
+
+      .nav-links{
+        flex-direction:column;
+        gap:.8rem;
+        margin-bottom:1rem;
+      }
+
+      .nav-actions{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+    }
+    .nav-toggle{
+      display:none;
+      background:none;
+      border:none;
+      font-size:1.4rem;
+      cursor:pointer;
+    }
+    /* ── HERO ────────────────────────────────────────────── */
+    #hero{padding:6rem 0 5rem;border-top:none;border-bottom:none}
+    .hero-inner{max-width:1080px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+    .hero-avatar{width:92px;height:92px;border-radius:50%;border:1px solid var(--border);background:var(--paper-warm);overflow:hidden;position:relative;margin-bottom:1.6rem;display:flex;align-items:center;justify-content:center}
+    .hero-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .avatar-initials{font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--ink-muted);user-select:none}
+    .hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1.2rem}
+    .hero-name{font-size:clamp(2.8rem,6vw,4.8rem);font-weight:400;line-height:1.05;color:var(--ink);margin-bottom:.4rem}
+    .hero-handle{font-family:'IBM Plex Mono',monospace;font-size:.9rem;color:var(--accent);margin-bottom:2.5rem}
+    .hero-tagline{font-size:1.15rem;font-style:italic;color:var(--ink-mid);line-height:1.65;max-width:42ch;border-left:2px solid var(--border);padding-left:1.2rem;margin-bottom:2.5rem}
+    .hero-intro{font-size:1rem;color:var(--ink-mid);line-height:1.8;max-width:50ch}
+    .hero-right{display:flex;flex-direction:column;gap:1.4rem}
+    .hero-card{background:var(--paper-warm);border:1px solid var(--border);border-radius:2px;padding:1.3rem 1.5rem;position:relative}
+    .hero-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent);border-radius:2px 0 0 2px}
+    .hero-card-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.4rem}
+    .hero-card-text{font-size:.92rem;color:var(--ink-mid);line-height:1.6}
+    .hero-links{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap}
+    .hero-link{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--border);padding-bottom:2px;transition:color .2s,border-color .2s}.hero-link:hover{color:var(--accent);border-color:var(--accent)}
+
+    /* ── BLOG CATEGORIES ──────────────────────────────────── */
+    .blog-category{margin-bottom:3.5rem}.blog-category:last-child{margin-bottom:0}
+    .cat-header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
+    .cat-title-row{display:flex;align-items:baseline;gap:1rem}
+    .cat-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-style:italic;color:var(--ink)}
+    .cat-pieces{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-faint);letter-spacing:.1em}
+    .cat-expand-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:none;border:1px dashed var(--border);padding:.3rem .6rem;cursor:pointer;transition:all .2s;white-space:nowrap}.cat-expand-btn:hover{border-color:var(--accent);background:var(--accent-pale)}
+    .blog-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+    .cat-extra{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1)}.cat-extra.open{max-height:1400px}
+    .cat-extra .blog-grid-2{margin-top:1.5rem}
+    .blog-card{background:var(--paper-warm);border:1px solid var(--border);border-top:2px solid var(--ink-mid);overflow:hidden;transition:border-top-color .2s,transform .15s,box-shadow .2s;display:flex;flex-direction:column}.blog-card:hover{border-top-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+    .blog-img{width:100%;height:148px;overflow:hidden;border-bottom:1px solid var(--border-light);flex-shrink:0;position:relative}
+    .blog-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}.blog-card:hover .blog-img img{transform:scale(1.04)}
+    .blog-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .blog-img-ph::before{content:'';position:absolute;inset:0;opacity:.05;background-image:repeating-linear-gradient(0deg,var(--ink) 0,var(--ink) 1px,transparent 1px,transparent 18px),repeating-linear-gradient(90deg,var(--ink) 0,var(--ink) 1px,transparent 1px,transparent 18px)}
+    .blog-img-ph span{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ink-faint);position:relative;z-index:1}
+    .ph-faith{background:linear-gradient(135deg,#e8e0d4,#d8ccbc)}
+    .ph-code{background:linear-gradient(135deg,#dae4dc,#ccd8cc)}
+    .ph-essay{background:linear-gradient(135deg,#e4dcd4,#d8ccc0)}
+    .blog-card-content{padding:1.3rem;display:flex;flex-direction:column;gap:.65rem;flex:1}
+    .blog-meta{display:flex;gap:.8rem;align-items:center}
+    .blog-date{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-faint);letter-spacing:.08em}
+    .blog-tag{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-light);border:1px solid var(--border);padding:1px 5px}
+    .blog-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.35}.blog-card a.blog-title:hover{color:var(--accent)}
+    .blog-excerpt{font-size:.9rem;color:var(--ink-muted);line-height:1.65;flex:1}
+    .blog-readmore{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);align-self:flex-start;border-bottom:1px dashed var(--border);padding-bottom:1px;transition:color .2s}.blog-card:hover .blog-readmore{color:var(--accent)}
+
+    /* ── POETRY PREVIEW ───────────────────────────────────── */
+    #poetry{background:linear-gradient(to bottom,transparent,var(--paper-warm) 25%,var(--paper-warm) 75%,transparent)}
+    .poetry-preview-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2.5rem}
+    .poem-preview-card{background:var(--paper);border:1px solid var(--border);padding:1.6rem 1.5rem;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden}
+    .poem-preview-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.07);border-color:var(--accent-light)}
+    .ppc-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.8rem}
+    .ppc-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--accent);margin-bottom:1rem}.ppc-title::before{content:'— ';color:var(--ink-faint);font-style:normal}
+    .ppc-lines{font-family:'Crimson Pro',serif;font-size:.95rem;font-style:italic;color:var(--ink-muted);line-height:1.9;white-space:pre-line}
+    .ppc-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,var(--paper))}
+    .ppc-open{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent-light);margin-top:1rem}
+    .poetry-archive-bar{display:flex;align-items:center;gap:1.5rem;padding-top:1rem;border-top:1px solid var(--border-light)}
+    .explore-poetry-btn{font-family:'Playfair Display',serif;font-size:1.05rem;font-style:italic;color:var(--ink);background:none;border:none;cursor:pointer;padding:.5rem 0;border-bottom:1px solid var(--border);transition:color .2s,border-color .2s}.explore-poetry-btn:hover{color:var(--accent);border-color:var(--accent)}
+    .poetry-archive-count{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--ink-faint);letter-spacing:.1em}
+
+    /* ── POETRY OVERLAY ───────────────────────────────────── */
+    #poetry-overlay{position:fixed;inset:0;z-index:600;background:var(--paper);display:flex;opacity:0;pointer-events:none;transition:opacity .3s ease}
+    #poetry-overlay.open{opacity:1;pointer-events:all}
+    .po-sidebar{width:210px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+    .po-sidebar-head{padding:1.5rem 1.2rem 1rem;border-bottom:1px solid var(--border-light);flex-shrink:0}
+    .po-sidebar-title{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:.2rem}
+    .po-sidebar-sub{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--ink-faint)}
+    .po-index{flex:1;overflow-y:auto;padding:.6rem 0}
+    .po-index-item{display:flex;align-items:center;gap:.7rem;padding:.55rem 1.2rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.63rem;color:var(--ink-muted);letter-spacing:.06em;border-left:2px solid transparent;transition:all .15s;line-height:1.4}
+    .po-index-item:hover{background:var(--paper-warm);color:var(--ink)}.po-index-item.active{border-left-color:var(--accent);color:var(--accent);background:var(--accent-pale)}
+    .po-index-num{color:var(--ink-faint);font-size:.55rem;flex-shrink:0;width:1.2rem}
+    .po-main{flex:1;display:flex;flex-direction:column;align-items:center;padding:2rem 1.5rem;overflow-y:auto;position:relative}
+    .po-topbar{width:100%;max-width:560px;display:flex;justify-content:space-between;align-items:center;margin-bottom:2.5rem;flex-shrink:0}
+    .po-close{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);background:none;border:1px solid var(--border);padding:.4rem .8rem;cursor:pointer;transition:all .2s}.po-close:hover{color:var(--ink);border-color:var(--ink-mid)}
+    .po-progress{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--ink-faint);letter-spacing:.1em}
+    .poem-island{max-width:560px;width:100%;background:var(--paper-warm);border:1px solid var(--border);padding:3rem 2.8rem;box-shadow:0 4px 32px rgba(0,0,0,.05);transition:opacity .22s ease,transform .22s ease;flex-shrink:0}
+    .poem-island.exiting{opacity:0;transform:translateY(-10px) scale(.99)}
+    .pi-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--accent);margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border-light)}.pi-title::before{content:'— ';color:var(--ink-faint);font-style:normal}
+    .pi-body{font-family:'Crimson Pro',serif;font-size:1.1rem;font-style:italic;line-height:2.1;color:var(--ink-mid);white-space:pre-line}
+    .po-nav{display:flex;align-items:center;gap:1.5rem;margin-top:2rem;flex-shrink:0}
+    .po-nav-btn{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);background:none;border:1px solid var(--border);padding:.5rem 1rem;cursor:pointer;transition:all .2s}.po-nav-btn:hover{color:var(--ink);border-color:var(--ink-mid)}.po-nav-btn:disabled{opacity:.3;cursor:default}
+    .po-counter{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--ink-faint);min-width:40px;text-align:center}
+
+    /* ── LIBRARY ──────────────────────────────────────────── */
+    .library-layout{display:grid;grid-template-columns:180px 1fr;gap:2rem;align-items:start}
+    .lib-sidebar{position:sticky;top:5.5rem;background:var(--paper-warm);border:1px solid var(--border);overflow:hidden}
+    .lib-sidebar-head{padding:.9rem 1rem;border-bottom:1px solid var(--border-light)}
+    .lib-sidebar-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint)}
+    .lib-folder{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--ink-muted);border-left:2px solid transparent;transition:all .15s}
+    .lib-folder:hover{background:var(--paper-dark);color:var(--ink)}.lib-folder.active{border-left-color:var(--accent);color:var(--accent);background:var(--accent-pale)}
+    .lib-folder-count{font-size:.58rem;color:var(--ink-faint)}.lib-folder.active .lib-folder-count{color:var(--accent-light)}
+    .lib-search{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink);background:var(--paper-warm);border:1px solid var(--border);padding:.6rem .9rem;width:100%;outline:none;letter-spacing:.04em;transition:border-color .15s;margin-bottom:1.2rem;display:block}.lib-search:focus{border-color:var(--accent)}.lib-search::placeholder{color:var(--ink-faint)}
+    .lib-showing{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-faint);letter-spacing:.1em;display:block;margin-bottom:1rem}
+    .library-shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem}
+    .lib-card{background:var(--paper);border:1px solid var(--border);padding:1.2rem;position:relative;transition:box-shadow .2s,transform .15s}.lib-card:hover{box-shadow:2px 4px 14px rgba(0,0,0,.06);transform:translateY(-2px)}.lib-card.hidden{display:none}
+    .lib-card-type{font-family:'IBM Plex Mono',monospace;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-light);margin-bottom:.6rem}
+    .lib-card-title{font-family:'Playfair Display',serif;font-size:.98rem;font-weight:500;color:var(--ink);line-height:1.35;margin-bottom:.35rem}
+    .lib-card-author{font-size:.85rem;color:var(--ink-muted);font-style:italic;margin-bottom:.5rem}
+    .lib-card-note{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-faint);line-height:1.55}
+    .lib-card-corner{position:absolute;bottom:.7rem;right:.7rem;width:7px;height:7px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+    .lib-empty-msg{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--ink-faint);letter-spacing:.12em;padding:2rem;border:1px dashed var(--border);text-align:center;display:none}.lib-empty-msg.visible{display:block}
+    .lib-card-pdf {
+      display: inline-block;
+      margin-top: 0.8rem;
+      color: #A3564C;
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+    }
+    .lib-card-pdf:hover {
+      text-decoration: underline;
+    }
+    /* ── COVERS ───────────────────────────────────────────── */
+    #covers{}
+    .covers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.6rem}
+    .cover-card{background:var(--paper-warm);border:1px solid var(--border);overflow:hidden;transition:transform .2s,box-shadow .25s}.cover-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+    .cover-art{width:100%;aspect-ratio:1 / 1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    /* Gradient backgrounds by slot */
+    .cover-art.ca-1{background:linear-gradient(145deg,#e0d6c8 0%,#c8bca8 40%,#b4a890 100%)}
+    .cover-art.ca-2{background:linear-gradient(145deg,#ccd8d0 0%,#b4c4bc 40%,#a0b0a8 100%)}
+    .cover-art.ca-3{background:linear-gradient(145deg,#d8ccd0 0%,#c0b0b8 40%,#a89898 100%)}
+    .cover-art.ca-4{background:linear-gradient(145deg,#d0d0c8 0%,#b8b8a8 40%,#a0a090 100%)}
+    .cover-art.ca-empty{background:linear-gradient(145deg,var(--paper-warm) 0%,var(--paper-dark) 100%)}
+    /* Groove rings on art */
+    .cover-art::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,transparent 22%,rgba(0,0,0,.04) 22.5%,transparent 23%,transparent 30%,rgba(0,0,0,.03) 30.5%,transparent 31%,transparent 38%,rgba(0,0,0,.03) 38.5%,transparent 39%,transparent 46%,rgba(0,0,0,.02) 46.5%,transparent 47%);pointer-events:none}
+    .cover-initials{font-family:'Playfair Display',serif;font-size:2.5rem;font-style:italic;color:rgba(0,0,0,.18);position:relative;z-index:1;user-select:none;letter-spacing:.04em}
+    .cover-placeholder-icon{width:48px;height:48px;opacity:.2;position:relative;z-index:1}
+    /* Bottom info strip */
+    .cover-info{padding:1.1rem 1.2rem 1rem}
+    .cover-song{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:500;color:var(--ink);line-height:1.3;margin-bottom:.3rem}
+    .cover-original{font-size:.85rem;font-style:italic;color:var(--ink-muted);margin-bottom:.5rem}
+    .cover-meta-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border-light)}
+    .cover-instrument{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+    .cover-listen-link{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--accent-light);padding-bottom:1px;transition:color .2s}.cover-listen-link:hover{color:var(--ink)}
+    /* Placeholder / empty card */
+    .cover-card.cover-placeholder{border-style:dashed;opacity:.6}
+    .cover-add-hint{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);text-align:center;padding:1.5rem 1.2rem}
+
+    /* ── INTERESTS ────────────────────────────────────────── */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .interests-inner{display:grid;grid-template-columns:1fr 2fr;gap:5rem;align-items:start}
+    .interests-index{position:sticky;top:6rem}
+    .interests-index h3{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1.2rem}
+    .interest-tag{display:block;font-family:'Crimson Pro',serif;font-size:1rem;color:var(--ink-muted);line-height:2;border-left:1px solid var(--border);padding-left:1rem;transition:color .2s,border-color .2s}.interest-tag:hover{color:var(--accent);border-color:var(--accent)}
+    .interest-fragment{margin-bottom:2.4rem;padding-bottom:2.4rem;border-bottom:1px dashed var(--border-light)}.interest-fragment:last-child{border-bottom:none;margin-bottom:0}
+    .fragment-marker{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--accent-light);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.45rem}
+    .interest-fragment p{font-size:1rem;color:var(--ink-mid);line-height:1.85}.interest-fragment p em{font-style:italic;color:var(--ink)}
+
+    a.interest-tag {
+      text-decoration: none;
+      color: inherit;          /* keeps your original span color */ /* preserves any padding behaviour */
+    }
+
+    /* ── PROJECTS ─────────────────────────────────────────── */
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem}
+    .project-card{border:1px solid var(--border);padding:1.5rem;background:var(--paper);position:relative;overflow:hidden;transition:transform .15s,box-shadow .2s}.project-card:hover{transform:translateY(-3px);box-shadow:3px 6px 18px rgba(0,0,0,.06)}
+    .project-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--accent),transparent);opacity:0;transition:opacity .2s}.project-card:hover::after{opacity:1}
+    .project-lang{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-light);margin-bottom:.75rem;display:flex;align-items:center;gap:.45rem}.project-lang::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent-light);display:inline-block;flex-shrink:0}
+    .project-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:.5rem;line-height:1.3}
+    .project-desc{font-size:.92rem;color:var(--ink-muted);line-height:1.65;margin-bottom:1.1rem}
+    .project-footer{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+    .project-stats{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-faint)}
+    .project-link{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);border-bottom:1px dashed var(--border);transition:color .2s}.project-card:hover .project-link{color:var(--accent)}
+
+    /* ── RESEARCH ─────────────────────────────────────────── */
+    #research{background:linear-gradient(to bottom,transparent,var(--paper-warm) 20%,var(--paper-warm) 80%,transparent)}
+    .research-featured{border:1px solid var(--border);border-top:2px solid var(--accent);background:var(--paper);padding:2rem 2.2rem;margin-bottom:2rem}
+    .rf-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+    .rf-badge{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;padding:.25rem .7rem;border:1px solid var(--accent);color:var(--accent)}
+    .rf-status-pill{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .6rem;border:1px solid var(--border);color:var(--ink-faint)}.rf-status-pill.active{border-color:var(--green);color:var(--green)}
+    .rf-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:500;color:var(--ink);margin-bottom:.4rem;line-height:1.2}
+    .rf-subtitle{font-size:1rem;font-style:italic;color:var(--ink-mid);margin-bottom:1.2rem}
+    .rf-abstract{font-size:.98rem;color:var(--ink-mid);line-height:1.85;max-width:72ch;margin-bottom:1.4rem}
+    .rf-keywords{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+    .rf-kw{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.1em;border:1px solid var(--border-light);padding:.2rem .6rem;color:var(--ink-faint);background:var(--paper-warm)}
+    .rf-meta-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;padding-top:1.2rem;border-top:1px solid var(--border-light);margin-bottom:1.4rem}
+    .rf-meta-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:.25rem}
+    .rf-meta-value{font-size:.9rem;color:var(--ink-mid)}
+    .rf-link{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--accent-light);padding-bottom:1px;transition:color .2s}.rf-link:hover{color:var(--ink)}
+    .research-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+    .research-card{border:1px solid var(--border);border-left:3px solid var(--border);background:var(--paper);padding:1.5rem;transition:border-left-color .2s,transform .15s,box-shadow .2s}.research-card:hover{border-left-color:var(--accent);transform:translateY(-2px);box-shadow:3px 5px 16px rgba(0,0,0,.06)}
+    .rc-type{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-light);margin-bottom:.7rem}
+    .rc-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink);margin-bottom:.5rem;line-height:1.3}
+    .rc-desc{font-size:.9rem;color:var(--ink-muted);line-height:1.7;margin-bottom:1.1rem}
+    .rc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.8rem;border-top:1px solid var(--border-light)}
+    .rc-status{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--ink-faint);letter-spacing:.08em}
+    .rc-link{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);border-bottom:1px dashed var(--border);transition:color .2s}.research-card:hover .rc-link{color:var(--accent)}
+
+    /* ── BRAIN MAP OVERLAY ────────────────────────────────── */
+    #brainmap-overlay{position:fixed;inset:0;z-index:700;background:var(--paper);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s ease}
+    #brainmap-overlay.open{opacity:1;pointer-events:all}
+    .bm-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.8rem;border-bottom:1px solid var(--border);flex-shrink:0;gap:1rem;flex-wrap:wrap}
+    .bm-header-left{display:flex;align-items:baseline;gap:1rem}
+    .bm-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--ink)}
+    .bm-subtitle{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-faint);letter-spacing:.1em}
+    .bm-legend{display:flex;gap:1.2rem;flex-wrap:wrap}
+    .bml-item{display:flex;align-items:center;gap:.4rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--ink-faint)}
+    .bml-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .bm-close-btn{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);background:none;border:1px solid var(--border);padding:.4rem .8rem;cursor:pointer;transition:all .2s;flex-shrink:0}.bm-close-btn:hover{color:var(--ink);border-color:var(--ink-mid)}
+    .bm-body{flex:1;position:relative;overflow:hidden}
+    .bm-svg-wrap{width:100%;height:100%;position:relative}
+    #brain-svg{width:100%;height:100%;display:block;cursor:default;user-select:none}
+    #brain-svg .bm-node{cursor:grab}.bm-node:active{cursor:grabbing}
+    /* Node styles via SVG attributes, but pulse animation */
+    .bm-node-pulse circle{animation:bmPulse 2.5s ease-in-out infinite}
+    @keyframes bmPulse{0%,100%{r:var(--base-r)}50%{r:calc(var(--base-r) + 2px)}}
+    /* Tooltip */
+    .bm-tooltip{position:absolute;background:var(--paper-warm);border:1px solid var(--border);padding:1.1rem 1.3rem;min-width:210px;max-width:260px;pointer-events:auto;z-index:10;box-shadow:4px 6px 20px rgba(0,0,0,.1)}
+    .bm-tooltip.hidden{display:none !important}
+    .bmt-cluster{font-family:'IBM Plex Mono',monospace;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-light);margin-bottom:.4rem}
+    .bmt-label{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--ink);margin-bottom:.5rem;line-height:1.2}
+    .bmt-desc{font-size:.88rem;color:var(--ink-muted);line-height:1.6;margin-bottom:.8rem}
+    .bmt-nav-link{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:block;border-bottom:1px solid var(--accent-light);padding-bottom:2px;width:fit-content;transition:color .2s}.bmt-nav-link:hover{color:var(--ink)}
+    .bmt-close-x{position:absolute;top:.6rem;right:.7rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--ink-faint);background:none;border:none;cursor:pointer;padding:.2rem .4rem;transition:color .2s}.bmt-close-x:hover{color:var(--ink)}
+    .bm-footer{padding:.7rem 1.8rem;border-top:1px solid var(--border-light);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+    .bm-hint{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--ink-faint);letter-spacing:.1em}
+    .bm-reset-btn{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);background:none;border:1px dashed var(--border);padding:.3rem .6rem;cursor:pointer;transition:all .2s}.bm-reset-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ── FOOTER ───────────────────────────────────────────── */
+    footer{border-top:1px solid var(--border);padding:3.5rem 2rem 4rem;background:var(--paper-warm)}
+    .footer-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+    .footer-col-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1rem}
+    .footer-links{list-style:none;display:flex;flex-direction:column;gap:.5rem}.footer-links a{font-size:.95rem;color:var(--ink-muted)}.footer-links a:hover{color:var(--accent)}
+    .footer-quote{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--ink-faint);line-height:1.7}
+    .footer-bottom{max-width:1080px;margin:0 auto;padding-top:2rem;border-top:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center}
+    .footer-copy{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--ink-faint);letter-spacing:.1em}
+    .footer-sig{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--ink-faint)}
+    .footnote{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--ink-faint);font-style:italic}
+
+    /* ── RESPONSIVE ───────────────────────────────────────── */
+    @media(max-width:980px){
+      .hero-inner{grid-template-columns:1fr;gap:3rem}
+      .library-layout{grid-template-columns:1fr}
+      .lib-sidebar{position:static;display:flex;flex-wrap:wrap;gap:0}
+      .lib-folder{flex:1;min-width:120px;justify-content:center;border-left:none;border-bottom:2px solid transparent}.lib-folder.active{border-left:none;border-bottom-color:var(--accent)}
+      .interests-inner{grid-template-columns:1fr;gap:2.5rem}.interests-index{position:static}
+      .rf-meta-row{grid-template-columns:1fr}
+      .footer-inner{grid-template-columns:1fr;gap:2rem}
+      .footer-bottom{flex-direction:column;gap:.5rem;text-align:center}
+    }
+    @media(max-width:760px){
+      body{font-size:16px}
+      nav{padding:.8rem 1rem}
+      .nav-links{gap:1rem}.nav-links li:nth-child(n+5){display:none}
+      section{padding:3.5rem 0}.container{padding:0 1.2rem}
+      .hero-name{font-size:2.6rem}
+      .blog-grid-2{grid-template-columns:1fr}
+      .poetry-preview-row{grid-template-columns:1fr;gap:1rem}
+      .po-sidebar{display:none}
+      .poem-island{padding:2rem 1.5rem}
+      .library-shelf{grid-template-columns:1fr 1fr}
+      .covers-grid{grid-template-columns:1fr 1fr}
+      .projects-grid{grid-template-columns:1fr}
+      .research-grid{grid-template-columns:1fr}
+      .bm-legend{display:none}
+    }
+    @media(max-width:480px){
+      .library-shelf{grid-template-columns:1fr}
+      .covers-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#hero">Sayan Sarkar</a>
+
+    <button class="nav-toggle" onclick="toggleNav()">
+      ☰
+    </button>
+
+    <div class="nav-menu" id="navMenu">
+      <ul class="nav-links">
+        <li><a href="#blog">Writing</a></li>
+        <li><a href="#poetry">Poetry</a></li>
+        <li><a href="#library">Library</a></li>
+        <li><a href="#covers">Covers</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#research">Research</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="nav-map-btn" onclick="openBrainMap()">⬡ Map</button>
+        <a href="tools.html" class="nav-map-btn">Tools 🛠</a>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-avatar"><img src="src/me.jpeg"></div>
+      <p class="hero-eyebrow">phd scholar · coder · writer</p>
+      <h1 class="hero-name">Sayan<br/>Sarkar</h1>
+      <p class="hero-handle">@psypherion</p>
+      <p class="hero-tagline">Collecting fragments of mathematics, code, poetry, and an ever-growing collection of unfinished questions.</p>
+      <p class="hero-intro">I am a researcher at NIT Durgapur working at the intersection of geometry, information theory, and Physics-Informed Neural Networks. Alongside my primary research, I mentor interns on research works in Generative AI, Continual learning & Neuromorphic computing. Beyond research, I write when words seem necessary, play music when I feel like it, and enjoy creating unconventional fusion dishes.
+        But you can always find me pondering questions of meaning, existence, and the nature of reality itself.
+      </p>
+      <div class="hero-links">
+        <a class="hero-link" href="https://github.com/psypherion" target="_blank">GitHub ↗</a>
+        <a class="hero-link" href="https://psypherion.medium.com" target="_blank">Medium ↗</a>
+        <a class="hero-link" href="https://www.linkedin.com/in/sayan-sarkar-3817a4218/" target="_blank">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card"><p class="hero-card-label">Research Focus</p><p class="hero-card-text">Geometric and Informational Enhancements to Physics-Informed Neural Networks.</p></div>
+      <div class="hero-card"><p class="hero-card-label">Current Work</p><p class="hero-card-text"><span class="mono">Variance-Optimal Collocation distribution</span> — for <em>Physics Informed Neural Networks</em><i> ~WIP</i></p></div>
+      <div class="hero-card"><p class="hero-card-label">Located</p><p class="hero-card-text">Durgapur / Kolkata, India · <span class="mono">UTC+05:30</span> · affiliated with <a href="https://github.com/ahamlabs">@ahamlabs</a> & <a href="https://github.com/neobrains">@neobrains</a></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BLOG ─────────────────────────────────────────────── -->
+<section id="blog">
+  <div class="container">
+    <span class="section-label">§ 01 — writing</span>
+    <h2 class="section-title">Notes &amp; Essays</h2>
+    <p class="section-desc">Few pieces across faith, code, and reflection</p>
+    <p class="section-desc">more at <a href="https://psypherion.medium.com/">psypherion.medium.com</a></p>
+
+    <div class="blog-category">
+      <div class="cat-header">
+        <div class="cat-title-row"><h3 class="cat-name">Faith &amp; Theology</h3><span class="cat-pieces">4 pieces</span></div>
+        <button class="cat-expand-btn" onclick="toggleCat('extra-faith',this)" data-label="+ 2 more">+ 2 more</button>
+      </div>
+      <div class="blog-grid-2">
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/heretic.png" alt="Heretic"><div class="blog-img-ph ph-faith"><span>essay</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">Dec 22, 2024</span><span class="blog-tag">essay</span></div>
+            <a href="https://psypherion.medium.com/heretic-d6b5569bc4e0" target="_blank" class="blog-title">Heretic</a>
+            <p class="blog-excerpt">Faith, lies, and the struggle for meaning. An inquiry into what it means to be a heretic — not as rebellion, but as intellectual honesty in a world of inherited certainties and also a movie analysis.</p>
+            <a href="https://psypherion.medium.com/heretic-d6b5569bc4e0" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/messengers.png" alt="messengers"><div class="blog-img-ph ph-faith"><span>philosophy</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">Nov 5, 2024</span><span class="blog-tag">philosophy</span></div>
+            <a href="https://psypherion.medium.com/were-they-really-messengers-of-divine-wisdom-a95d62db8873" target="_blank" class="blog-title">Were they really messengers of divine wisdom?</a>
+            <p class="blog-excerpt">A provocation: rethinking divine messengers, the architecture of belief, and what questions survive the collapse of theology.</p>
+            <a href="https://psypherion.medium.com/were-they-really-messengers-of-divine-wisdom-a95d62db8873" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+      </div>
+      <div class="cat-extra" id="extra-faith">
+        <div class="blog-grid-2">
+          <article class="blog-card">
+            <div class="blog-img"><img src="src/rant.png" alt="rant"><div class="blog-img-ph ph-faith"><span>rant</span></div></div>
+            <div class="blog-card-content">
+              <div class="blog-meta"><span class="blog-date">Jul 17, 2024</span><span class="blog-tag">rant</span></div>
+              <a href="https://psypherion.medium.com/rant-f27ff7c1e669" target="_blank" class="blog-title">rant. - <i>I do not believe in anything.</i></a>
+              <p class="blog-excerpt">Not nihilism. Something more honest — a reckoning with the compulsive need to believe and the strange relief of letting it go.</p>
+              <a href="https://psypherion.medium.com/rant-f27ff7c1e669" target="_blank" class="blog-readmore">Read on Medium →</a>
+            </div>
+          </article>
+          <article class="blog-card">
+            <div class="blog-img"><img src="src/rant.png" alt="rant"><div class="blog-img-ph ph-faith"><span>rant</span></div></div>
+            <div class="blog-card-content">
+              <div class="blog-meta"><span class="blog-date">Jun 26, 2024</span><span class="blog-tag">rant</span></div>
+              <a href="https://psypherion.medium.com/rant-f487f95b615b" target="_blank" class="blog-title">rant. - <i>There never was any God.</i></a>
+              <p class="blog-excerpt">A second descent into divine absence — not as argument, but as felt certainty. What it means to live inside a truth that no one around you shares.</p>
+              <a href="https://psypherion.medium.com/rant-f487f95b615b" target="_blank" class="blog-readmore">Read on Medium →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="blog-category">
+      <div class="cat-header">
+        <div class="cat-title-row"><h3 class="cat-name">Code &amp; Craft</h3><span class="cat-pieces">4 pieces</span></div>
+        <button class="cat-expand-btn" onclick="toggleCat('extra-code',this)" data-label="+ 2 more">+ 2 more</button>
+      </div>
+      <div class="blog-grid-2">
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/ml.png" alt="ml"><div class="blog-img-ph ph-code"><span>tech</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">Jun2, 2022</span><span class="blog-tag">tech</span></div>
+            <a href="https://psypherion.medium.com/machine-learning-self-study-1-9073b5c2d068" target="_blank" class="blog-title">Machine Learning (Self- Study) — Fundamentals
+            </a>
+            <p class="blog-excerpt">In this blog I tried to give a basic overview of Machine Learning. From basic mathematics regarding ML to coding in python.</p>
+            <a href="https://psypherion.medium.com/machine-learning-self-study-1-9073b5c2d068" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/rust.png" alt="rust"><div class="blog-img-ph ph-code"><span>learning</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">Sep 8, 2024</span><span class="blog-tag">learning</span></div>
+            <a href="https://psypherion.medium.com/learning-rust-488dfd459011" target="_blank" class="blog-title">Learning Rust — Part I</a>
+            <p class="blog-excerpt">Field notes from the ownership battleground. What Rust's borrow checker teaches about memory, discipline, and why most assumptions about programming are wrong.</p>
+            <a href="https://psypherion.medium.com/learning-rust-488dfd459011" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+      </div>
+      <div class="cat-extra" id="extra-code">
+        <div class="blog-grid-2">
+          <article class="blog-card">
+            <div class="blog-img"><img src="src/envtool.png" alt="envtool"><div class="blog-img-ph ph-code"><span>tools</span></div></div>
+            <div class="blog-card-content">
+              <div class="blog-meta"><span class="blog-date">Jun 11, 2024</span><span class="blog-tag">tools</span></div>
+              <a href="https://psypherion.medium.com/envtool-create-manage-python-environments-easily-5d1d298c2e74" target="_blank" class="blog-title">envtool: Create &amp; Manage Python Environments Easily</a>
+              <p class="blog-excerpt">Born from laziness. A small tool that solves a small problem perfectly.</p>
+              <a href="https://psypherion.medium.com/envtool-create-manage-python-environments-easily-5d1d298c2e74" target="_blank" class="blog-readmore">Read on Medium →</a>
+            </div>
+          </article>
+          <article class="blog-card">
+            <div class="blog-img"><img src="src/chatx.png" alt="chatx"><div class="blog-img-ph ph-code"><span>tech</span></div></div>
+            <div class="blog-card-content">
+              <div class="blog-meta"><span class="blog-date">Jun 11, 2024</span><span class="blog-tag">tech</span></div>
+              <a href="https://psypherion.medium.com/chatx-a-real-time-simple-text-based-chat-server-from-scratch-d107b728e88b" target="_blank" class="blog-title">chatX: A Real-Time Simple Text-Based Chat Server from Scratch</a>
+              <p class="blog-excerpt">Born from curiosity about sockets — a versatile, easy-to-deploy real-time chat server, documented blow-by-blow.</p>
+              <a href="https://psypherion.medium.com/chatx-a-real-time-simple-text-based-chat-server-from-scratch-d107b728e88b" target="_blank" class="blog-readmore">Read on Medium →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="blog-category">
+      <div class="cat-header">
+        <div class="cat-title-row"><h3 class="cat-name">Essays &amp; Reflection</h3><span class="cat-pieces">4 pieces</span></div>
+        <button class="cat-expand-btn" onclick="toggleCat('extra-ref',this)" data-label="+ 2 more">+ 2 more</button>
+      </div>
+      <div class="blog-grid-2">
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/tree.png" alt="tree"><div class="blog-img-ph ph-essay"><span>essay</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">May20, 2026</span><span class="blog-tag">essay</span></div>
+            <a href="https://psypherion.medium.com/can-you-ever-perceive-reality-as-it-is-8f57ec030ee0" target="_blank" class="blog-title">Can You Ever Perceive Reality as It Is?</a>
+            <p class="blog-excerpt">An attempt at answering the possibility of perceiving reality as it is. Not Approximation. Not lossy understanding.</p>
+            <a href="https://psypherion.medium.com/can-you-ever-perceive-reality-as-it-is-8f57ec030ee0" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/ul1.png" alt="ul1"><div class="blog-img-ph ph-essay"><span>essay</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">Mar 30, 2024</span><span class="blog-tag">essay</span></div>
+            <a href="https://psypherion.medium.com/understanding-love-7da44523ec79" target="_blank" class="blog-title">Understanding Love — 1</a>
+            <p class="blog-excerpt">love is not merely romantic attraction but a multifaceted human experience encompassing friendship, desire, familial bonds, selfless care, intellectual passion, and spiritual longing. I explored philosophical perspectives to show that love is ultimately a complex form of connection and meaning-making that transcends physical relationships.</p>
+            <a href="https://psypherion.medium.com/understanding-love-7da44523ec79" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="cat-extra" id="extra-ref">
+      <div class="blog-grid-2">
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/ul2.png" alt="ul2"><div class="blog-img-ph ph-essay"><span>essay</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">Jun 16, 2024</span><span class="blog-tag">essay</span></div>
+            <a href="https://psypherion.medium.com/understanding-love-2-01cfc4c7beb9" target="_blank" class="blog-title">Understanding Love — 2</a>
+            <p class="blog-excerpt">Love is awful. Part two of an ongoing, probably doomed attempt to understand the thing that most defies understanding.</p>
+            <a href="https://psypherion.medium.com/understanding-love-2-01cfc4c7beb9" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-img"><img src="src/scream.png" alt="scream"><div class="blog-img-ph ph-essay"><span>review</span></div></div>
+          <div class="blog-card-content">
+            <div class="blog-meta"><span class="blog-date">Jun 21, 2024</span><span class="blog-tag">review</span></div>
+            <a href="https://psypherion.medium.com/i-am-therefore-i-must-torture-e64a0c7c41d9" target="_blank" class="blog-title">I Am Therefore I Must Torture</a>
+            <p class="blog-excerpt">On Harlan Ellison's "I Have No Mouth, and I Must Scream" — a meditation on cruelty, consciousness, and what an omnipotent torturer reveals about the nature of mind.</p>
+            <a href="https://psypherion.medium.com/i-am-therefore-i-must-torture-e64a0c7c41d9" target="_blank" class="blog-readmore">Read on Medium →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── POETRY ────────────────────────────────────────────── -->
+<section id="poetry">
+  <div class="container">
+    <span class="section-label">§ 02 — verse</span>
+    <h2 class="section-title">Poetry Collection</h2>
+    <p class="section-desc">nine poems, 2023–2025</p>
+    <div class="poetry-preview-row">
+      <div class="poem-preview-card" onclick="openPoetryOverlay(0)">
+        <div class="ppc-label">i</div>
+        <div class="ppc-title">Stain</div>
+        <div class="ppc-lines">I stood over with the
+          handkerchief in my hand;
+          Her Lipstick stains,
+          Over the corner.
+          I have seen it a thousand times–</div>
+        <div class="ppc-fade"></div>
+        <div class="ppc-open">open poem ↗</div>
+      </div>
+      <div class="poem-preview-card" onclick="openPoetryOverlay(6)">
+        <div class="ppc-label">vii</div>
+        <div class="ppc-title">Tomorrow</div>
+        <div class="ppc-lines">'t wasn't the rain that soaked me.
+          It was her.
+          She engrossed me.
+          I could see her—
+          the one she stitched behind her eyes,</div>
+        <div class="ppc-fade"></div>
+        <div class="ppc-open">open poem ↗</div>
+      </div>
+      <div class="poem-preview-card" onclick="openPoetryOverlay(5)">
+        <div class="ppc-label">vi</div>
+        <div class="ppc-title">Home</div>
+        <div class="ppc-lines">is where the heart is.
+          Mine?
+          In my chest,
+          Behind my ribs
+          Surrounded with veins
+          That keeps me running.</div>
+        <div class="ppc-fade"></div>
+        <div class="ppc-open">open poem ↗</div>
+      </div>
+    </div>
+    <div class="poetry-archive-bar">
+      <button class="explore-poetry-btn" onclick="openPoetryOverlay(0)">Explore the full archive — all poems →</button>
+      <span class="poetry-archive-count">13 poems · island view</span>
+    </div>
+  </div>
+</section>
+
+<!-- POETRY OVERLAY -->
+<div id="poetry-overlay" role="dialog" aria-modal="true">
+  <aside class="po-sidebar">
+    <div class="po-sidebar-head">
+      <span class="po-sidebar-title">Archive</span>
+      <span class="po-sidebar-sub">9 poems</span>
+    </div>
+    <nav class="po-index" id="po-index"></nav>
+  </aside>
+  <main class="po-main">
+    <div class="po-topbar">
+      <span class="po-progress" id="po-progress">i / ix</span>
+      <button class="po-close" onclick="closePoetryOverlay()">✕ close</button>
+    </div>
+    <div class="poem-island" id="poem-island">
+      <h2 class="pi-title" id="pi-title"></h2>
+      <div class="pi-body" id="pi-body"></div>
+    </div>
+    <div class="po-nav">
+      <button class="po-nav-btn" id="po-prev" onclick="navigatePoem(-1)">← prev</button>
+      <span class="po-counter" id="po-counter">1 / 9</span>
+      <button class="po-nav-btn" id="po-next" onclick="navigatePoem(1)">next →</button>
+    </div>
+  </main>
+</div>
+
+<!-- ── LIBRARY ───────────────────────────────────────────── -->
+<section id="library">
+  <div class="container">
+    <span class="section-label">§ 03 — archive</span>
+    <h2 class="section-title">Digital Library</h2>
+    <p class="section-desc">papers, books, philosophy, and references — a research shelf</p>
+    <div class="library-layout">
+      <div class="lib-sidebar" id="lib-sidebar">
+        <div class="lib-sidebar-head"><span class="lib-sidebar-title">Collections</span></div>
+        <div class="lib-folder active" data-filter="all" onclick="setLibFolder(this)">All documents<span class="lib-folder-count">13</span></div>
+        <div class="lib-folder" data-filter="Textbook" onclick="setLibFolder(this)">Textbooks<span class="lib-folder-count">2</span></div>
+        <div class="lib-folder" data-filter="Books & Fiction" onclick="setLibFolder(this)">Books &amp; Fiction<span class="lib-folder-count">5</span></div>
+        <div class="lib-folder" data-filter="Philosophy" onclick="setLibFolder(this)">Philosophy<span class="lib-folder-count">6</span></div>
+        <div class="lib-folder" data-filter="Poetry,Monograph,Reference" onclick="setLibFolder(this)">Other<span class="lib-folder-count">0</span></div>
+      </div>
+      <div class="lib-main">
+        <input class="lib-search" id="lib-search" type="search" placeholder="Search by title, author, keyword…" oninput="filterLibrary()"/>
+        <span class="lib-showing" id="lib-showing">13 documents</span>
+        <div class="library-shelf" id="library-shelf">
+          <div class="lib-card" data-type="Textbook" data-search="differential geometry lie groups physicists marian fecko fiber bundles connections holonomy"><p class="lib-card-type">Textbook</p><p class="lib-card-title">Differential Geometry and Lie Groups for Physicists</p><p class="lib-card-author">Marián Fecko</p><p class="lib-card-note">// fiber bundles, connections, holonomy — the foundation.</p>
+            <a class="lib-card-pdf"
+               href="src/Differential_geometry_and_Lie_groups_for_physicist.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Philosophy" data-search="ashtavakra gita self-knowledge non-duality advaita vedanta"><p class="lib-card-type">Philosophy</p><p class="lib-card-title">Ashtavakra Gita</p><p class="lib-card-author">Traditional (Sage Ashtavakra)</p><p class="lib-card-note">// the song of the self — pure, unbounded awareness.</p>
+            <a class="lib-card-pdf"
+               href="src/ASHTAVAKRA_GITA.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Philosophy" data-search="avadhuta gita ever-free advaita song of the liberated"><p class="lib-card-type">Philosophy</p><p class="lib-card-title">Avadhuta Gita</p><p class="lib-card-author">Traditional (Sage Dattatreya)</p><p class="lib-card-note">// the song of the ever-free — no path, no attainment.</p>
+            <a class="lib-card-pdf"
+               href="src/Avadhuta_Gita.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Philosophy" data-search="bhagavad gita shankaracharya commentary self absolute dialogue krishna arjuna"><p class="lib-card-type">Philosophy</p><p class="lib-card-title">Bhagavad Gita with the Commentary of Sri Shankaracharya</p><p class="lib-card-author">Vyasa / Śaṅkarācārya</p><p class="lib-card-note">// the dialogue of the self and the absolute, illumined.</p>
+            <a class="lib-card-pdf"
+               href="src/Bhagavad-Gita.with.the.Commentary.of.Sri.ShankaracharyaN.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Textbook" data-search="introduction probability models sheldon ross stochastic processes"><p class="lib-card-type">Textbook</p><p class="lib-card-title">Introduction to Probability Models</p><p class="lib-card-author">Sheldon M. Ross</p><p class="lib-card-note">// the classic — where intuition meets rigour.</p>
+            <a class="lib-card-pdf"
+               href="src/introduction-to-probability-model-s.ross-math-cs.blog_.ir_.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Philosophy" data-search="myth of sisyphus albert camus absurd hero happiness revolt"><p class="lib-card-type">Philosophy</p><p class="lib-card-title">The Myth of Sisyphus</p><p class="lib-card-author">Albert Camus</p><p class="lib-card-note">// one must imagine Sisyphus happy — the absurd hero.</p>
+            <a class="lib-card-pdf"
+               href="src/Myth_of_Sisyphus.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Books & Fiction" data-search="notes from underground dostoevsky anti-hero consciousness spite"><p class="lib-card-type">Books & Fiction</p><p class="lib-card-title">Notes from the Underground</p><p class="lib-card-author">Fyodor Dostoevsky</p><p class="lib-card-note">// the underground man — spite, freedom, and the piano key.</p>
+            <a class="lib-card-pdf"
+               href="src/Notes_from_the_Underground_NT.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Philosophy" data-search="on the genealogy of morality nietzsche slave morality ressentiment"><p class="lib-card-type">Philosophy</p><p class="lib-card-title">On the Genealogy of Morality</p><p class="lib-card-author">Friedrich Nietzsche</p><p class="lib-card-note">// the birth of guilt, bad conscience, and ascetic ideals.</p>
+            <a class="lib-card-pdf"
+               href="src/On_the_Genealogy_of_Morality.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Books & Fiction" data-search="reality is not what it seems carlo rovelli quantum gravity loop"><p class="lib-card-type">Books & Fiction</p><p class="lib-card-title">Reality Is Not What It Seems</p><p class="lib-card-author">Carlo Rovelli</p><p class="lib-card-note">// the journey to quantum gravity — poetry of the real.</p>
+            <a class="lib-card-pdf"
+               href="src/Reality is Not What it Seems.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Books & Fiction" data-search="the book of disquiet fernando pessoa fragments self heteronym"><p class="lib-card-type">Books & Fiction</p><p class="lib-card-title">The Book of Disquiet</p><p class="lib-card-author">Fernando Pessoa</p><p class="lib-card-note">// fragments of a self never achieved — a quiet revolution.</p>
+            <a class="lib-card-pdf"
+               href="src/The_book_of_Disquiet.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Books & Fiction" data-search="the stranger albert camus indifference absurd meursault sun"><p class="lib-card-type">Books & Fiction</p><p class="lib-card-title">The Stranger</p><p class="lib-card-author">Albert Camus</p><p class="lib-card-note">// the sun, the sea, the irrelevance of meaning.</p>
+            <a class="lib-card-pdf"
+               href="src/The_stranger.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Philosophy" data-search="thus spoke zarathustra nietzsche overman eternal recurrence dance"><p class="lib-card-type">Philosophy</p><p class="lib-card-title">Thus Spoke Zarathustra</p><p class="lib-card-author">Friedrich Nietzsche</p><p class="lib-card-note">// a book for everyone and no one — the down-going begins.</p>
+            <a class="lib-card-pdf"
+               href="src/thus_spoke_zarathrustha.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+          <div class="lib-card" data-type="Books & Fiction" data-search="white nights dostoevsky dreamer love loneliness petersburg"><p class="lib-card-type">Books & Fiction</p><p class="lib-card-title">White Nights</p><p class="lib-card-author">Fyodor Dostoevsky</p><p class="lib-card-note">// a dreamer’s fleeting love — four nights, one dawn.</p>
+            <a class="lib-card-pdf"
+               href="src/White_Nights.pdf"
+               target="_blank"
+               rel="noopener noreferrer">
+              [PDF]
+            </a><div class="lib-card-corner"></div></div>
+        </div>
+        <div class="lib-empty-msg" id="lib-empty">No documents match your search.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COVERS ────────────────────────────────────────────── -->
+<section id="covers">
+  <div class="container">
+    <span class="section-label">§ 04 — music</span>
+    <h2 class="section-title">Song Covers</h2>
+    <p class="section-desc">borrowed melodies — voice, strings, and occasional mistakes</p>
+    <div class="covers-grid">
+
+      <!-- Cover 1 — Letter to Frances -->
+      <div class="cover-card">
+        <div class="cover-art ca-1">
+          <div class="cover-initials">LF</div>
+        </div>
+        <div class="cover-info">
+          <div class="cover-song">Letter to Frances</div>
+          <div class="cover-original">cover of Nirvana</div>
+          <div class="cover-meta-row">
+            <span class="cover-instrument">guitar instrumental</span>
+            <a class="cover-listen-link" href="https://youtu.be/njp_WNgAboA" target="_blank" rel="noopener noreferrer">listen ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cover 2 — Drain You -->
+      <div class="cover-card">
+        <div class="cover-art ca-2">
+          <div class="cover-initials">DY</div>
+        </div>
+        <div class="cover-info">
+          <div class="cover-song">Drain You</div>
+          <div class="cover-original">cover of Nirvana</div>
+          <div class="cover-meta-row">
+            <span class="cover-instrument">voice & guitar</span>
+            <a class="cover-listen-link" href="https://youtu.be/tMTMPLpghRY" target="_blank" rel="noopener noreferrer">listen ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cover 3 — Stinking of You -->
+      <div class="cover-card">
+        <div class="cover-art ca-3">
+          <div class="cover-initials">SY</div>
+        </div>
+        <div class="cover-info">
+          <div class="cover-song">Stinking of You</div>
+          <div class="cover-original">cover of Kurt Cobain</div>
+          <div class="cover-meta-row">
+            <span class="cover-instrument">voice & guitar</span>
+            <a class="cover-listen-link" href="https://youtu.be/EwJXwZ47Bqo" target="_blank" rel="noopener noreferrer">listen ↗</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── INTERESTS ─────────────────────────────────────────── -->
+<section id="interests">
+  <div class="container">
+    <span class="section-label">§ 05 — marginalia</span>
+    <h2 class="section-title">Threads of Curiosity</h2>
+    <p class="section-desc">fragments from a research diary</p>
+    <div class="interests-inner">
+      <div class="interests-index">
+        <h3>Index</h3>
+        <a href="#fragment-physics" class="interest-tag">Physics</a>
+        <a href="#fragment-philosophy" class="interest-tag">Philosophy</a>
+        <a href="#fragment-poetry" class="interest-tag">Poetry</a>
+        <a href="#fragment-mathematics" class="interest-tag">Mathematics</a>
+        <a href="#fragment-neuroscience" class="interest-tag">Neuroscience</a>
+        <a href="#fragment-open-source" class="interest-tag">Open Source</a>
+        <a href="#fragment-advaita-vedanta" class="interest-tag">Advaita Vedanta</a>
+        <a href="#fragment-understanding-reality" class="interest-tag">Understanding Reality</a>
+      </div>
+      <div class="interests-prose">
+        <div class="interest-fragment" id="fragment-physics">
+        <p class="fragment-marker">// on Physics</p>
+          <p>Physics, to me, is an object of profound curiosity and understanding. From an early age, I have been driven by a simple question: what are the fundamental constituents of any system? Whether examining a physical phenomenon, a mathematical structure, or an abstract idea, I find myself drawn to the underlying principles that give rise to complexity.
+            The pursuit of understanding the fundamental substrate of reality has become a central thread in my intellectual life. From the symmetries of a snowflake to the causal structure of spacetime, physics represents a quiet attempt to decipher the source code of existence—an endeavor undertaken with the knowledge that the documentation will always remain incomplete. Yet it is precisely this incompleteness that makes the search meaningful.
+          </p>
+        </div>
+        <div class="interest-fragment" id="fragment-philosophy">
+          <p class="fragment-marker">// on Philosophy</p>
+          <p>Philosophy has played a profoundly important role in my life. It has accompanied me through periods of grief, uncertainty, and personal turmoil, while also shaping my understanding of the self—its significance, its limitations, and perhaps even its ultimate meaninglessness. The works of many philosophers have left a lasting impact on me, from Friedrich Nietzsche and Swami Vivekananda to Adi Shankaracharya.
+            I do not view philosophy as something separate from the sciences. To me, both emerge from the same thread of curiosity: the desire to understand reality. They differ not in their ultimate aim, but in the methods they employ. Philosophy explores questions through reflection, reasoning, and inquiry, while science approaches them through observation, experimentation, and formalization.
+            For this reason, I prefer not to draw rigid boundaries between disciplines. The more I learn, the more interconnected everything appears. Philosophy, in particular, is deeply intertwined with any field that seeks to understand the nature of reality, whether physics, mathematics, cognitive science, or beyond. At its core, it remains an enduring attempt to ask what exists, how we know it, and what it means to understand it at all.
+          </p>
+        </div>
+        <div class="interest-fragment" id="fragment-poetry">
+          <p class="fragment-marker">// on Poetry</p>
+          <p>Poetry has always been my creative outlet. No matter how poorly I may write, there are moments, incidents, and states of mind that seem to demand expression. In those moments, I cannot help but write them down.
+
+            Yet everything I have written so far feels incomplete. Every poem, every line, every carefully chosen word appears insufficient, as though it falls just short of what I truly intended to convey. There is always a sense that I need more words—not merely words I have yet to learn, but words that perhaps do not even exist. Meanings for which no language has yet provided a name.
+
+            This persistent incompleteness often feels like failure. An itch that remains unsatisfied no matter how much I write. Perhaps language itself is incapable of fully capturing experience, emotion, or thought. Perhaps there will always be a gap between what is felt and what can be expressed.
+
+            And yet, despite that impossibility, I continue to write. There is something sacred in the attempt itself—in reaching toward the inexpressible while knowing it can never be fully grasped. If poetry has taught me anything, it is that meaning often resides not in arrival, but in the act of reaching.
+          </p>
+        </div>
+        <div class="interest-fragment" id="fragment-mathematics">
+          <p class="fragment-marker">// on Mathematics</p>
+          <p>Mathematics, to me, is fundamentally a language—no different in principle from Bengali, English, C, or Python. It is a system of symbols, structures, and rules that allows us to describe, communicate, and reason about patterns with extraordinary precision.
+
+            I once had a discussion with a professor about the nature of mathematics. While I viewed mathematics as a language, he described it as an organ of perception—a means through which reality itself is directly apprehended. That subtle distinction captures the difference in our perspectives.
+
+            I do not see mathematics as something inherently embedded within reality, waiting to be discovered like a hidden computational mechanism governing the universe. Rather, I see it as one of humanity's greatest inventions: a remarkably powerful language that has proven exceptionally effective at expressing and modeling observed reality. Its success is undeniable, but to me that success does not necessarily imply that reality itself is mathematical in nature.
+
+            What fascinates me is not whether mathematics exists independently of us, but how a language created to describe patterns can align so closely with the structure of the world we observe. Whether mathematics is discovered or invented remains an open philosophical question. For now, I regard it as the most precise language we have developed for articulating the regularities, symmetries, and relationships that emerge from experience.
+          </p>
+        </div>
+        <div class="interest-fragment" id="fragment-neuroscience">
+          <p class="fragment-marker">// on Neuroscience</p>
+          <p>My first meaningful encounter with neuroscience came through exploring how the brain stores and organizes memory, particularly the distinction between episodic and semantic memory. I had previously approached questions of perception and consciousness through philosophy, but neuroscience offered a complementary perspective grounded in biological mechanisms. It provided a clearer understanding of how thoughts, memories, and perceptions arise, and in turn helped me better understand—and to some extent regulate—my own patterns of thinking.
+
+            My engagement with neuroscience has been somewhat liminal, existing at the boundary between curiosity and formal study. More recently, through my interests in neuromorphic computing and continual learning, I have found myself returning to neuroscientific ideas from a computational perspective. I am particularly interested in how intuitive insights drawn from biological intelligence can inspire more adaptive and efficient learning systems.
+          </p>
+        </div>
+        <div class="interest-fragment" id="fragment-open-source">
+          <p class="fragment-marker">// on Open Source</p>
+          <p>My perspective on software development has always leaned strongly toward open-source principles. I believe knowledge, tools, and ideas grow stronger when they are shared, scrutinized, and built upon collectively. While I contribute when I can, I am also involved in developing several open-source projects through my organization, @ahamlabs.
+
+            These projects reflect my interests across research, engineering, and experimentation, and I welcome anyone who finds them interesting to explore, contribute, or collaborate. Meaningful progress is rarely an individual effort; more often, it emerges from communities of curious people building together.
+          </p>
+        </div>
+          <div class="interest-fragment" id="fragment-advaita-vedanta">
+          <p class="fragment-marker">// on Advaita Vedanta</p>
+          <p> My encounter with Advaita Vedanta began through Rabindranath Tagore's *The Religion of Man*. Looking back, I realize that my long-standing pursuit of understanding the fundamental nature of things was, in many ways, moving along a similar trajectory. The questions that drew me toward physics, philosophy, and consciousness eventually led me toward the Advaitic tradition as well.
+
+            My own philosophical intuitions had, in many ways, been unknowingly Advaitic long before I encountered the tradition itself. It was only later, through reading texts such as the various Gitas and studying Advaita alongside Sāṅkhya philosophy, that I realized many of the ideas I had arrived at independently bore a striking resemblance to Advaitic thought, and studying Advaita alongside Sāṅkhya philosophy provided a framework through which I could better understand my own intellectual and inclinations. In particular, it helped me recognize why I felt naturally drawn toward Jñāna Yoga—the path of inquiry, understanding, and direct knowledge.
+
+            At the same time, I do not fully subscribe to the Advaitic worldview. While I deeply appreciate its elegance and depth, I often find myself closer to the Buddha's Middle Way, which resonates more strongly with my own intuitions. Nevertheless, Advaita Vedanta remains an important influence, not because it provided definitive answers, but because it helped clarify the nature of the questions I have been asking all along.
+          </p>
+        </div>
+        <div class="interest-fragment" id="fragment-understanding-reality">
+          <p class="fragment-marker">// on Understanding Reality</p>
+          <p>If there is a single thread that runs through my life, it is the desire to understand reality. Much of what I study—physics, mathematics, philosophy, neuroscience, information theory, and even poetry—can be traced back to this one persistent question: what is truly going on?
+
+            This pursuit extends beyond academics or research. It finds its way into my essays, my poems, my conversations, and often into my quiet moments of reflection. In one form or another, I am always trying to understand reality a little better than I did the day before.
+
+            At the same time, I increasingly suspect that reality, as it is in itself, may be fundamentally inaccessible. Every observation is filtered through perception, every description through language, and every theory through assumptions. Yet this possibility does not discourage me. If anything, it makes the search more meaningful.
+
+            I do not expect to arrive at a final answer. What matters to me is the pursuit itself—the continual attempt to explore deeper, question further, and illuminate even a small fragment of the unknown. Perhaps understanding reality is not a destination but a lifelong process of refinement, one that I suspect will occupy me for as long as I remain curious.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ──────────────────────────────────────────── -->
+<section id="projects">
+  <div class="container">
+    <span class="section-label">§ 06 — work</span>
+    <h2 class="section-title">Projects</h2>
+    <p class="section-desc">things built, tools made, problems solved — open source and otherwise</p>
+    <div class="projects-grid">
+      <div class="project-card"><p class="project-lang">Python · Bash · Ngrok</p><h3 class="project-name">chatX</h3><p class="project-desc">A versatile real-time text-based chat server from scratch — born from curiosity about sockets and a late-night YouTube rabbit hole.</p><div class="project-footer"><div class="project-stats">★ 2</div><a href="https://github.com/psypherion/chatX" target="_blank" class="project-link">github ↗</a></div></div>
+      <div class="project-card"><p class="project-lang">Python</p><h3 class="project-name">Spoti-Tube</h3><p class="project-desc">A lightweight script to download songs from a Spotify playlist without a premium membership — built out of principle as much as necessity.</p><div class="project-footer"><div class="project-stats">★ 1 · ⑂ 1</div><a href="https://github.com/psypherion/Spoti-Tube" target="_blank" class="project-link">github ↗</a></div></div>
+      <div class="project-card"><p class="project-lang">Python</p><h3 class="project-name">AssignEase</h3><p class="project-desc">A small Python tool to help users finish assignments efficiently. Automation as an act of self-respect.</p><div class="project-footer"><div class="project-stats">★ 2</div><a href="https://github.com/psypherion/AssignEase" target="_blank" class="project-link">github ↗</a></div></div>
+      <div class="project-card"><p class="project-lang">Python · CLI</p><h3 class="project-name">tubeFetch-cli</h3><p class="project-desc">A command-line tool for downloading entire YouTube playlists — because one song at a time is a form of patience I don't have.</p><div class="project-footer"><div class="project-stats">★ 1</div><a href="https://github.com/psypherion/tubeFetch-cli" target="_blank" class="project-link">github ↗</a></div></div>
+      <div class="project-card"><p class="project-lang">C · Low-level</p><h3 class="project-name">toolB</h3><p class="project-desc">A low-level engine handling I/O and parsing in C — enabling true parallelism and low-latency performance. Built under @ahamlabs.</p><div class="project-footer"><div class="project-stats">⑂ 1</div><a href="https://github.com/ahamlabs/toolB" target="_blank" class="project-link">github ↗</a></div></div>
+      <div class="project-card"><p class="project-lang">Jupyter · Python · YOLOv5</p><h3 class="project-name">Global Wheat Detection</h3><p class="project-desc">Wheat head detection using YOLOv5 on the Global Wheat Detection Kaggle dataset — an early experiment in applied computer vision.</p><div class="project-footer"><div class="project-stats">★ 2</div><a href="https://github.com/psypherion/Global-Wheat-Detection" target="_blank" class="project-link">github ↗</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESEARCH ──────────────────────────────────────────── -->
+<section id="research">
+  <div class="container">
+    <span class="section-label">§ 07 — research</span>
+    <h2 class="section-title">Research</h2>
+    <p class="section-desc">novel ideas, experimental frameworks, academic investigations at the frontier</p>
+    <div class="research-featured">
+      <div class="rf-header"><span class="rf-badge">Journal Article</span><span class="rf-status-pill active"><i>WIP</i></span></div>
+      <h3 class="rf-title">Physics-Informed Conformal Prediction (PI-CP)</h3>
+      <p class="rf-subtitle">Distribution-Free Uncertainty Quantification for Physics-Informed Neural Networks</p>
+      <p class="rf-abstract">A post-hoc conformal prediction framework for PINNs that provides reliable uncertainty estimates near shocks, fronts, and boundary layers. By combining PDE-aware nonconformity scores, graph-regularized conditional quantiles, and stratified calibration, PI-CP achieves valid coverage while adapting interval widths to localized solution complexity.</p>
+
+      <div class="rf-keywords">
+        <span class="rf-kw">PINNs</span>
+        <span class="rf-kw">conformal prediction</span>
+        <span class="rf-kw">uncertainty quantification</span>
+        <span class="rf-kw">PDEs</span>
+        <span class="rf-kw">shock detection</span>
+        <span class="rf-kw">graph learning</span>
+        <span class="rf-kw">coverage guarantees</span>
+      </div>
+
+      <div class="rf-meta-row">
+        <div>
+          <span class="rf-meta-label">Contributions</span>
+          <span class="rf-meta-value">PDE-aware Nonconformity · Stratified Calibration · Graph-Regularized Quantiles</span>
+        </div>
+        <div>
+          <span class="rf-meta-label">Status</span>
+          <span class="rf-meta-value">Work In Progress</span>
+        </div>
+        <div>
+          <span class="rf-meta-label">Benchmarks</span>
+          <span class="rf-meta-value">Burgers · Allen-Cahn · Geometric Brownian Motion · Ornstein-Uhlenbeck SDE</span>
+        </div>
+      </div>
+      <a href="https://github.com/psypherion/holoPINN" target="_blank" class="rf-link">View repository on GitHub ↗</a>
+    </div>
+    <div class="research-grid">
+      <div class="research-card">
+        <p class="rc-type">Research Paper · PINNs & Adaptive Sampling</p>
+
+        <h3 class="rc-name">Variance-Optimal Adaptive Collocation for PINNs</h3>
+
+        <p class="rc-desc">
+          A theoretical and empirical study showing that variance-optimal PINN collocation is governed by per-point physics-loss gradient norms rather than PDE residuals. The work explains when residual-based adaptive sampling succeeds, why it fails near shocks and interfaces, and introduces an efficient Hutchinson-based estimator for practical variance-optimal sampling.
+        </p>
+
+        <div class="rc-footer">
+          <span class="rc-status">work in progress</span>
+          <a href="https://github.com/psypherion" target="_blank" class="rc-link">github ↗</a>
+        </div>
+      </div>
+      <div class="research-card">
+        <p class="rc-type">Research Concept · Continual Learning</p>
+
+        <h3 class="rc-name">MEC-Net</h3>
+
+        <p class="rc-desc">
+          A memory-centric continual learning framework inspired by hippocampal–neocortical consolidation. MEC-Net combines episodic memory graphs, prioritized replay, manifold learning, generative replay, and semantic distillation to support lifelong learning while mitigating catastrophic forgetting.
+        </p>
+
+        <div class="rc-footer">
+          <span class="rc-status">solo research · WIP</span>
+          <a href="https://github.com/psypherion" target="_blank" class="rc-link">github ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p class="footer-col-label">Navigate</p>
+      <ul class="footer-links">
+        <li><a href="#blog">Writing</a></li><li><a href="#poetry">Poetry</a></li><li><a href="#library">Library</a></li><li><a href="#covers">Covers</a></li><li><a href="#projects">Projects</a></li><li><a href="#research">Research</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-label">Find me</p>
+      <ul class="footer-links">
+        <li><a href="https://github.com/psypherion" target="_blank">GitHub @psypherion</a></li>
+        <li><a href="https://psypherion.medium.com" target="_blank">Medium</a></li>
+        <li><a href="https://www.linkedin.com/in/sayan-sarkar-3817a4218/" target="_blank">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/neechgaleechinsaan" target="_blank">Instagram</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-label">A note</p>
+      <p class="footer-quote">"To understand is to be foreign to oneself."</p>
+      <p class="footnote" style="margin-top:.8rem">— Pessoa</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 Sayan Sarkar · Durgapur, West Bengal, India</p>
+    <p class="footer-sig">psypherion</p>
+  </div>
+</footer>
+
+<!-- ── BRAIN MAP OVERLAY ─────────────────────────────────── -->
+<div id="brainmap-overlay" role="dialog" aria-modal="true" aria-label="Brain Map">
+  <div class="bm-header">
+    <div class="bm-header-left">
+      <span class="bm-title">Brain Map</span>
+      <span class="bm-subtitle">an interactable map of intellectual threads</span>
+    </div>
+    <div class="bm-legend" id="bm-legend"></div>
+    <button class="bm-close-btn" onclick="closeBrainMap()">✕ close</button>
+  </div>
+  <div class="bm-body">
+    <div class="bm-svg-wrap" id="bm-svg-wrap">
+      <svg id="brain-svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"></svg>
+      <!-- Tooltip (absolute within bm-svg-wrap) -->
+      <div class="bm-tooltip hidden" id="bm-tooltip">
+        <button class="bmt-close-x" onclick="hideBmTooltip()">✕</button>
+        <div class="bmt-cluster" id="bmt-cluster"></div>
+        <div class="bmt-label" id="bmt-label"></div>
+        <p class="bmt-desc" id="bmt-desc"></p>
+        <a class="bmt-nav-link" id="bmt-link" href="#">Explore this thread →</a>
+      </div>
+    </div>
+  </div>
+  <div class="bm-footer">
+    <span class="bm-hint">drag nodes to rearrange · click to explore · ← → arrow keys · esc to close</span>
+    <button class="bm-reset-btn" onclick="resetBrainMap()">↺ reset layout</button>
+  </div>
+</div>
+
+<!-- ── SCRIPT ────────────────────────────────────────────── -->
+<script>
+  /* ═══════════════════════════════════════════════════════════
+     BLOG EXPAND
+  ═══════════════════════════════════════════════════════════ */
+  function toggleCat(id, btn) {
+    const el = document.getElementById(id);
+    const open = el.classList.toggle('open');
+    btn.textContent = open ? 'show less ↑' : btn.dataset.label;
+  }
+
+  function toggleNav() {
+    document.getElementById('navMenu').classList.toggle('open');
+  }
+  /* ═══════════════════════════════════════════════════════════
+     POETRY OVERLAY
+  ═══════════════════════════════════════════════════════════ */
+  const POEMS = [
+    { title:'Stain', body:`I stood over with the–\nHandkerchief in my hand;\nHer Lipstick stains,\nOver the corner.\n\nI have seen it a thousand times–\nSince yesterday\nA gift,\nHer presence alone,\nsharpens a theology\nThat are sang in every hymns.\n\nI crave a day–\nStained by her\nmarked by a\nBeast with softest lips\nAnd sharpest teeth.\nI wish to bleed;\nFor eternity\n\nO! How I wish the day to never end.` },
+    { title:'Borrowed', body:`I look at you\nwith the eyes of a newborn\nnot innocent,\nbut unfinished.\nI lean toward your gaze\nas the weight of untamed hunger\nseeks collapse.\nEach stolen glance\nheld a mirror.\nmy existence borrowed into shape.\nI exist, I exist—\nI cry,\nnot as fact\nbut as a request,\na plea.\nA wish\nSo selfish yet\nI hold onto.` },
+    { title:'Pencil', body:`I wished to capture each frames\nHow she lights her cigarette\nHow her fingers rests on the\nPencil,\nWhen she showed me how to hold one.\nHow she pretends to stab me over the camera.\n\nShe's to be withheld with utmost valour,\nFor she's not a flower,\nShe's fire\nBehind cage,\nChanging anyone who steps close,\nRewriting your very self,\nCurving her name with each flickered flare.\n\nPeople burn.\nI found my warmth–\nIt never singes, never scars.\nPerhaps a delusion.\n\nBut what else one can feel about\nIf not burn for muse?` },
+    { title:'Thou art', body:`I rise through the creaks of hollow mountains.\nI see what I seek.\nI seek as I crawl.\nI seek as I fall.\nScorched are the pebbles — each one I touched, none bore thy face.\nIn thy radiance, I rest.\nAs vision blurred, I saw the light — thy light, thy face —\nthe Holy.\nI heard thy voice.\nIn thy presence, it echoed mine — too familiar, yet unknown.\n\nThrough the lights and whispers of thy mystics,\nthou appeared to me — as me.\n\nIn Thy magnum vast, I saw Thee —\nfrom the pebble that rests beneath my feet\nto the unfathomed grand cosmos.\nIn every dust that kissed the wind,\nin every flame that forgot its name,\nThou moved — unseen, yet all there was.\n\nall sang one hymn:\nThou art.` },
+    { title:'Before Sunrise', body:`O you, silent radiance!\nHow you press upon me,\nHow you wound me with your fire.\n\nUnspeakable, ungraspable\nYet nearer to me than my breath.\nYou linger beyond my reach,\nas my voice falls silent\nAnd still you shine upon me.\n\nYou are absence made radiant,\nPresence made untouchable.\nIn you I learn to withhold myself,\nTo bow before the horizon,\nThat forever recedes.\n\nTo whisper yes into the abyss.\nAs your pilgrim.\nYour silent witness.\nA dawn that doesn't break.\nYet you rise.\nIn your unending flare\nI cry\nYes, unto eternity.` },
+    { title:'Home', body:`is where the heart is.\nMine?\nIn my chest,\nBehind my ribs\nSurrounded with veins\nThat keeps me running.\nBut,\nIt beats off-key.\nin minor keys.\nSyncopated grief.\nOut of time. Out of line.\n\nShe made tea when I sobbed.\nAs if heat could cure the aching.\nNot because she lacked love — but because her love had conditions.\nBe quiet.\nBe normal.\nBe the boy who didn't ask questions—\n\nHome was never safe.\nIt was just quiet.\nA quiet that hummed with judgments unspoken,\nwith shame—\nduct-taped over emotion.\n\nAnd so I built my own.\nNot to be better—\nJust to survive—\nDeath.` },
+    { title:'Tomorrow', body:`'t wasn't the rain that soaked me.\nIt was her.\nShe engrossed me.\nI could see her—\nthe one she stitched behind her eyes,\nnow out,\nLike a wildflower\nOn a wall.\nI saw her.\nMy hands,\ntraitors,\nached to reach—\nher,\nfor the ache beneath her ribs.\nThe tremble behind her jaw.\nBut I didn't.\nNot out of virtue.\nOut of reverence.\nTo hold her now\nwould be to—\nend the moment.\n\nAnd I—\nI live in unfinished sentences.\nSo I mourned.\nLike an abandoned sonnet\nA pause too long.\nA line half-said.\nAnd whispered\nwith ache—\nTomorrow.` },
+    { title:'Nails', body:`I crave her nails.\ndigging deep into my skin—\nTo mark me.\nA flesh aching to be read—\ngets\nWritten with sharpness\nAnd want.\nOnly in that ache,\nDo I exist.\n\nShe loosens.\nI have to pretend\nNot to like it.\nBut I do.\nGod, I do.\n\nIn that split second\nI notice her—\nWhat she hides.\nA calm chaos,\nCoiled quiet\nWaiting to be found\nYet, terrified of being seen.\nThat's her.\nAnd\nI ache to see her,\nI want to know her.\nNo,\nI need to.` },
+
+    { title:'Undone', body:`I watch over—\nHe was drunk.\nA hiccup—\nin his holy silence.\nI'll sleep\nOnce he's sober\nWhen he sees\nWhat he has done.\nBut till then\nHe must be—\nTaken care of.\nCradled with\nLullaby —\nof crying children.\nFor when he's drunk\nHe's me\nYou\nHimself.` },
+    { title:'Dreamstone', body:`It began on a lonely winter twilight
+With my dreamstone and me,
+I carried her on, through the bitter night
+Her face was all that I could see.
+
+“Oh! Look closer now, and see in daylight
+Still trapped in that old hypocrisy?”
+
+But the feelings we had felt
+Were only the whispers in the wind.
+Only songs we used to sing
+Only lies we told within.
+
+When I’m feeling like a meek
+Feeling like I’m half asleep,
+She would lie there next to me
+Sewing nightmares in her seams
+Or is it just my dreams?
+
+Life went on
+& this feeling
+It’s like a potion melting all the fright
+I guess it’s good enough for me.` },
+
+    { title:'Endless', body:`I’m driving down a long murky boulevard
+And suddenly all the good feelings I felt,
+are gone.
+
+Those lampposts, lining the median, starts
+Depicting my life.
+The light pulses as I pass them,
+Darkness then light,
+In an endless cycle.
+And though I know the next lamp will pass
+Me,
+The darkness in between
+Calls to remind those
+Worst of days.
+So long ago but still raw and bleeding the
+Wounds,
+They left.
+
+One by one, light passes me over.
+And I can’t help but feel an aching fear in
+My heart,
+That the road will be dark and unlit ahead.
+Where can I go then,
+Following broken headlights,
+Chasing whatever light I see around?
+
+I’m afraid I’ll become the person I was
+Back then,
+No light of my own,
+Trying to lift myself up
+But only digging deeper down.` },
+
+    { title:'Subtle Things', body:`I dipped myself into the night
+In pitch black, with no sight.
+
+I want to meet the day
+Which brings meaning to my life.
+
+I lost everything
+In this pragma,
+My atro soul cries.
+
+All I want is
+To see you again
+& feel those ludic times.
+
+My aubade is ready,
+Just waiting for your dawn.
+
+I couldn’t efface the kalopsia
+Even though I want this to gone.
+
+I’ve become insomniac,
+Waiting for your lullaby
+With a gentle hug.
+
+Oneday you’ll surely recognize
+As our mizpah
+Hasn’t demise.
+
+Our tristful story will surely find it’s way
+Towards nepenthe.` },
+
+    { title:'Confused', body:`Numerous thoughts scramble my brain
+Buzzing like an erst of Bee.
+
+Strange voices whisper insane verbage
+There is someone in my head but not me
+
+Wild thoughts running rampant
+My heart is punding like a drum
+
+When they tire, they take rest
+& there is constant humm.
+
+What’s real, what’s fake in the
+Maze of life named show.
+
+This thoughts ain’t mine
+But
+Whose, I don’t know` }
+  ];
+  const ROMAN = ['i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii','xiii'];
+  let curPoem = 0, poAnimating = false;
+
+  function buildPoemIndex() {
+    const nav = document.getElementById('po-index');
+    nav.innerHTML = POEMS.map((p,i) => `
+    <div class="po-index-item${i===0?' active':''}" id="pi-idx-${i}" onclick="jumpToPoem(${i})">
+      <span class="po-index-num">${ROMAN[i]}</span>${p.title}
+    </div>`).join('');
+  }
+
+  function renderPoem(i) {
+    document.getElementById('pi-title').textContent = POEMS[i].title;
+    document.getElementById('pi-body').textContent = POEMS[i].body;
+    document.getElementById('po-counter').textContent = `${i+1} / ${POEMS.length}`;
+    document.getElementById('po-progress').textContent = `${ROMAN[i]} / ${ROMAN[POEMS.length-1]}`;
+    document.getElementById('po-prev').disabled = i === 0;
+    document.getElementById('po-next').disabled = i === POEMS.length-1;
+    document.querySelectorAll('.po-index-item').forEach((el,j) => el.classList.toggle('active', j===i));
+    document.getElementById(`pi-idx-${i}`)?.scrollIntoView({block:'nearest',behavior:'smooth'});
+  }
+
+  function openPoetryOverlay(i) {
+    curPoem = i; buildPoemIndex(); renderPoem(i);
+    document.getElementById('poetry-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePoetryOverlay() {
+    document.getElementById('poetry-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function navigatePoem(dir) {
+    if (poAnimating) return;
+    const ni = curPoem + dir;
+    if (ni < 0 || ni >= POEMS.length) return;
+    poAnimating = true;
+    const isl = document.getElementById('poem-island');
+    isl.classList.add('exiting');
+    setTimeout(() => { curPoem = ni; renderPoem(ni); isl.classList.remove('exiting'); poAnimating = false; }, 220);
+  }
+  function jumpToPoem(i) {
+    if (poAnimating || i === curPoem) return;
+    poAnimating = true;
+    const isl = document.getElementById('poem-island');
+    isl.classList.add('exiting');
+    setTimeout(() => { curPoem = i; renderPoem(i); isl.classList.remove('exiting'); poAnimating = false; }, 220);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     LIBRARY FILTER
+  ═══════════════════════════════════════════════════════════ */
+  let libFilter = 'all';
+  function setLibFolder(el) {
+    document.querySelectorAll('.lib-folder').forEach(f => f.classList.remove('active'));
+    el.classList.add('active');
+    libFilter = el.dataset.filter;
+    filterLibrary();
+  }
+  function filterLibrary() {
+    const q = (document.getElementById('lib-search').value || '').toLowerCase().trim();
+    const cards = document.querySelectorAll('#library-shelf .lib-card');
+    const filterTypes = libFilter === 'all' ? null : libFilter.split(',');
+    let vis = 0;
+    cards.forEach(c => {
+      const typeMatch = !filterTypes || filterTypes.includes(c.dataset.type);
+      const searchMatch = !q || (c.dataset.search||'').includes(q)
+              || c.querySelector('.lib-card-title').textContent.toLowerCase().includes(q)
+              || c.querySelector('.lib-card-author').textContent.toLowerCase().includes(q);
+      const show = typeMatch && searchMatch;
+      c.classList.toggle('hidden', !show);
+      if (show) vis++;
+    });
+    document.getElementById('lib-showing').textContent = `${vis} document${vis!==1?'s':''}`;
+    document.getElementById('lib-empty').classList.toggle('visible', vis === 0);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     BRAIN MAP — DATA
+  ═══════════════════════════════════════════════════════════ */
+  const BM_CLUSTER_META = {
+    science:    { label:'Science', fill:'#9a7a54', bg:'#9a7a5420' },
+    ml:         { label:'Research', fill:'#4a7a62', bg:'#4a7a6220' },
+    philosophy: { label:'Philosophy', fill:'#6a7888', bg:'#6a788820' },
+    creative:   { label:'Expression', fill:'#8a6272', bg:'#8a627220' },
+    code:       { label:'Open Source', fill:'#6a7a52', bg:'#6a7a5220' }
+  };
+
+  const BM_NODES = [
+    // Central Question
+    {
+      id:'reality',
+      label:'Reality',
+      cluster:'philosophy',
+      r:28,
+      href:'#about',
+      desc:'The question beneath all questions.'
+    },
+
+    // Science
+    {
+      id:'physics',
+      label:'Physics',
+      cluster:'science',
+      r:24,
+      href:'#interests',
+      desc:'Searching for the fundamental structure of existence.'
+    },
+
+    {
+      id:'math',
+      label:'Mathematics',
+      cluster:'science',
+      r:21,
+      href:'#interests',
+      desc:'A language for expressing patterns and observed reality.'
+    },
+
+    {
+      id:'diffgeo',
+      label:'Differential\nGeometry',
+      cluster:'science',
+      r:19,
+      href:'#research',
+      desc:'Curvature, connections, and hidden structure.'
+    },
+
+    {
+      id:'infotheory',
+      label:'Information\nTheory',
+      cluster:'science',
+      r:19,
+      href:'#interests',
+      desc:'Entropy, uncertainty, and inference.'
+    },
+
+    {
+      id:'neuro',
+      label:'Neuroscience',
+      cluster:'science',
+      r:18,
+      href:'#interests',
+      desc:'Memory, perception, and cognition.'
+    },
+
+    // Research
+    {
+      id:'pinn',
+      label:'PINNs',
+      cluster:'ml',
+      r:22,
+      href:'#research',
+      desc:'Physics and machine learning meeting through differential equations.'
+    },
+
+    {
+      id:'holodiff',
+      label:'holo-Diff\nPINN',
+      cluster:'ml',
+      r:17,
+      href:'#research',
+      desc:'Geometry-aware PINNs through holonomy and graph connections.'
+    },
+
+    {
+      id:'contlearn',
+      label:'Continual\nLearning',
+      cluster:'ml',
+      r:18,
+      href:'#research',
+      desc:'Learning without forgetting.'
+    },
+
+    // Philosophy
+    {
+      id:'philosophy',
+      label:'Philosophy',
+      cluster:'philosophy',
+      r:24,
+      href:'#interests',
+      desc:'The questions beneath every discipline.'
+    },
+
+    {
+      id:'advaita',
+      label:'Advaita',
+      cluster:'philosophy',
+      r:16,
+      href:'#interests',
+      desc:'Non-duality and self-inquiry.'
+    },
+
+    {
+      id:'middleway',
+      label:'Middle Way',
+      cluster:'philosophy',
+      r:16,
+      href:'#interests',
+      desc:'A philosophical direction closer to my own intuitions.'
+    },
+
+    // Philosophers
+    {
+      id:'nietzsche',
+      label:'Nietzsche',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'Values, becoming, and self-overcoming.'
+    },
+
+    {
+      id:'camus',
+      label:'Camus',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'The absurd and the refusal to surrender.'
+    },
+
+    {
+      id:'shankara',
+      label:'Shankaracharya',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'Advaita Vedanta and non-dual inquiry.'
+    },
+
+    {
+      id:'kierkegaard',
+      label:'Kierkegaard',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'Subjectivity, faith, and existence.'
+    },
+
+    {
+      id:'wittgenstein',
+      label:'Wittgenstein',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'The limits of language.'
+    },
+
+    {
+      id:'vivekananda',
+      label:'Vivekananda',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'Practical Vedanta and Jnana Yoga.'
+    },
+
+    {
+      id:'jiddu',
+      label:'J. Krishnamurti',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'Observation without authority.'
+    },
+
+    // Creative
+    {
+      id:'poetry',
+      label:'Poetry',
+      cluster:'creative',
+      r:21,
+      href:'#poetry',
+      desc:'Attempts to express what language cannot fully contain.'
+    },
+
+    {
+      id:'writing',
+      label:'Writing',
+      cluster:'creative',
+      r:21,
+      href:'#blog',
+      desc:'Essays, reflections, and philosophical exploration.'
+    },
+
+    // Open Source
+    {
+      id: 'opensource',
+      label: 'Open\nSource',
+      cluster: 'code',
+      r: 18,
+      href: '#projects',
+      desc: 'Building and sharing knowledge collectively.'
+    },
+    // Research
+
+    {
+      id:'uq',
+      label:'Uncertainty\nQuantification',
+      cluster:'ml',
+      r:16,
+      href:'#research',
+      desc:'Reliable uncertainty estimation for scientific machine learning.'
+    },
+
+    {
+      id:'adaptive',
+      label:'Adaptive\nSampling',
+      cluster:'ml',
+      r:16,
+      href:'#research',
+      desc:'Understanding variance-optimal collocation beyond residual heuristics.'
+    },
+
+    // Open Source / Projects
+
+    {
+      id:'mecnet',
+      label:'MEC-Net',
+      cluster:'code',
+      r:16,
+      href:'#research',
+      desc:'Memory-centric continual learning inspired by hippocampal consolidation.'
+    },
+
+    {
+      id:'ahamlabs',
+      label:'AhamLabs',
+      cluster:'code',
+      r:16,
+      href:'#projects',
+      desc:'Open-source research and experimental systems.'
+    },
+
+
+    // Philosophy additions
+
+    {
+      id:'sartre',
+      label:'Sartre',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'Freedom, responsibility, and existence.'
+    },
+
+    {
+      id:'descartes',
+      label:'Descartes',
+      cluster:'philosophy',
+      r:13,
+      href:'#library',
+      desc:'Doubt as a method of inquiry.'
+    },
+
+    // Poetry influences
+
+    {
+      id:'tagore',
+      label:'Tagore',
+      cluster:'creative',
+      r:13,
+      href:'#library',
+      desc:'Beauty, humanity, and the infinite.'
+    },
+
+    {
+      id:'bukowski',
+      label:'Bukowski',
+      cluster:'creative',
+      r:13,
+      href:'#library',
+      desc:'Raw honesty and ordinary suffering.'
+    },
+
+    {
+      id:'plath',
+      label:'Plath',
+      cluster:'creative',
+      r:13,
+      href:'#library',
+      desc:'Intensity, introspection, and language.'
+    },
+
+    // Literature cluster
+
+    {
+      id:'literature',
+      label:'Literature',
+      cluster:'creative',
+      r:20,
+      href:'#library',
+      desc:'Fiction as another route toward truth.'
+    },
+
+    {
+      id:'dostoevsky',
+      label:'Dostoevsky',
+      cluster:'creative',
+      r:13,
+      href:'#library',
+      desc:'Consciousness, morality, and suffering.'
+    },
+
+    {
+      id:'pessoa',
+      label:'Pessoa',
+      cluster:'creative',
+      r:13,
+      href:'#library',
+      desc:'Multiplicity of self and inner life.'
+    },
+
+    {
+      id:'murakami',
+      label:'Murakami',
+      cluster:'creative',
+      r:13,
+      href:'#library',
+      desc:'Dreams, loneliness, and parallel realities.'
+    },
+
+    {
+      id:'dazai',
+      label:'Osamu Dazai',
+      cluster:'creative',
+      r:13,
+      href:'#library',
+      desc:'Alienation and fragile humanity.'
+    }
+  ];
+
+  const BM_EDGES = [
+    ['reality','physics'],
+    ['reality','philosophy'],
+    ['reality','poetry'],
+
+    ['physics','math'],
+    ['physics','diffgeo'],
+    ['physics','pinn'],
+
+    ['math','diffgeo'],
+    ['math','infotheory'],
+
+    ['infotheory','neuro'],
+    ['neuro','contlearn'],
+
+    ['diffgeo','pinn'],
+    ['pinn','holodiff'],
+    ['pinn','uncertainty'],
+    ['pinn','contlearn'],
+
+    ['philosophy','advaita'],
+    ['philosophy','middleway'],
+
+    ['philosophy','nietzsche'],
+    ['philosophy','camus'],
+    ['philosophy','shankara'],
+    ['philosophy','kierkegaard'],
+    ['philosophy','wittgenstein'],
+    ['philosophy','vivekananda'],
+    ['philosophy','jiddu'],
+
+    ['advaita','shankara'],
+    ['advaita','vivekananda'],
+
+    ['middleway','camus'],
+
+    ['philosophy','writing'],
+    ['writing','poetry'],
+    // Research
+    ['pinn','adaptive'],
+    ['pinn','uq'],
+    ['adaptive','math'],
+    ['uq','infotheory'],
+
+// Open Source
+    ['opensource','mecnet'],
+    ['opensource','ahamlabs'],
+    ['opensource','pinn'],
+    ['opensource','contlearn'],
+
+// Philosophy
+    ['philosophy','sartre'],
+    ['philosophy','descartes'],
+
+// Poetry
+    ['poetry','tagore'],
+    ['poetry','bukowski'],
+    ['poetry','plath'],
+
+// Literature
+    ['writing','literature'],
+    ['literature','dostoevsky'],
+    ['literature','pessoa'],
+    ['literature','murakami'],
+    ['literature','dazai'],
+
+// Cross-links
+    ['philosophy','literature'],
+    ['camus','sartre'],
+    ['poetry','literature'],
+    ['tagore','advaita'],
+    ['dostoevsky','philosophy'],
+    ['pessoa','poetry']
+  ];
+
+  const BM_CLUSTER_LAYOUT = {
+    science:    { cx: 0.18, cy: 0.28 },
+    ml:         { cx: 0.55, cy: 0.38 },
+    philosophy: { cx: 0.22, cy: 0.72 },
+    creative:   { cx: 0.54, cy: 0.76,
+      label:'Literature & Expression',
+    },
+    code:       { cx: 0.84, cy: 0.28 },
+  };
+
+  /* ═══════════════════════════════════════════════════════════
+     BRAIN MAP — STATE & SIMULATION
+  ═══════════════════════════════════════════════════════════ */
+  let bmNodes = [], bmW = 900, bmH = 520;
+  let bmAlpha = 1, bmAnimFrame = null;
+  let bmDragNode = null, bmDragDist = 0;
+  let bmDragSX = 0, bmDragSY = 0;
+  let bmInited = false;
+
+  function cloneNodes() {
+    return BM_NODES.map(n => {
+      const c = BM_CLUSTER_LAYOUT[n.cluster] || {cx:.5,cy:.5};
+      return {
+        ...n,
+        x: (c.cx + (Math.random()-.5) * .18) * bmW,
+        y: (c.cy + (Math.random()-.5) * .18) * bmH,
+        vx: 0, vy: 0, fixed: false
+      };
+    });
+  }
+
+  function bmTick() {
+    const REP = 11000, SPR_LEN = 115, SPR_K = 0.042, DAMP = 0.83, CENT = 0.009;
+    const pad = 55;
+    bmNodes.forEach(n => { n.fx = 0; n.fy = 0; });
+    // Repulsion
+    for (let i = 0; i < bmNodes.length; i++) {
+      for (let j = i+1; j < bmNodes.length; j++) {
+        const a = bmNodes[i], b = bmNodes[j];
+        const dx = b.x-a.x, dy = b.y-a.y;
+        const d2 = dx*dx + dy*dy + 1;
+        const d = Math.sqrt(d2);
+        const f = REP / d2;
+        const fx = dx/d*f, fy = dy/d*f;
+        a.fx -= fx; a.fy -= fy; b.fx += fx; b.fy += fy;
+      }
+    }
+    // Springs
+    BM_EDGES.forEach(([s,t]) => {
+      const na = bmNodes.find(n=>n.id===s), nb = bmNodes.find(n=>n.id===t);
+      if (!na||!nb) return;
+      const dx = nb.x-na.x, dy = nb.y-na.y;
+      const d = Math.sqrt(dx*dx+dy*dy)||0.01;
+      const f = SPR_K*(d-SPR_LEN);
+      const fx = dx/d*f, fy = dy/d*f;
+      na.fx += fx; na.fy += fy; nb.fx -= fx; nb.fy -= fy;
+    });
+    // Center + update
+    bmNodes.forEach(n => {
+      if (n.fixed) return;
+      n.fx += (bmW/2 - n.x) * CENT;
+      n.fy += (bmH/2 - n.y) * CENT;
+      n.vx = (n.vx + n.fx * bmAlpha) * DAMP;
+      n.vy = (n.vy + n.fy * bmAlpha) * DAMP;
+      const speed = Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+      if (speed > 14) { n.vx=n.vx/speed*14; n.vy=n.vy/speed*14; }
+      n.x = Math.max(pad+n.r, Math.min(bmW-pad-n.r, n.x + n.vx));
+      n.y = Math.max(pad+n.r, Math.min(bmH-pad-n.r, n.y + n.vy));
+    });
+    bmAlpha = Math.max(0.03, bmAlpha * 0.9985);
+  }
+
+  function bmUpdateDOM() {
+    BM_EDGES.forEach(([s,t]) => {
+      const ln = document.getElementById(`bme-${s}-${t}`);
+      const na = bmNodes.find(n=>n.id===s), nb = bmNodes.find(n=>n.id===t);
+      if (!ln||!na||!nb) return;
+      ln.setAttribute('x1', na.x); ln.setAttribute('y1', na.y);
+      ln.setAttribute('x2', nb.x); ln.setAttribute('y2', nb.y);
+    });
+    bmNodes.forEach(n => {
+      const g = document.getElementById(`bmn-${n.id}`);
+      if (g) g.setAttribute('transform', `translate(${n.x},${n.y})`);
+    });
+  }
+
+  function bmAnimate() {
+    bmTick(); bmUpdateDOM();
+    bmAnimFrame = requestAnimationFrame(bmAnimate);
+  }
+
+  function buildBmSvg() {
+    const svg = document.getElementById('brain-svg');
+    svg.innerHTML = '';
+    const NS = 'http://www.w3.org/2000/svg';
+    const mk = (tag,attrs={}) => {
+      const el = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
+      return el;
+    };
+
+    // Defs (arrow marker for edges)
+    const defs = mk('defs');
+    const marker = mk('marker',{id:'bm-arrow',markerWidth:'6',markerHeight:'6',refX:'5',refY:'3',orient:'auto'});
+    const path = mk('path',{d:'M0,0 L0,6 L6,3 z',fill:'var(--border)'});
+    marker.appendChild(path); defs.appendChild(marker); svg.appendChild(defs);
+
+    // Edge group
+    const eg = mk('g',{id:'bm-edge-g'});
+    BM_EDGES.forEach(([s,t]) => {
+      const ln = mk('line',{
+        id:`bme-${s}-${t}`,
+        stroke: 'var(--border)',
+        'stroke-width': '1',
+        'stroke-opacity': '0.65'
+      });
+      eg.appendChild(ln);
+    });
+    svg.appendChild(eg);
+
+    // Node group
+    const ng = mk('g',{id:'bm-node-g'});
+    bmNodes.forEach(n => {
+      const meta = BM_CLUSTER_META[n.cluster];
+      const g = mk('g',{id:`bmn-${n.id}`,class:'bm-node','data-id':n.id,
+        transform:`translate(${n.x},${n.y})`});
+
+      const circle = mk('circle',{
+        r: n.r, fill: meta.bg,
+        stroke: meta.fill, 'stroke-width': '1.5',
+        style: 'transition: filter 0.2s'
+      });
+      g.appendChild(circle);
+
+      // Label — split multiline at \n
+      const lines = n.label.split('\n');
+      const baseY = n.r + 5;
+      lines.forEach((line, li) => {
+        const tx = mk('text',{
+          'text-anchor':'middle',
+          'dominant-baseline': li===0 ? 'hanging':'hanging',
+          x: '0', y: baseY + li * 12,
+          'font-family':'IBM Plex Mono, monospace',
+          'font-size': '9.5',
+          fill: 'var(--ink-mid)',
+          'pointer-events': 'none'
+        });
+        tx.textContent = line;
+        g.appendChild(tx);
+      });
+
+      // Events
+      g.addEventListener('mousedown', e => { e.stopPropagation(); bmStartDrag(e, n); });
+      g.addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); bmStartDragTouch(e, n); }, {passive:false});
+      g.addEventListener('click', e => {
+        if (bmDragDist < 6) showBmTooltip(n);
+      });
+      ng.appendChild(g);
+    });
+    svg.appendChild(ng);
+
+    // SVG background click dismisses tooltip
+    svg.addEventListener('click', e => {
+      if (!e.target.closest('.bm-node')) hideBmTooltip();
+    });
+  }
+
+  /* ── DRAG ─────────────────────────────────────────────── */
+  function svgPt(clientX, clientY) {
+    const svg = document.getElementById('brain-svg');
+    const r = svg.getBoundingClientRect();
+    return {
+      x: (clientX - r.left) * (bmW / r.width),
+      y: (clientY - r.top)  * (bmH / r.height)
+    };
+  }
+
+  function bmStartDrag(e, node) {
+    bmDragNode = node; bmDragDist = 0; node.fixed = true;
+    const pt = svgPt(e.clientX, e.clientY);
+    bmDragSX = pt.x; bmDragSY = pt.y;
+  }
+  function bmStartDragTouch(e, node) {
+    const t = e.touches[0];
+    bmStartDrag({clientX:t.clientX, clientY:t.clientY}, node);
+  }
+  function bmOnMove(clientX, clientY) {
+    if (!bmDragNode) return;
+    const pt = svgPt(clientX, clientY);
+    const dx = pt.x - bmDragSX, dy = pt.y - bmDragSY;
+    bmDragDist += Math.sqrt(dx*dx+dy*dy);
+    bmDragNode.x = pt.x; bmDragNode.y = pt.y;
+    bmDragNode.vx = 0; bmDragNode.vy = 0;
+    bmDragSX = pt.x; bmDragSY = pt.y;
+  }
+  function bmOnUp() {
+    if (bmDragNode) { bmDragNode.fixed = false; bmDragNode = null; bmAlpha = Math.min(1, bmAlpha + 0.3); }
+  }
+
+  /* Global mouse/touch events for drag */
+  document.addEventListener('mousemove', e => bmOnMove(e.clientX, e.clientY));
+  document.addEventListener('mouseup', bmOnUp);
+  document.addEventListener('touchmove', e => {
+    if (bmDragNode) { e.preventDefault(); bmOnMove(e.touches[0].clientX, e.touches[0].clientY); }
+  }, {passive:false});
+  document.addEventListener('touchend', bmOnUp);
+
+  /* ── TOOLTIP ──────────────────────────────────────────── */
+  let bmSelectedId = null;
+  function showBmTooltip(node) {
+    bmSelectedId = node.id;
+    const tt = document.getElementById('bm-tooltip');
+    tt.classList.remove('hidden');
+    document.getElementById('bmt-cluster').textContent = BM_CLUSTER_META[node.cluster].label;
+    document.getElementById('bmt-label').textContent = node.label.replace('\n',' ');
+    document.getElementById('bmt-desc').textContent = node.desc;
+    const link = document.getElementById('bmt-link');
+    link.textContent = `Explore ${node.label.replace('\n',' ')} →`;
+    link.onclick = e => { e.preventDefault(); closeBrainMap(); setTimeout(() => { document.querySelector(node.href)?.scrollIntoView({behavior:'smooth'}); }, 350); };
+
+    // Position near node in container space
+    const svg = document.getElementById('brain-svg');
+    const wrap = document.getElementById('bm-svg-wrap');
+    const sr = svg.getBoundingClientRect();
+    const wr = wrap.getBoundingClientRect();
+    const scx = sr.width / bmW, scy = sr.height / bmH;
+    let ttLeft = (node.x * scx) + (sr.left - wr.left) + node.r * scx + 10;
+    let ttTop  = (node.y * scy) + (sr.top  - wr.top)  - 20;
+    const ttW = 240, ttH = 130;
+    if (ttLeft + ttW > wr.width - 10)  ttLeft -= ttW + node.r * scx * 2 + 20;
+    if (ttTop + ttH > wr.height - 10)  ttTop  = wr.height - ttH - 10;
+    if (ttTop < 10) ttTop = 10;
+    tt.style.left = ttLeft + 'px';
+    tt.style.top  = ttTop + 'px';
+
+    // Highlight node
+    document.querySelectorAll('.bm-node circle').forEach(c => {
+      const g = c.closest('.bm-node');
+      c.style.filter = g.dataset.id === node.id ? 'brightness(1.4) drop-shadow(0 0 6px currentColor)' : 'none';
+    });
+  }
+  function hideBmTooltip() {
+    document.getElementById('bm-tooltip').classList.add('hidden');
+    bmSelectedId = null;
+    document.querySelectorAll('.bm-node circle').forEach(c => { c.style.filter = 'none'; });
+  }
+
+  /* ── OPEN / CLOSE / RESET ────────────────────────────── */
+  function initBrainMapSize() {
+    const wrap = document.getElementById('bm-svg-wrap');
+    const r = wrap.getBoundingClientRect();
+    bmW = r.width || 900; bmH = r.height || 520;
+    document.getElementById('brain-svg').setAttribute('viewBox', `0 0 ${bmW} ${bmH}`);
+  }
+
+  function openBrainMap() {
+    if (!bmInited) {
+      document.getElementById('brainmap-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      // Wait a frame for layout, then init
+      requestAnimationFrame(() => {
+        initBrainMapSize();
+        bmNodes = cloneNodes();
+        buildBmSvg();
+        buildBmLegend();
+        bmAlpha = 1;
+        bmAnimFrame = requestAnimationFrame(bmAnimate);
+        bmInited = true;
+      });
+    } else {
+      document.getElementById('brainmap-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      bmAlpha = Math.max(bmAlpha, 0.2);
+      if (!bmAnimFrame) bmAnimFrame = requestAnimationFrame(bmAnimate);
+    }
+  }
+
+  function closeBrainMap() {
+    document.getElementById('brainmap-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    hideBmTooltip();
+    if (bmAnimFrame) { cancelAnimationFrame(bmAnimFrame); bmAnimFrame = null; }
+  }
+
+  function resetBrainMap() {
+    hideBmTooltip();
+    if (bmAnimFrame) { cancelAnimationFrame(bmAnimFrame); bmAnimFrame = null; }
+    initBrainMapSize();
+    bmNodes = cloneNodes();
+    buildBmSvg();
+    bmAlpha = 1;
+    bmAnimFrame = requestAnimationFrame(bmAnimate);
+  }
+
+  function buildBmLegend() {
+    const el = document.getElementById('bm-legend');
+    el.innerHTML = Object.entries(BM_CLUSTER_META).map(([,m]) =>
+            `<span class="bml-item"><span class="bml-dot" style="background:${m.fill}"></span>${m.label}</span>`
+    ).join('');
+  }
+
+  /* ── KEYBOARD ────────────────────────────────────────── */
+  document.addEventListener('keydown', e => {
+    const poOpen = document.getElementById('poetry-overlay').classList.contains('open');
+    const bmOpen = document.getElementById('brainmap-overlay').classList.contains('open');
+    if (poOpen) {
+      if (e.key==='Escape') closePoetryOverlay();
+      if (e.key==='ArrowRight'||e.key==='ArrowDown') navigatePoem(1);
+      if (e.key==='ArrowLeft'||e.key==='ArrowUp')  navigatePoem(-1);
+    }
+    if (bmOpen && e.key==='Escape') closeBrainMap();
+  });
+</script>
+</body>
+</html>
