@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Line → Sphere → Manifold | One Invariant, Many Representations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{ box-sizing: border-box; margin:0; padding:0; }
+  :root{
+    --paper:#f4f0e8; --paper-warm:#ede7d9; --paper-dark:#dfd7c5;
+    --ink:#1b1814; --ink-mid:#4a443c; --ink-muted:#7a7068; --ink-faint:#aaa090;
+    --accent:#8c6d46; --accent-light:#c4a87e; --accent-pale:#f0e8dc; --accent-dim:#6b5334;
+    --border:#cec2ae; --border-light:#e0d8ca;
+    --red:#9a4a3a; --green:#4a6f56;
+    --canvas-bg:#f8f3e8;
+  }
+  html{ scroll-behavior: smooth; }
+  body{
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(237,231,217,0.7) 0%, transparent 55%),
+      var(--paper);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+  ::-webkit-scrollbar{ width:6px; }
+  ::-webkit-scrollbar-track{ background: var(--paper-warm); }
+  ::-webkit-scrollbar-thumb{ background: var(--border); border-radius: 3px; }
+
+  h1,h2,h3,h4{ font-family:'Playfair Display', Georgia, serif; font-weight:400; line-height:1.25; color: var(--ink); }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+
+  .wrap{ max-width: 1100px; margin: 0 auto; padding: 48px 24px 90px; }
+
+  header{ margin-bottom: 36px; border-bottom: 1px solid var(--border-light); padding-bottom: 26px; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem;
+  }
+  h1{ font-size: clamp(24px, 3.4vw, 34px); margin-bottom: 0.7rem; }
+  h1 em{ color: var(--accent); font-style: italic; }
+  .subtitle{ color: var(--ink-muted); font-size: 1rem; line-height: 1.75; max-width: 800px; }
+
+  .section-block{ margin-top: 52px; }
+  .section-head{ display:flex; align-items:baseline; gap:14px; margin-bottom: 16px; flex-wrap: wrap; }
+  .section-tag{
+    font-family:'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 0.16em;
+    color: var(--paper); background: var(--accent); padding: 3px 9px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .section-title{ font-size: 1.7rem; font-style: italic; font-weight: 400; color: var(--ink); }
+  .section-desc{
+    font-family:'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--ink-faint);
+    letter-spacing: 0.03em; max-width: 780px; margin-bottom: 24px; line-height: 1.8;
+  }
+
+  .main-grid{ display:grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start; }
+  .twin-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 900px){
+    .main-grid{ grid-template-columns: 1fr; }
+    .twin-grid{ grid-template-columns: 1fr; }
+  }
+
+  .panel{
+    background: linear-gradient(180deg, var(--paper-warm), var(--paper-dark));
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+  }
+  .panel + .panel{ margin-top: 18px; }
+  .panel-title{
+    font-family:'IBM Plex Mono', monospace; font-size: 0.66rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px;
+    display:flex; justify-content: space-between; align-items:center;
+  }
+  .panel-title button{
+    font-family:'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em;
+    background: none; border: 1px solid var(--border); color: var(--accent);
+    padding: 4px 9px; cursor: pointer; text-transform: uppercase; transition: all .2s;
+  }
+  .panel-title button:hover{ background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  canvas.stage3d{
+    width:100%; aspect-ratio: 1/1; display:block; border-radius: 3px;
+    background: var(--canvas-bg); cursor: grab; touch-action: none;
+    border: 1px solid var(--border-light);
+  }
+  canvas.stage3d:active{ cursor: grabbing; }
+  canvas.stage2d{
+    width:100%; aspect-ratio: 4/3; display:block; border-radius: 3px;
+    background: var(--canvas-bg); border: 1px solid var(--border-light);
+  }
+  canvas.stagePolar{
+    width:100%; aspect-ratio: 16/9; display:block; border-radius: 3px;
+    background: var(--canvas-bg); border: 1px solid var(--border-light);
+  }
+
+  .caption{ font-family:'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--ink-muted); margin-top: 10px; line-height: 1.6; letter-spacing: 0.01em; }
+  .caption .swatch{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; position:relative; top:0px; }
+
+  .controls-row{ margin-bottom: 16px; }
+  .controls-row:last-child{ margin-bottom:0; }
+  .ctrl-label{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono', monospace; font-size: 0.7rem; margin-bottom: 7px; color: var(--ink-mid); }
+  .ctrl-label .val{ color: var(--accent); }
+  input[type="range"]{
+    -webkit-appearance:none; width:100%; height:3px; border-radius:2px; background: var(--border); outline:none;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
+    background: var(--accent); border: 2px solid var(--paper); cursor:pointer;
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:14px; height:14px; border-radius:50%; background: var(--accent);
+    border: 2px solid var(--paper); cursor:pointer; box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .toggle-row{ display:flex; align-items:center; gap:8px; font-family:'IBM Plex Mono', monospace; font-size: 0.66rem; color: var(--ink-muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .toggle-row input{ accent-color: var(--accent); }
+
+  .readout{
+    background: var(--accent-pale); border: 1px solid var(--border); border-radius: 3px; padding: 16px 18px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .readout .eq-general{ color: var(--ink-faint); font-size: 0.68rem; margin-bottom: 12px; line-height: 1.7; letter-spacing: 0.01em; }
+  .readout .eq-live{ color: var(--ink-mid); font-size: 0.78rem; line-height: 2; }
+  .readout .eq-live b{ color: var(--accent); font-weight: 400; }
+  .flag{
+    display:inline-block; margin-top: 10px; font-family:'IBM Plex Mono', monospace; font-size: 0.64rem;
+    color: var(--red); border: 1px solid rgba(154,74,58,0.35); background: rgba(154,74,58,0.07);
+    padding: 4px 9px; letter-spacing: 0.02em;
+  }
+
+  .note{
+    font-family:'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--ink-faint);
+    line-height: 1.8; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-light);
+    letter-spacing: 0.01em;
+  }
+  .note b{ color: var(--ink-mid); }
+
+  .example-list{ list-style:none; display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 760px){ .example-list{ grid-template-columns: 1fr; } }
+  .example-list li{ background: var(--paper-warm); border: 1px solid var(--border-light); border-radius: 3px; padding: 16px 18px; }
+  .example-list .ex-name{
+    font-family:'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); display:block; margin-bottom: 8px;
+  }
+  .example-list .ex-body{ font-family:'Crimson Pro', Georgia, serif; font-size: 0.95rem; color: var(--ink-mid); line-height: 1.65; }
+
+  footer{ margin-top: 50px; color: var(--ink-faint); font-family:'IBM Plex Mono', monospace; font-size: 0.65rem; text-align:center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Fig. 1–2 — Interactive Demonstration</p>
+    <h1>One straight line, <em>y = mx + c</em> — four representational spaces</h1>
+    <p class="subtitle">
+      The relation never changes. What changes is the space you choose to write it in. Move m, c, θ, φ below
+      and watch the same invariant line turn into a rational function of θ, a clipped surface in spherical
+      coordinates, and — one level further — a geodesic on a curved manifold that looks straight in one chart
+      and sinusoidal in another.
+    </p>
+  </header>
+
+  <!-- ============ SECTION 1: CARTESIAN / POLAR / SPHERICAL ============ -->
+  <div class="section-block">
+    <div class="section-head">
+      <span class="section-tag">Level 1</span>
+      <p class="section-title">Same flat plane, three coordinate systems</p>
+    </div>
+    <p class="section-desc">
+      Cartesian: y = mx + c, two numbers, done. Polar: r = c / (sinθ − m·cosθ) — the same points, but now r
+      swings between ±∞ every half turn. Spherical: leave z free and the line becomes the plane traced by
+      r(θ, φ) below, clipped to a sphere just to keep it on screen.
+    </p>
+
+    <div class="main-grid">
+      <div class="col-left">
+        <div class="panel">
+          <p class="panel-title">
+            <span>Spherical — r(θ, φ) surface</span>
+            <button id="resetViewBtn">reset view</button>
+          </p>
+          <canvas id="view3d" class="stage3d"></canvas>
+          <p class="caption">
+            <span class="swatch" style="background:#8c6d46;"></span>current point
+            &nbsp;&nbsp;
+            <span class="swatch" style="background:#cec2ae;"></span>traced surface (θ, φ grid)
+            &nbsp;&nbsp;
+            <span class="swatch" style="background:#4a6f56;"></span>axes
+          </p>
+          <div class="toggle-row">
+            <input type="checkbox" id="autoRotate" checked>
+            <label for="autoRotate">auto-rotate</label>
+            &nbsp;&nbsp;&nbsp;
+            <input type="checkbox" id="showMesh" checked>
+            <label for="showMesh">show full surface</label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <p class="panel-title"><span>Polar — r as a function of θ (not a polar plot)</span></p>
+          <canvas id="viewPolarFn" class="stagePolar"></canvas>
+          <p class="caption">
+            <span class="swatch" style="background:#4a6f56;"></span>r(θ) = c / (sinθ − m·cosθ)
+            &nbsp;&nbsp;
+            <span class="swatch" style="background:#8c6d46;"></span>current θ
+            &nbsp;&nbsp;
+            <span class="swatch" style="background:#9a4a3a;"></span>asymptotes
+          </p>
+          <div class="note">
+            The plotted <b>shape</b> of a line in the plane never changes — plotting it in polar coordinates
+            gives you the same straight line back. What changes is the <b>functional form</b>: r as a function
+            of θ is a simple line in Cartesian coordinates, but a function with two vertical asymptotes per
+            turn in polar coordinates, at θ = arctan(m) and arctan(m) + 180°. That is the graph above.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="panel">
+          <p class="panel-title"><span>Controls</span></p>
+          <div class="controls-row">
+            <div class="ctrl-label"><span>m — slope</span><span class="val" id="mVal">1.00</span></div>
+            <input type="range" id="mSlider" min="-5" max="5" step="0.01" value="1">
+          </div>
+          <div class="controls-row">
+            <div class="ctrl-label"><span>c — intercept</span><span class="val" id="cVal">2.00</span></div>
+            <input type="range" id="cSlider" min="-5" max="5" step="0.01" value="2">
+          </div>
+          <div class="controls-row">
+            <div class="ctrl-label"><span>θ — azimuth</span><span class="val" id="thetaVal">40°</span></div>
+            <input type="range" id="thetaSlider" min="0" max="360" step="1" value="40">
+          </div>
+          <div class="controls-row">
+            <div class="ctrl-label"><span>φ — polar angle</span><span class="val" id="phiVal">60°</span></div>
+            <input type="range" id="phiSlider" min="0" max="180" step="1" value="60">
+          </div>
+        </div>
+
+        <div class="panel">
+          <p class="panel-title"><span>Live equations</span></p>
+          <div class="readout">
+            <div class="eq-general">
+              y = mx + c &nbsp;⟶&nbsp; r(sinθ − m·cosθ) = c &nbsp;⟶&nbsp; r = c / [sinφ·(sinθ − m·cosθ)]
+            </div>
+            <div class="eq-live" id="eqLive"></div>
+            <div id="singularFlag"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <p class="panel-title"><span>Cartesian — the plain check</span></p>
+          <canvas id="view2d" class="stage2d"></canvas>
+          <p class="caption">
+            <span class="swatch" style="background:#4a6f56;"></span>line y = mx + c
+            &nbsp;&nbsp;
+            <span class="swatch" style="background:#8c6d46;"></span>(x, y) from θ, φ
+          </p>
+          <div class="note">
+            <b>Geometric note:</b> since z = r·cosφ is left free, the "surface" traced above is not a new
+            shape at all — it's the flat plane y = mx + c, running parallel to the z-axis. The intricacy lives
+            entirely in r(θ, φ), not in the object itself. Surface clipped to |r| ≤ 4 for display; it truly
+            runs to infinity wherever sinφ·(sinθ − m·cosθ) → 0.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 2: RIEMANNIAN / GEODESIC ============ -->
+  <div class="section-block">
+    <div class="section-head">
+      <span class="section-tag">Level 2</span>
+      <p class="section-title">One step further — a geodesic on a curved manifold</p>
+    </div>
+    <p class="section-desc">
+      A sphere's own "straight line" is a great circle — a geodesic. Below is one genuine great circle, tilted
+      by inclination i and rotated by node longitude Ω, with a point at parameter t. The same point is drawn
+      three ways: on the sphere itself, on an ordinary latitude–longitude (equirectangular) chart, and on a
+      gnomonic chart centered at the north pole. Gnomonic projection is defined so that every geodesic through
+      its center maps to a straight line — it is the sphere's analogue of Cartesian coordinates for this
+      manifold. Equirectangular coordinates are its "polar coordinates": convenient, but they bend the same
+      invariant path into a sine wave.
+    </p>
+
+    <div class="main-grid">
+      <div class="col-left">
+        <div class="panel">
+          <p class="panel-title">
+            <span>The manifold — sphere with one geodesic</span>
+            <button id="resetView2Btn">reset view</button>
+          </p>
+          <canvas id="viewGeo3d" class="stage3d"></canvas>
+          <p class="caption">
+            <span class="swatch" style="background:#8c6d46;"></span>current point
+            &nbsp;&nbsp;
+            <span class="swatch" style="background:#4a6f56;"></span>the geodesic (great circle)
+            &nbsp;&nbsp;
+            <span class="swatch" style="background:#cec2ae;"></span>equator / reference
+          </p>
+          <div class="toggle-row">
+            <input type="checkbox" id="autoRotate2" checked>
+            <label for="autoRotate2">auto-rotate</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="panel">
+          <p class="panel-title"><span>Controls</span></p>
+          <div class="controls-row">
+            <div class="ctrl-label"><span>i — inclination</span><span class="val" id="inclVal">35°</span></div>
+            <input type="range" id="inclSlider" min="0" max="90" step="1" value="35">
+          </div>
+          <div class="controls-row">
+            <div class="ctrl-label"><span>Ω — node longitude</span><span class="val" id="nodeVal">20°</span></div>
+            <input type="range" id="nodeSlider" min="0" max="360" step="1" value="20">
+          </div>
+          <div class="controls-row">
+            <div class="ctrl-label"><span>t — position on geodesic</span><span class="val" id="tVal">50°</span></div>
+            <input type="range" id="tSlider" min="0" max="360" step="1" value="50">
+          </div>
+        </div>
+
+        <div class="panel">
+          <p class="panel-title"><span>Live coordinates</span></p>
+          <div class="readout">
+            <div class="eq-general">same point, three charts of the same manifold</div>
+            <div class="eq-live" id="eqLiveGeo"></div>
+            <div id="belowHorizonFlag"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="twin-grid" style="margin-top:16px;">
+      <div class="panel">
+        <p class="panel-title"><span>Equirectangular chart (lon, lat)</span></p>
+        <canvas id="viewEquirect" class="stage2d"></canvas>
+        <p class="caption">The "polar coordinates" of the sphere: a straight geodesic bends into a sine wave.</p>
+      </div>
+      <div class="panel">
+        <p class="panel-title"><span>Gnomonic chart (centered on N pole)</span></p>
+        <canvas id="viewGnomonic" class="stage2d"></canvas>
+        <p class="caption">By construction, every geodesic through the center is a straight line here — only the northern hemisphere is visible; the rest runs off to infinity at the horizon.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 3: FURTHER EXAMPLES ============ -->
+  <div class="section-block">
+    <div class="section-head">
+      <span class="section-tag">Notes</span>
+      <p class="section-title">The same pattern shows up outside geometry too</p>
+    </div>
+    <p class="section-desc">
+      In every case below, nothing about the underlying object changes — only the basis, frame, or chart used
+      to describe it. Complexity turns out to be a property of the representation, not the thing represented.
+    </p>
+    <ul class="example-list">
+      <li>
+        <span class="ex-name">Fourier basis</span>
+        <span class="ex-body">A sharp spike in time is an infinite sum of sinusoids in frequency. A pure
+        sinusoid in time is a single point in frequency. Same signal, opposite "complexity," depending only
+        on which basis you decompose it in.</span>
+      </li>
+      <li>
+        <span class="ex-name">Normal modes</span>
+        <span class="ex-body">Coupled oscillators look like a tangle of interacting equations in ordinary
+        coordinates. Rotate into the eigenbasis (the normal modes) and they decouple into independent, trivial
+        equations. The coupling was in the coordinates, not the physics.</span>
+      </li>
+      <li>
+        <span class="ex-name">Rotating frames</span>
+        <span class="ex-body">A free particle moving in a perfectly straight line, described from a rotating
+        frame, needs centrifugal and Coriolis terms to explain the exact same motion. The law didn't get more
+        complicated — the frame did.</span>
+      </li>
+      <li>
+        <span class="ex-name">Conformal maps</span>
+        <span class="ex-body">The real line under z → z² becomes a parabola; under z → 1/z it becomes a
+        circle. Holomorphic maps preserve local angles but can bend a straight line into almost anything.</span>
+      </li>
+      <li>
+        <span class="ex-name">Accelerated frames (SR)</span>
+        <span class="ex-body">Inertial, straight-line motion in flat spacetime, viewed from a uniformly
+        accelerating (Rindler) frame, is described by hyperbolic worldlines and comes with its own horizon —
+        the spacetime version of the geodesic-on-a-manifold panel above.</span>
+      </li>
+      <li>
+        <span class="ex-name">Number bases</span>
+        <span class="ex-body">0.1 is a single digit in base 10 and an infinitely repeating fraction in base 2.
+        The number never changed; only the base you chose to write it in did.</span>
+      </li>
+    </ul>
+  </div>
+
+  <footer>generated for visualization purposes · pure HTML / CSS / JS · no external libraries</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ================= shared helpers =================
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+  function fitCanvas(canvas){
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function rotateY(p, a){
+    const cs = Math.cos(a), sn = Math.sin(a);
+    return { x: p.x*cs + p.z*sn, y: p.y, z: -p.x*sn + p.z*cs };
+  }
+  function rotateX(p, a){
+    const cs = Math.cos(a), sn = Math.sin(a);
+    return { x: p.x, y: p.y*cs - p.z*sn, z: p.y*sn + p.z*cs };
+  }
+  function project(p, camAz, camEl, zoom, w, h){
+    const rotated = rotateX(rotateY(p, camAz), camEl);
+    const dist = 8;
+    const focal = 300 * zoom;
+    const denom = rotated.z + dist;
+    return {
+      x: w/2 + (rotated.x * focal) / denom,
+      y: h/2 - (rotated.y * focal) / denom
+    };
+  }
+
+  // ================= palette (kept in sync with CSS vars) =================
+  const COL = {
+    accent: '#8c6d46',
+    accentSoft: 'rgba(140,109,70,0.6)',
+    accentShadow: 'rgba(140,109,70,0.35)',
+    green: '#4a6f56',
+    greenSoft: 'rgba(74,111,86,0.55)',
+    red: 'rgba(154,74,58,0.75)',
+    border: 'rgba(206,194,174,0.9)',
+    borderSoft: 'rgba(206,194,174,0.55)',
+    inkMuted: 'rgba(122,112,104,0.9)',
+    inkFaint: 'rgba(170,160,144,0.55)'
+  };
+
+  // ================= SECTION 1 STATE =================
+  const state = {
+    m: 1, c: 2,
+    theta: 40 * Math.PI/180,
+    phi: 60 * Math.PI/180,
+    camAz: 0.9, camEl: 0.35, zoom: 1,
+    autoRotate: true, showMesh: true
+  };
+  const RMAX = 4;
+  const THETA_STEPS = 48;
+  const PHI_STEPS = 26;
+
+  function computeR(theta, phi, m, c){
+    const denom = Math.sin(phi) * (Math.sin(theta) - m*Math.cos(theta));
+    const eps = 1e-5;
+    const safeDenom = Math.abs(denom) < eps ? (denom < 0 ? -eps : eps) : denom;
+    return { r: c / safeDenom, denom: denom, singular: Math.abs(denom) < 1e-3 };
+  }
+  function sphToCart(r, theta, phi){
+    return {
+      x: r * Math.sin(phi) * Math.cos(theta),
+      y: r * Math.sin(phi) * Math.sin(theta),
+      z: r * Math.cos(phi)
+    };
+  }
+
+  let meshPoints = [];
+  function rebuildMesh(){
+    meshPoints = [];
+    for(let pi=0; pi<=PHI_STEPS; pi++){
+      const phi = Math.PI * pi/PHI_STEPS;
+      const row = [];
+      for(let ti=0; ti<=THETA_STEPS; ti++){
+        const theta = 2*Math.PI * ti/THETA_STEPS;
+        const { r } = computeR(theta, phi, state.m, state.c);
+        const rC = clamp(isFinite(r) ? r : RMAX, -RMAX, RMAX);
+        row.push(sphToCart(rC, theta, phi));
+      }
+      meshPoints.push(row);
+    }
+  }
+
+  const c3 = document.getElementById('view3d');
+  const ctx3 = c3.getContext('2d');
+  const c2 = document.getElementById('view2d');
+  const ctx2 = c2.getContext('2d');
+  const cPolar = document.getElementById('viewPolarFn');
+  const ctxPolar = cPolar.getContext('2d');
+
+  function drawPoint(ctx, x, y, radius){
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI*2);
+    ctx.fillStyle = COL.accent;
+    ctx.shadowColor = COL.accentShadow;
+    ctx.shadowBlur = 7;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(27,24,20,0.25)';
+    ctx.stroke();
+  }
+
+  function draw3D(){
+    const rect = c3.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctx3.clearRect(0,0,w,h);
+
+    const axisLen = RMAX * 1.35;
+    const axes = [
+      { from:{x:-axisLen,y:0,z:0}, to:{x:axisLen,y:0,z:0}, label:'x' },
+      { from:{x:0,y:-axisLen,z:0}, to:{x:0,y:axisLen,z:0}, label:'y' },
+      { from:{x:0,y:0,z:-axisLen}, to:{x:0,y:0,z:axisLen}, label:'z' }
+    ];
+    ctx3.strokeStyle = COL.greenSoft;
+    ctx3.lineWidth = 1;
+    axes.forEach(ax=>{
+      const a = project(ax.from, state.camAz, state.camEl, state.zoom, w, h);
+      const b = project(ax.to, state.camAz, state.camEl, state.zoom, w, h);
+      ctx3.beginPath(); ctx3.moveTo(a.x, a.y); ctx3.lineTo(b.x, b.y); ctx3.stroke();
+      ctx3.fillStyle = COL.green;
+      ctx3.font = "11px 'IBM Plex Mono', monospace";
+      ctx3.fillText(ax.label, b.x+4, b.y+4);
+    });
+
+    if(state.showMesh && meshPoints.length){
+      ctx3.strokeStyle = COL.borderSoft;
+      ctx3.lineWidth = 1;
+      for(let pi=0; pi<meshPoints.length; pi++){
+        const row = meshPoints[pi];
+        ctx3.beginPath();
+        for(let ti=0; ti<row.length; ti++){
+          const pr = project(row[ti], state.camAz, state.camEl, state.zoom, w, h);
+          if(ti===0) ctx3.moveTo(pr.x, pr.y); else ctx3.lineTo(pr.x, pr.y);
+        }
+        ctx3.stroke();
+      }
+      for(let ti=0; ti<meshPoints[0].length; ti++){
+        ctx3.beginPath();
+        for(let pi=0; pi<meshPoints.length; pi++){
+          const pr = project(meshPoints[pi][ti], state.camAz, state.camEl, state.zoom, w, h);
+          if(pi===0) ctx3.moveTo(pr.x, pr.y); else ctx3.lineTo(pr.x, pr.y);
+        }
+        ctx3.stroke();
+      }
+    }
+
+    const { r } = computeR(state.theta, state.phi, state.m, state.c);
+    const rC = clamp(isFinite(r) ? r : RMAX, -RMAX, RMAX);
+    const p = sphToCart(rC, state.theta, state.phi);
+    const pr = project(p, state.camAz, state.camEl, state.zoom, w, h);
+
+    const origin = project({x:0,y:0,z:0}, state.camAz, state.camEl, state.zoom, w, h);
+    ctx3.strokeStyle = COL.accentSoft;
+    ctx3.lineWidth = 1.5;
+    ctx3.beginPath(); ctx3.moveTo(origin.x, origin.y); ctx3.lineTo(pr.x, pr.y); ctx3.stroke();
+
+    drawPoint(ctx3, pr.x, pr.y, 5.5);
+  }
+
+  function draw2D(){
+    const rect = c2.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctx2.clearRect(0,0,w,h);
+    const range = 5;
+    const toPx = (x,y) => ({ x: w/2 + (x/range)*(w/2-20), y: h/2 - (y/range)*(h/2-20) });
+
+    ctx2.strokeStyle = COL.borderSoft; ctx2.lineWidth = 1;
+    for(let g=-range; g<=range; g++){
+      const a = toPx(g,-range), b = toPx(g,range);
+      ctx2.beginPath(); ctx2.moveTo(a.x,a.y); ctx2.lineTo(b.x,b.y); ctx2.stroke();
+      const c1 = toPx(-range,g), d1 = toPx(range,g);
+      ctx2.beginPath(); ctx2.moveTo(c1.x,c1.y); ctx2.lineTo(d1.x,d1.y); ctx2.stroke();
+    }
+    ctx2.strokeStyle = COL.inkMuted; ctx2.lineWidth = 1.2;
+    const ax1=toPx(-range,0), ax2=toPx(range,0);
+    ctx2.beginPath(); ctx2.moveTo(ax1.x,ax1.y); ctx2.lineTo(ax2.x,ax2.y); ctx2.stroke();
+    const ay1=toPx(0,-range), ay2=toPx(0,range);
+    ctx2.beginPath(); ctx2.moveTo(ay1.x,ay1.y); ctx2.lineTo(ay2.x,ay2.y); ctx2.stroke();
+
+    ctx2.strokeStyle = COL.green; ctx2.lineWidth = 2;
+    ctx2.beginPath();
+    const x1=-range, y1=state.m*x1+state.c, x2=range, y2=state.m*x2+state.c;
+    const p1=toPx(x1,y1), p2=toPx(x2,y2);
+    ctx2.moveTo(p1.x,p1.y); ctx2.lineTo(p2.x,p2.y); ctx2.stroke();
+
+    const { r } = computeR(state.theta, state.phi, state.m, state.c);
+    const p3 = sphToCart(r, state.theta, state.phi);
+    const pp = toPx(clamp(p3.x,-range,range), clamp(p3.y,-range,range));
+    drawPoint(ctx2, pp.x, pp.y, 5.5);
+
+    ctx2.fillStyle = COL.inkMuted;
+    ctx2.font = "11px 'IBM Plex Mono', monospace";
+    ctx2.fillText('x', ax2.x-10, ax2.y-6);
+    ctx2.fillText('y', ay2.x+6, ay2.y+10);
+  }
+
+  function drawPolarFn(){
+    const rect = cPolar.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctxPolar.clearRect(0,0,w,h);
+
+    const RANGE_R = 8;
+    const pad = 28;
+    const toPx = (thDeg, r) => ({
+      x: pad + (thDeg/360) * (w - 2*pad),
+      y: h/2 - clamp(r, -RANGE_R, RANGE_R) / RANGE_R * (h/2 - 14)
+    });
+
+    ctxPolar.strokeStyle = COL.borderSoft; ctxPolar.lineWidth = 1;
+    for(let d=0; d<=360; d+=90){
+      const a = toPx(d,-RANGE_R), b = toPx(d,RANGE_R);
+      ctxPolar.beginPath(); ctxPolar.moveTo(a.x,a.y); ctxPolar.lineTo(b.x,b.y); ctxPolar.stroke();
+      ctxPolar.fillStyle = COL.inkMuted;
+      ctxPolar.font = "10.5px 'IBM Plex Mono', monospace";
+      ctxPolar.fillText(d+'°', a.x-8, h-4);
+    }
+    ctxPolar.strokeStyle = COL.inkMuted; ctxPolar.lineWidth = 1.2;
+    const za = toPx(0,0), zb = toPx(360,0);
+    ctxPolar.beginPath(); ctxPolar.moveTo(za.x,za.y); ctxPolar.lineTo(zb.x,zb.y); ctxPolar.stroke();
+
+    const asym1 = (Math.atan(state.m) * 180/Math.PI + 360) % 360;
+    const asym2 = (asym1 + 180) % 360;
+    ctxPolar.strokeStyle = COL.red;
+    ctxPolar.setLineDash([4,4]);
+    [asym1, asym2].forEach(d=>{
+      const a = toPx(d,-RANGE_R), b = toPx(d,RANGE_R);
+      ctxPolar.beginPath(); ctxPolar.moveTo(a.x,a.y); ctxPolar.lineTo(b.x,b.y); ctxPolar.stroke();
+    });
+    ctxPolar.setLineDash([]);
+
+    ctxPolar.strokeStyle = COL.green;
+    ctxPolar.lineWidth = 2;
+    let drawing = false;
+    for(let d=0; d<=360; d+=0.5){
+      const th = d*Math.PI/180;
+      const { r } = computeR(th, Math.PI/2, state.m, state.c);
+      const px = toPx(d, r);
+      if(!isFinite(r) || Math.abs(r) > RANGE_R){ drawing = false; continue; }
+      if(!drawing){ ctxPolar.beginPath(); ctxPolar.moveTo(px.x, px.y); drawing = true; }
+      else ctxPolar.lineTo(px.x, px.y);
+    }
+    ctxPolar.stroke();
+
+    const thDeg = state.theta * 180/Math.PI;
+    const { r: rNow } = computeR(state.theta, Math.PI/2, state.m, state.c);
+    if(isFinite(rNow) && Math.abs(rNow) <= RANGE_R){
+      const pm = toPx(thDeg, rNow);
+      drawPoint(ctxPolar, pm.x, pm.y, 5);
+    }
+  }
+
+  function updateReadout(){
+    const { r, singular } = computeR(state.theta, state.phi, state.m, state.c);
+    const p = sphToCart(r, state.theta, state.phi);
+    const fmt = (v) => isFinite(v) ? v.toFixed(3) : '±∞';
+
+    document.getElementById('eqLive').innerHTML =
+      `r &nbsp;=&nbsp; <b>${fmt(r)}</b><br>` +
+      `x &nbsp;=&nbsp; r·sinφ·cosθ &nbsp;=&nbsp; <b>${fmt(p.x)}</b><br>` +
+      `y &nbsp;=&nbsp; r·sinφ·sinθ &nbsp;=&nbsp; <b>${fmt(p.y)}</b><br>` +
+      `z &nbsp;=&nbsp; r·cosφ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp; <b>${fmt(p.z)}</b>`;
+
+    document.getElementById('singularFlag').innerHTML = singular
+      ? '<span class="flag">near-singular direction — sinφ·(sinθ − m·cosθ) ≈ 0, r diverges</span>'
+      : '';
+  }
+
+  function syncLabels(){
+    document.getElementById('mVal').textContent = state.m.toFixed(2);
+    document.getElementById('cVal').textContent = state.c.toFixed(2);
+    document.getElementById('thetaVal').textContent = Math.round(state.theta*180/Math.PI) + '°';
+    document.getElementById('phiVal').textContent = Math.round(state.phi*180/Math.PI) + '°';
+  }
+
+  const mSlider = document.getElementById('mSlider');
+  const cSlider = document.getElementById('cSlider');
+  const thetaSlider = document.getElementById('thetaSlider');
+  const phiSlider = document.getElementById('phiSlider');
+
+  function onLineParamsChanged(){
+    syncLabels(); rebuildMesh(); updateReadout(); draw2D(); drawPolarFn();
+  }
+  mSlider.addEventListener('input', e=>{ state.m = parseFloat(e.target.value); onLineParamsChanged(); });
+  cSlider.addEventListener('input', e=>{ state.c = parseFloat(e.target.value); onLineParamsChanged(); });
+  thetaSlider.addEventListener('input', e=>{
+    state.theta = parseFloat(e.target.value) * Math.PI/180;
+    syncLabels(); updateReadout(); draw2D(); drawPolarFn();
+  });
+  phiSlider.addEventListener('input', e=>{
+    state.phi = parseFloat(e.target.value) * Math.PI/180;
+    syncLabels(); updateReadout(); draw2D();
+  });
+
+  document.getElementById('autoRotate').addEventListener('change', e=>{ state.autoRotate = e.target.checked; });
+  document.getElementById('showMesh').addEventListener('change', e=>{ state.showMesh = e.target.checked; });
+  document.getElementById('resetViewBtn').addEventListener('click', ()=>{
+    state.camAz = 0.9; state.camEl = 0.35; state.zoom = 1;
+  });
+
+  function wireOrbit(canvas, onMove){
+    let dragging = false, lastX = 0, lastY = 0;
+    function down(x,y){ dragging = true; lastX = x; lastY = y; }
+    function move(x,y){
+      if(!dragging) return;
+      onMove(x-lastX, y-lastY);
+      lastX = x; lastY = y;
+    }
+    function up(){ dragging = false; }
+    canvas.addEventListener('mousedown', e=> down(e.clientX, e.clientY));
+    window.addEventListener('mousemove', e=> move(e.clientX, e.clientY));
+    window.addEventListener('mouseup', up);
+    canvas.addEventListener('touchstart', e=>{ const t=e.touches[0]; down(t.clientX,t.clientY); }, {passive:true});
+    canvas.addEventListener('touchmove', e=>{ const t=e.touches[0]; move(t.clientX,t.clientY); }, {passive:true});
+    canvas.addEventListener('touchend', up);
+    return { isDragging: () => dragging };
+  }
+
+  const orbit1 = wireOrbit(c3, (dx,dy)=>{
+    state.camAz += dx*0.006;
+    state.camEl = clamp(state.camEl + dy*0.006, -1.5, 1.5);
+  });
+  c3.addEventListener('wheel', e=>{
+    e.preventDefault();
+    state.zoom = clamp(state.zoom * (e.deltaY<0?1.08:0.93), 0.4, 3);
+  }, {passive:false});
+
+  // ================= SECTION 2: geodesic on a sphere =================
+  const geoState = {
+    incl: 35*Math.PI/180, node: 20*Math.PI/180, t: 50*Math.PI/180,
+    camAz: 1.0, camEl: 0.4, zoom: 1, autoRotate: true
+  };
+  const GNOM_MAX = 6;
+  const HORIZON_EPS = 3 * Math.PI/180;
+
+  function geoPoint(t, incl, node){
+    const ct=Math.cos(t), st=Math.sin(t);
+    const x1=ct, y1=st*Math.cos(incl), z1=st*Math.sin(incl);
+    return {
+      x: x1*Math.cos(node) - y1*Math.sin(node),
+      y: x1*Math.sin(node) + y1*Math.cos(node),
+      z: z1
+    };
+  }
+  function toLatLon(p){
+    return { lon: Math.atan2(p.y, p.x), lat: Math.asin(clamp(p.z,-1,1)) };
+  }
+  function toGnomonic(lat, lon){
+    if(lat <= HORIZON_EPS) return null;
+    const rho = clamp(Math.cos(lat)/Math.sin(lat), -GNOM_MAX, GNOM_MAX);
+    return { x: rho*Math.sin(lon), y: -rho*Math.cos(lon) };
+  }
+
+  const cg3 = document.getElementById('viewGeo3d');
+  const ctxg3 = cg3.getContext('2d');
+  const cEq = document.getElementById('viewEquirect');
+  const ctxEq = cEq.getContext('2d');
+  const cGn = document.getElementById('viewGnomonic');
+  const ctxGn = cGn.getContext('2d');
+
+  function drawGeoSphere(){
+    const rect = cg3.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctxg3.clearRect(0,0,w,h);
+
+    ctxg3.strokeStyle = COL.borderSoft; ctxg3.lineWidth = 1;
+    for(let lat=-60; lat<=60; lat+=30){
+      const latR = lat*Math.PI/180;
+      ctxg3.beginPath();
+      for(let d=0; d<=360; d+=6){
+        const lon = d*Math.PI/180;
+        const p = { x: Math.cos(latR)*Math.cos(lon), y: Math.cos(latR)*Math.sin(lon), z: Math.sin(latR) };
+        const pr = project(p, geoState.camAz, geoState.camEl, geoState.zoom, w, h);
+        if(d===0) ctxg3.moveTo(pr.x,pr.y); else ctxg3.lineTo(pr.x,pr.y);
+      }
+      ctxg3.stroke();
+    }
+    for(let lon=0; lon<360; lon+=30){
+      const lonR = lon*Math.PI/180;
+      ctxg3.beginPath();
+      for(let d=-90; d<=90; d+=6){
+        const lat = d*Math.PI/180;
+        const p = { x: Math.cos(lat)*Math.cos(lonR), y: Math.cos(lat)*Math.sin(lonR), z: Math.sin(lat) };
+        const pr = project(p, geoState.camAz, geoState.camEl, geoState.zoom, w, h);
+        if(d===-90) ctxg3.moveTo(pr.x,pr.y); else ctxg3.lineTo(pr.x,pr.y);
+      }
+      ctxg3.stroke();
+    }
+
+    ctxg3.strokeStyle = COL.green; ctxg3.lineWidth = 2;
+    ctxg3.beginPath();
+    for(let d=0; d<=360; d+=2){
+      const t = d*Math.PI/180;
+      const p = geoPoint(t, geoState.incl, geoState.node);
+      const pr = project(p, geoState.camAz, geoState.camEl, geoState.zoom, w, h);
+      if(d===0) ctxg3.moveTo(pr.x,pr.y); else ctxg3.lineTo(pr.x,pr.y);
+    }
+    ctxg3.stroke();
+
+    const p = geoPoint(geoState.t, geoState.incl, geoState.node);
+    const pr = project(p, geoState.camAz, geoState.camEl, geoState.zoom, w, h);
+    drawPoint(ctxg3, pr.x, pr.y, 5.5);
+  }
+
+  function drawEquirect(){
+    const rect = cEq.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctxEq.clearRect(0,0,w,h);
+    const toPx = (lon,lat) => ({
+      x: w/2 + (lon/Math.PI)*(w/2-16),
+      y: h/2 - (lat/(Math.PI/2))*(h/2-16)
+    });
+
+    ctxEq.strokeStyle = COL.borderSoft; ctxEq.lineWidth = 1;
+    for(let d=-180; d<=180; d+=45){
+      const a = toPx(d*Math.PI/180, -Math.PI/2), b = toPx(d*Math.PI/180, Math.PI/2);
+      ctxEq.beginPath(); ctxEq.moveTo(a.x,a.y); ctxEq.lineTo(b.x,b.y); ctxEq.stroke();
+    }
+    for(let d=-90; d<=90; d+=30){
+      const a = toPx(-Math.PI, d*Math.PI/180), b = toPx(Math.PI, d*Math.PI/180);
+      ctxEq.beginPath(); ctxEq.moveTo(a.x,a.y); ctxEq.lineTo(b.x,b.y); ctxEq.stroke();
+    }
+    ctxEq.strokeStyle = COL.inkMuted; ctxEq.lineWidth = 1.2;
+    const e1 = toPx(-Math.PI,0), e2 = toPx(Math.PI,0);
+    ctxEq.beginPath(); ctxEq.moveTo(e1.x,e1.y); ctxEq.lineTo(e2.x,e2.y); ctxEq.stroke();
+
+    ctxEq.strokeStyle = COL.green; ctxEq.lineWidth = 2;
+    let drawing = false, prevLon = null;
+    for(let d=0; d<=360; d+=1){
+      const t = d*Math.PI/180;
+      const p = geoPoint(t, geoState.incl, geoState.node);
+      const { lon, lat } = toLatLon(p);
+      const px = toPx(lon, lat);
+      if(prevLon !== null && Math.abs(lon - prevLon) > Math.PI){ drawing = false; }
+      if(!drawing){ ctxEq.beginPath(); ctxEq.moveTo(px.x,px.y); drawing = true; }
+      else ctxEq.lineTo(px.x,px.y);
+      prevLon = lon;
+    }
+    ctxEq.stroke();
+
+    const pNow = geoPoint(geoState.t, geoState.incl, geoState.node);
+    const { lon: lonNow, lat: latNow } = toLatLon(pNow);
+    const pxNow = toPx(lonNow, latNow);
+    drawPoint(ctxEq, pxNow.x, pxNow.y, 5);
+  }
+
+  function drawGnomonic(){
+    const rect = cGn.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctxGn.clearRect(0,0,w,h);
+    const range = GNOM_MAX;
+    const toPx = (x,y) => ({ x: w/2 + (x/range)*(w/2-18), y: h/2 - (y/range)*(h/2-18) });
+
+    ctxGn.strokeStyle = COL.borderSoft; ctxGn.lineWidth = 1;
+    for(let g=-range; g<=range; g+=2){
+      const a = toPx(g,-range), b = toPx(g,range);
+      ctxGn.beginPath(); ctxGn.moveTo(a.x,a.y); ctxGn.lineTo(b.x,b.y); ctxGn.stroke();
+      const c1 = toPx(-range,g), d1 = toPx(range,g);
+      ctxGn.beginPath(); ctxGn.moveTo(c1.x,c1.y); ctxGn.lineTo(d1.x,d1.y); ctxGn.stroke();
+    }
+    ctxGn.strokeStyle = COL.inkMuted; ctxGn.lineWidth = 1.2;
+    const ax1=toPx(-range,0), ax2=toPx(range,0);
+    ctxGn.beginPath(); ctxGn.moveTo(ax1.x,ax1.y); ctxGn.lineTo(ax2.x,ax2.y); ctxGn.stroke();
+    const ay1=toPx(0,-range), ay2=toPx(0,range);
+    ctxGn.beginPath(); ctxGn.moveTo(ay1.x,ay1.y); ctxGn.lineTo(ay2.x,ay2.y); ctxGn.stroke();
+
+    ctxGn.setLineDash([3,4]);
+    ctxGn.strokeStyle = COL.inkFaint;
+    ctxGn.beginPath(); ctxGn.arc(w/2,h/2, (w/2-18), 0, Math.PI*2); ctxGn.stroke();
+    ctxGn.setLineDash([]);
+
+    ctxGn.strokeStyle = COL.green; ctxGn.lineWidth = 2;
+    let drawing = false;
+    for(let d=0; d<=360; d+=1){
+      const t = d*Math.PI/180;
+      const p = geoPoint(t, geoState.incl, geoState.node);
+      const { lon, lat } = toLatLon(p);
+      const g = toGnomonic(lat, lon);
+      if(!g){ drawing = false; continue; }
+      const px = toPx(g.x, g.y);
+      if(!drawing){ ctxGn.beginPath(); ctxGn.moveTo(px.x,px.y); drawing = true; }
+      else ctxGn.lineTo(px.x,px.y);
+    }
+    ctxGn.stroke();
+
+    const pNow = geoPoint(geoState.t, geoState.incl, geoState.node);
+    const { lon: lonNow, lat: latNow } = toLatLon(pNow);
+    const gNow = toGnomonic(latNow, lonNow);
+    if(gNow){
+      const pxNow = toPx(gNow.x, gNow.y);
+      drawPoint(ctxGn, pxNow.x, pxNow.y, 5);
+    }
+  }
+
+  function updateGeoReadout(){
+    const p = geoPoint(geoState.t, geoState.incl, geoState.node);
+    const { lon, lat } = toLatLon(p);
+    const g = toGnomonic(lat, lon);
+    const fmt = (v) => v.toFixed(3);
+    const fmtDeg = (v) => (v*180/Math.PI).toFixed(1) + '°';
+
+    document.getElementById('eqLiveGeo').innerHTML =
+      `sphere &nbsp;(X,Y,Z) = <b>${fmt(p.x)}, ${fmt(p.y)}, ${fmt(p.z)}</b><br>` +
+      `equirect &nbsp;(lon,lat) = <b>${fmtDeg(lon)}, ${fmtDeg(lat)}</b><br>` +
+      `gnomonic &nbsp;(x,y) = <b>${g ? fmt(g.x)+', '+fmt(g.y) : '— below horizon —'}</b>`;
+
+    document.getElementById('belowHorizonFlag').innerHTML = g ? '' :
+      '<span class="flag">below the equator — invisible in a north-pole-centered gnomonic chart</span>';
+  }
+
+  function syncGeoLabels(){
+    document.getElementById('inclVal').textContent = Math.round(geoState.incl*180/Math.PI) + '°';
+    document.getElementById('nodeVal').textContent = Math.round(geoState.node*180/Math.PI) + '°';
+    document.getElementById('tVal').textContent = Math.round(geoState.t*180/Math.PI) + '°';
+  }
+
+  function onGeoParamsChanged(){
+    syncGeoLabels(); updateGeoReadout(); drawEquirect(); drawGnomonic();
+  }
+  document.getElementById('inclSlider').addEventListener('input', e=>{
+    geoState.incl = parseFloat(e.target.value)*Math.PI/180; onGeoParamsChanged();
+  });
+  document.getElementById('nodeSlider').addEventListener('input', e=>{
+    geoState.node = parseFloat(e.target.value)*Math.PI/180; onGeoParamsChanged();
+  });
+  document.getElementById('tSlider').addEventListener('input', e=>{
+    geoState.t = parseFloat(e.target.value)*Math.PI/180; onGeoParamsChanged();
+  });
+  document.getElementById('autoRotate2').addEventListener('change', e=>{ geoState.autoRotate = e.target.checked; });
+  document.getElementById('resetView2Btn').addEventListener('click', ()=>{
+    geoState.camAz = 1.0; geoState.camEl = 0.4; geoState.zoom = 1;
+  });
+
+  const orbit2 = wireOrbit(cg3, (dx,dy)=>{
+    geoState.camAz += dx*0.006;
+    geoState.camEl = clamp(geoState.camEl + dy*0.006, -1.5, 1.5);
+  });
+  cg3.addEventListener('wheel', e=>{
+    e.preventDefault();
+    geoState.zoom = clamp(geoState.zoom * (e.deltaY<0?1.08:0.93), 0.4, 3);
+  }, {passive:false});
+
+  window.addEventListener('resize', ()=>{
+    [c3,c2,cPolar,cg3,cEq,cGn].forEach(fitCanvas);
+  });
+
+  // ================= animation loop =================
+  function tick(){
+    if(state.autoRotate && !orbit1.isDragging()) state.camAz += 0.0025;
+    if(geoState.autoRotate && !orbit2.isDragging()) geoState.camAz += 0.0025;
+    draw3D();
+    drawGeoSphere();
+    requestAnimationFrame(tick);
+  }
+
+  // ================= init =================
+  [c3,c2,cPolar,cg3,cEq,cGn].forEach(fitCanvas);
+  syncLabels(); rebuildMesh(); updateReadout(); draw2D(); drawPolarFn();
+  syncGeoLabels(); updateGeoReadout(); drawEquirect(); drawGnomonic();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
