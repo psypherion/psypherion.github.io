@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcade — Retro Games in Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <span class="brand-name">§ arcade</span>
+      <span class="brand-sub">a small paper cabinet</span>
+    </div>
+    <nav class="site-nav">
+      <a href="#games">Games</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">Cabinet No. 001 — three machines</p>
+    <h1>Three <em>quiet</em> games <br>on paper &amp; phosphor.</h1>
+    <p class="subtitle">
+      Old shapes on warm paper, with a green CRT ghost underneath. Nothing installs, nothing tracks —
+      three small machines you can pick up, put down, and come back to.
+    </p>
+  </section>
+
+  <section id="games" class="section-block">
+    <div class="section-head">
+      <span class="section-tag">the cabinet</span>
+      <p class="section-title">Pick a machine</p>
+    </div>
+
+    <div class="games-grid">
+
+      <a class="game-card" href="tictactoe.html">
+        <div class="game-art">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <pattern id="paperGrain1" width="4" height="4" patternUnits="userSpaceOnUse">
+                <rect width="4" height="4" fill="#f4f0e8"/>
+                <circle cx="1" cy="1" r="0.3" fill="#dfd7c5" opacity="0.6"/>
+              </pattern>
+            </defs>
+            <rect width="200" height="200" fill="url(#paperGrain1)"/>
+            <line x1="70" y1="30" x2="70" y2="170" stroke="#1b1814" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="130" y1="30" x2="130" y2="170" stroke="#1b1814" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="30" y1="70" x2="170" y2="70" stroke="#1b1814" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="30" y1="130" x2="170" y2="130" stroke="#1b1814" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="50" y="60" font-family="Playfair Display" font-style="italic" font-size="42" fill="#9a4a3a">×</text>
+            <text x="150" y="120" font-family="Playfair Display" font-style="italic" font-size="34" fill="#4a6f56">◯</text>
+            <text x="50" y="160" font-family="Playfair Display" font-style="italic" font-size="42" fill="#9a4a3a">×</text>
+            <line x1="35" y1="40" x2="80" y2="70" stroke="#9a4a3a" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+            <line x1="60" y1="35" x2="45" y2="65" stroke="#9a4a3a" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+          </svg>
+        </div>
+        <div class="game-meta">
+          <span class="game-num">01</span>
+          <div>
+            <h3 class="game-title">Tic-Tac-Toe</h3>
+            <p class="game-desc">Three in a row against a thinking opponent. Minimax, no mercy — but three difficulty rings for the merciful.</p>
+            <div class="game-tags">
+              <span>2-player</span><span>vs CPU</span><span>quick</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a class="game-card" href="snake.html">
+        <div class="game-art">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <pattern id="paperGrain2" width="4" height="4" patternUnits="userSpaceOnUse">
+                <rect width="4" height="4" fill="#f4f0e8"/>
+                <circle cx="1" cy="1" r="0.3" fill="#dfd7c5" opacity="0.6"/>
+              </pattern>
+              <pattern id="dotgrid" width="16" height="16" patternUnits="userSpaceOnUse">
+                <circle cx="8" cy="8" r="0.8" fill="#cec2ae"/>
+              </pattern>
+            </defs>
+            <rect width="200" height="200" fill="url(#paperGrain2)"/>
+            <rect width="200" height="200" fill="url(#dotgrid)"/>
+            <g fill="none" stroke="#4a6f56" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter">
+              <path d="M 40 60 L 100 60 L 100 100 L 60 100 L 60 140 L 140 140 L 140 90"/>
+            </g>
+            <circle cx="140" cy="90" r="6" fill="#4a6f56"/>
+            <circle cx="142" cy="88" r="1.5" fill="#f4f0e8"/>
+            <circle cx="30" cy="30" r="7" fill="#9a4a3a"/>
+            <rect x="27" y="20" width="6" height="6" fill="#9a4a3a" transform="rotate(45 30 23)"/>
+          </svg>
+        </div>
+        <div class="game-meta">
+          <span class="game-num">02</span>
+          <div>
+            <h3 class="game-title">Serpent</h3>
+            <p class="game-desc">The classic, with a wandering apple and walls that appear one row at a time. Speed climbs with your body count.</p>
+            <div class="game-tags">
+              <span>1-player</span><span>arrows / WASD</span><span>obstacles</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a class="game-card" href="bounce.html">
+        <div class="game-art">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <pattern id="paperGrain3" width="4" height="4" patternUnits="userSpaceOnUse">
+                <rect width="4" height="4" fill="#f4f0e8"/>
+                <circle cx="1" cy="1" r="0.3" fill="#dfd7c5" opacity="0.6"/>
+              </pattern>
+            </defs>
+            <rect width="200" height="200" fill="url(#paperGrain3)"/>
+            <polygon points="60,40 80,55 72,80 48,75" fill="none" stroke="#1b1814" stroke-width="1.8"/>
+            <polygon points="130,60 155,70 150,95 128,85" fill="none" stroke="#1b1814" stroke-width="1.8"/>
+            <polygon points="40,120 70,115 75,140 45,148" fill="none" stroke="#1b1814" stroke-width="1.8"/>
+            <polygon points="110,130 145,125 155,155 118,160" fill="none" stroke="#1b1814" stroke-width="1.8"/>
+            <path d="M 30 30 Q 90 90 60 130 T 160 170" fill="none" stroke="#c4a87e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.9"/>
+            <circle cx="160" cy="170" r="8" fill="#8c6d46"/>
+            <circle cx="158" cy="167" r="2.5" fill="#f4f0e8" opacity="0.7"/>
+            <circle cx="30" cy="30" r="4" fill="#8c6d46" opacity="0.4"/>
+            <circle cx="90" cy="90" r="5" fill="#8c6d46" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="game-meta">
+          <span class="game-num">03</span>
+          <div>
+            <h3 class="game-title">Bounce Field</h3>
+            <p class="game-desc">Aim, launch, and watch a ball ricochet through a randomly assembled maze. Land it in the pocket — that's it.</p>
+            <div class="game-tags">
+              <span>1-player</span><span>physics</span><span>randomised</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section id="about" class="section-block about-block">
+    <div class="section-head">
+      <span class="section-tag">a note</span>
+      <p class="section-title">Why paper &amp; phosphor</p>
+    </div>
+    <p class="prose">
+      Because the two aesthetics belong to the same lineage. Warm paper, ink, and margin lines — the medium of
+      quiet games since long before screens. Phosphor green, CRT scanlines, and the arcade cabinet — the medium
+      of the first video games. Both were slow, focused, single-purpose objects. This cabinet is a small
+      attempt to keep some of that quietness.
+    </p>
+    <p class="prose">
+      Nothing here talks to a server. Everything runs in your browser, the source is a handful of files, and
+      the whole thing is meant to be dropped into a static host and forgotten about.
+    </p>
+  </section>
+
+  <footer class="site-foot">
+    <span>© arcade · a paper cabinet · <span class="mono">static · offline · quiet</span></span>
+  </footer>
+
+</div>
+</body>
+</html>

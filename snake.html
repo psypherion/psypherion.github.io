@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serpent — Arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <span class="brand-name">§ arcade</span>
+      <span class="brand-sub">machine 02 · serpent</span>
+    </div>
+    <a href="games.html" class="back-link">← Back to cabinet</a>
+  </header>
+
+  <div class="game-page-head">
+    <h1 class="game-page-title">
+      Serpent
+      <small>eat, grow, don't die</small>
+    </h1>
+  </div>
+
+  <div class="game-layout">
+
+    <div>
+      <div class="game-stage-wrap">
+        <div class="crt-screen" id="crtScreen">
+          <canvas id="board" width="560" height="560"></canvas>
+          <div class="game-overlay" id="overlay">
+            <div class="overlay-eyebrow" id="overlayEyebrow">press start</div>
+            <div class="overlay-title" id="overlayTitle">serpent</div>
+            <div class="overlay-sub" id="overlaySub">arrow keys or WASD to steer</div>
+            <button class="btn" id="overlayBtn">▷ start</button>
+          </div>
+        </div>
+
+        <div class="crt-hud">
+          <div class="hud-item"><span class="hud-label">score</span><span class="hud-value amber" id="hudScore">0</span></div>
+          <div class="hud-item"><span class="hud-label">length</span><span class="hud-value" id="hudLen">3</span></div>
+          <div class="hud-item"><span class="hud-label">best</span><span class="hud-value" id="hudBest">0</span></div>
+          <div class="hud-item"><span class="hud-label">speed</span><span class="hud-value" id="hudSpeed">1×</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="controls-panel">
+        <p class="panel-title">Match settings</p>
+
+        <div class="option-group">
+          <span class="option-group-label">Board size</span>
+          <div class="seg-control" id="sizeSeg">
+            <button data-value="14">Small</button>
+            <button data-value="20" class="active">Medium</button>
+            <button data-value="28">Large</button>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <span class="option-group-label">Starting speed</span>
+          <div class="seg-control" id="speedSeg">
+            <button data-value="slow">Slow</button>
+            <button data-value="normal" class="active">Normal</button>
+            <button data-value="fast">Fast</button>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <span class="option-group-label">Walls</span>
+          <div class="seg-control" id="wallSeg">
+            <button data-value="solid" class="active">Solid</button>
+            <button data-value="wrap">Wrap-around</button>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <span class="option-group-label">Obstacles</span>
+          <div class="seg-control" id="obsSeg">
+            <button data-value="none">None</button>
+            <button data-value="few" class="active">Few</button>
+            <button data-value="many">Many</button>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn primary" id="newGameBtn">▷ new game</button>
+          <button class="btn" id="pauseBtn">⏸ pause</button>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <p class="panel-title">Controls</p>
+        <div class="controls-help">
+          <p><b>Steer:</b> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> &nbsp; or &nbsp; <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd></p>
+          <p><b>Pause:</b> <kbd>Space</kbd> · <b>New game:</b> <kbd>N</kbd></p>
+          <p style="margin-top:10px;">Eat the red apple to grow. Every 5 apples the snake gets a little faster. You can't reverse into yourself.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <span>© arcade · a paper cabinet · <span class="mono">machine 02</span></span>
+  </footer>
+</div>
+
+<script src="snake.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic-Tac-Toe — Arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <span class="brand-name">§ arcade</span>
+      <span class="brand-sub">machine 01 · tic-tac-toe</span>
+    </div>
+    <a href="games.html" class="back-link">← Back to cabinet</a>
+  </header>
+
+  <div class="game-page-head">
+    <h1 class="game-page-title">
+      Tic-Tac-Toe
+      <small>three in a row</small>
+    </h1>
+  </div>
+
+  <div class="game-layout">
+
+    <!-- LEFT: CRT stage -->
+    <div>
+      <div class="game-stage-wrap">
+        <div class="crt-screen" id="crtScreen">
+          <canvas id="board" width="480" height="480"></canvas>
+          <div class="game-overlay" id="overlay">
+            <div class="overlay-eyebrow" id="overlayEyebrow">round over</div>
+            <div class="overlay-title" id="overlayTitle">draw</div>
+            <div class="overlay-sub" id="overlaySub">tap "new game" to play again</div>
+            <button class="btn" id="overlayBtn">▷ new game</button>
+          </div>
+        </div>
+
+        <div class="crt-hud">
+          <div class="hud-item">
+            <span class="hud-label">turn</span>
+            <span class="hud-value" id="hudTurn">×</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">× wins</span>
+            <span class="hud-value amber" id="hudX">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">◯ wins</span>
+            <span class="hud-value" id="hudO">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">draws</span>
+            <span class="hud-value" id="hudD">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: controls -->
+    <div>
+      <div class="controls-panel">
+        <p class="panel-title">Match settings</p>
+
+        <div class="option-group">
+          <span class="option-group-label">Opponent</span>
+          <div class="seg-control" id="modeSeg">
+            <button data-value="cpu" class="active">vs CPU</button>
+            <button data-value="hotseat">Hot-seat</button>
+          </div>
+        </div>
+
+        <div class="option-group" id="difficultyGroup">
+          <span class="option-group-label">CPU difficulty</span>
+          <div class="seg-control" id="diffSeg">
+            <button data-value="easy">Easy</button>
+            <button data-value="medium" class="active">Medium</button>
+            <button data-value="hard">Hard</button>
+          </div>
+        </div>
+
+        <div class="option-group" id="playerSideGroup">
+          <span class="option-group-label">You play as</span>
+          <div class="seg-control" id="sideSeg">
+            <button data-value="X" class="active">× (first)</button>
+            <button data-value="O">◯ (second)</button>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn primary" id="newGameBtn">▷ new game</button>
+          <button class="btn" id="resetScoreBtn">reset score</button>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <p class="panel-title">How to play</p>
+        <div class="controls-help">
+          <p>Click any empty square to place your mark. Three in a row — horizontally, vertically, or diagonally — wins the round.</p>
+          <p style="margin-top:10px;"><b>Keyboard:</b> <kbd>1</kbd>–<kbd>9</kbd> to place, using the numpad layout:</p>
+          <p class="mono" style="margin-top:6px;">7&nbsp;8&nbsp;9<br>4&nbsp;5&nbsp;6<br>1&nbsp;2&nbsp;3</p>
+          <p style="margin-top:10px;"><kbd>N</kbd> new game · <kbd>R</kbd> reset score</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <span>© arcade · a paper cabinet · <span class="mono">machine 01</span></span>
+  </footer>
+</div>
+
+<script src="tictactoe.js"></script>
+</body>
+</html>

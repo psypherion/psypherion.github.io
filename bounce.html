@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bounce Field — Arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <span class="brand-name">§ arcade</span>
+      <span class="brand-sub">machine 03 · bounce field</span>
+    </div>
+    <a href="games.html" class="back-link">← Back to cabinet</a>
+  </header>
+
+  <div class="game-page-head">
+    <h1 class="game-page-title">
+      Bounce Field
+      <small>aim, launch, land it</small>
+    </h1>
+  </div>
+
+  <div class="game-layout">
+
+    <div>
+      <div class="game-stage-wrap">
+        <div class="crt-screen" id="crtScreen">
+          <canvas id="board" width="640" height="480"></canvas>
+          <div class="game-overlay" id="overlay">
+            <div class="overlay-eyebrow" id="overlayEyebrow">press start</div>
+            <div class="overlay-title" id="overlayTitle">bounce field</div>
+            <div class="overlay-sub" id="overlaySub">click anywhere in the field to launch</div>
+            <button class="btn" id="overlayBtn">▷ new field</button>
+          </div>
+        </div>
+
+        <div class="crt-hud">
+          <div class="hud-item"><span class="hud-label">round</span><span class="hud-value" id="hudRound">1</span></div>
+          <div class="hud-item"><span class="hud-label">shots</span><span class="hud-value amber" id="hudShots">0</span></div>
+          <div class="hud-item"><span class="hud-label">landed</span><span class="hud-value" id="hudLanded">0</span></div>
+          <div class="hud-item"><span class="hud-label">bounces</span><span class="hud-value" id="hudBounces">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="controls-panel">
+        <p class="panel-title">Field settings</p>
+
+        <div class="option-group">
+          <span class="option-group-label">Obstacle count</span>
+          <div class="range-row">
+            <input type="range" id="obsCountSlider" min="4" max="24" step="1" value="10">
+            <span class="range-value" id="obsCountVal">10</span>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <span class="option-group-label">Restitution (bounciness)</span>
+          <div class="range-row">
+            <input type="range" id="restSlider" min="0.4" max="1.0" step="0.02" value="0.86">
+            <span class="range-value" id="restVal">0.86</span>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <span class="option-group-label">Gravity</span>
+          <div class="seg-control" id="gravSeg">
+            <button data-value="0">Off</button>
+            <button data-value="120" class="active">Low</button>
+            <button data-value="260">High</button>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <span class="option-group-label">Obstacle shapes</span>
+          <div class="seg-control" id="shapeSeg">
+            <button data-value="mix" class="active">Mixed</button>
+            <button data-value="poly">Polygons</button>
+            <button data-value="circle">Circles</button>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn primary" id="newFieldBtn">▷ new field</button>
+          <button class="btn" id="resetStatsBtn">reset stats</button>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <p class="panel-title">How to play</p>
+        <div class="controls-help">
+          <p>The <b>launcher</b> sits on the left; the <b>pocket</b> is the amber ring on the right. Move your mouse over the field to aim, click to launch the ball.</p>
+          <p style="margin-top:10px;">The ball ricochets off obstacles and walls. Land it in the pocket for a <b>hit</b>. Every hit reshuffles the field into a fresh layout.</p>
+          <p style="margin-top:10px;"><kbd>N</kbd> new field · <kbd>R</kbd> reset stats · <kbd>Space</kbd> re-arm</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <span>© arcade · a paper cabinet · <span class="mono">machine 03</span></span>
+  </footer>
+</div>
+
+<script src="bounce.js"></script>
+</body>
+</html>

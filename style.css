@@ -1,0 +1,607 @@
+/* ============================================================
+   arcade — shared stylesheet
+   palette lifted from psypherion.github.io + retro CRT accents
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* paper palette (from psypherion.github.io) */
+  --paper: #f4f0e8;
+  --paper-warm: #ede7d9;
+  --paper-dark: #dfd7c5;
+  --ink: #1b1814;
+  --ink-mid: #4a443c;
+  --ink-muted: #7a7068;
+  --ink-faint: #aaa090;
+  --accent: #8c6d46;
+  --accent-light: #c4a87e;
+  --accent-pale: #f0e8dc;
+  --accent-dim: #6b5334;
+  --border: #cec2ae;
+  --border-light: #e0d8ca;
+  --red: #9a4a3a;
+  --green: #4a6f56;
+
+  /* retro CRT accents */
+  --phosphor: #4a6f56;
+  --phosphor-glow: rgba(74, 111, 86, 0.35);
+  --amber-crt: #8c6d46;
+  --amber-glow: rgba(140, 109, 70, 0.35);
+  --scanline: rgba(27, 24, 20, 0.035);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(237, 231, 217, 0.7) 0%, transparent 55%),
+    var(--paper);
+  color: var(--ink);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.7;
+  font-weight: 300;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* subtle CRT scanlines across the whole body — very light, only visible up close */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    var(--scanline) 2px,
+    var(--scanline) 3px
+  );
+  z-index: 1000;
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--paper-warm); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.mono { font-family: 'IBM Plex Mono', monospace; font-size: 0.82em; color: var(--ink-mid); }
+.crt-font { font-family: 'VT323', 'IBM Plex Mono', monospace; }
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 90px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── site header ───────────────────────────────────────── */
+.site-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.brand { display: flex; align-items: baseline; gap: 12px; }
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+.brand-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.site-nav { display: flex; gap: 1.4rem; }
+.site-nav a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.site-nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* back-to-cabinet link (game pages) */
+.back-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--border);
+  transition: all .2s;
+}
+.back-link:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ─── hero (landing) ────────────────────────────────────── */
+.hero { margin-bottom: 60px; }
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-size: clamp(30px, 5vw, 46px);
+  margin-bottom: 1.2rem;
+  line-height: 1.15;
+}
+.hero h1 em {
+  color: var(--accent);
+  font-style: italic;
+  font-family: 'Playfair Display', serif;
+}
+.subtitle {
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  max-width: 620px;
+}
+
+/* ─── section headers ───────────────────────────────────── */
+.section-block { margin-top: 56px; }
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+.section-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: var(--paper);
+  background: var(--accent);
+  padding: 3px 9px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.section-title {
+  font-size: 1.7rem;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ─── games grid (landing) ──────────────────────────────── */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.game-card {
+  background: linear-gradient(180deg, var(--paper-warm), var(--paper-dark));
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+  position: relative;
+  overflow: hidden;
+}
+.game-card::after {
+  /* corner "insert coin" mark */
+  content: "◈";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 0.9rem;
+  color: var(--border);
+  transition: color .25s;
+}
+.game-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -14px rgba(27, 24, 20, 0.25);
+  border-color: var(--accent);
+}
+.game-card:hover::after { color: var(--accent); }
+
+.game-art {
+  background: var(--paper);
+  border: 1px solid var(--border-light);
+  border-radius: 2px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.game-art svg { width: 100%; height: 100%; display: block; }
+
+.game-meta { display: flex; gap: 14px; align-items: flex-start; }
+.game-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+  padding-top: 4px;
+}
+.game-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.game-desc {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.game-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.game-tags span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border: 1px solid var(--border-light);
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+/* ─── about ─────────────────────────────────────────────── */
+.about-block .prose {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 1.02rem;
+  color: var(--ink-mid);
+  line-height: 1.8;
+  max-width: 680px;
+  margin-bottom: 1rem;
+}
+
+/* ─── footer ────────────────────────────────────────────── */
+.site-foot {
+  margin-top: 70px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border-light);
+  text-align: center;
+  color: var(--ink-faint);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   game pages — shared layout
+   ============================================================ */
+
+.game-page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+.game-page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+}
+.game-page-title small {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-left: 12px;
+  font-style: normal;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .game-layout { grid-template-columns: 1fr; }
+}
+
+.game-stage-wrap {
+  background: linear-gradient(180deg, var(--paper-warm), var(--paper-dark));
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 20px;
+  position: relative;
+}
+
+/* the actual canvas / game surface: mimic a CRT screen framed in paper */
+.crt-screen {
+  position: relative;
+  background: #0d1410;  /* deep phosphor black */
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.5),
+    inset 0 0 4px rgba(74, 111, 86, 0.15);
+}
+.crt-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.18) 2px,
+      rgba(0, 0, 0, 0.18) 3px
+    );
+  z-index: 5;
+}
+.crt-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.6) 100%);
+  z-index: 6;
+}
+.crt-screen canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* HUD strip below the CRT */
+.crt-hud {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-family: 'VT323', 'IBM Plex Mono', monospace;
+  font-size: 1.15rem;
+  color: var(--phosphor);
+  background: #0d1410;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  padding: 8px 14px;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 6px var(--phosphor-glow);
+  flex-wrap: wrap;
+}
+.crt-hud .hud-item { display: flex; align-items: center; gap: 8px; }
+.crt-hud .hud-label {
+  font-size: 0.85rem;
+  color: rgba(74, 111, 86, 0.7);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.crt-hud .hud-value { color: var(--phosphor); }
+.crt-hud .hud-value.amber { color: var(--amber-light, #d9b47a); text-shadow: 0 0 6px var(--amber-glow); }
+.crt-hud .hud-value.red { color: #d97a6a; text-shadow: 0 0 6px rgba(217, 122, 106, 0.35); }
+
+/* controls panel */
+.controls-panel {
+  background: linear-gradient(180deg, var(--paper-warm), var(--paper-dark));
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 22px;
+}
+.controls-panel + .controls-panel { margin-top: 18px; }
+.panel-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+
+/* buttons in the paper style */
+.btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: all .18s;
+  border-radius: 2px;
+}
+.btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--accent);
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn.primary {
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--accent);
+}
+.btn.primary:hover:not(:disabled) {
+  background: var(--accent-dim);
+  border-color: var(--accent-dim);
+}
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.option-group { margin-bottom: 18px; }
+.option-group:last-child { margin-bottom: 0; }
+.option-group-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.seg-control { display: inline-flex; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.seg-control button {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  background: var(--paper);
+  border: none;
+  border-right: 1px solid var(--border);
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: all .15s;
+}
+.seg-control button:last-child { border-right: none; }
+.seg-control button.active {
+  background: var(--accent);
+  color: var(--paper);
+}
+.seg-control button:hover:not(.active) {
+  background: var(--accent-pale);
+  color: var(--ink);
+}
+
+/* range slider */
+.range-row { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+input[type="range"] {
+  -webkit-appearance: none;
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  outline: none;
+  border-radius: 2px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.range-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  min-width: 40px;
+  text-align: right;
+}
+
+.controls-help {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  color: var(--ink-faint);
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+}
+.controls-help kbd {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  padding: 2px 7px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 2px;
+  color: var(--ink-mid);
+  min-width: 22px;
+  text-align: center;
+}
+.controls-help p { margin-bottom: 6px; }
+
+/* game-over overlay (over the CRT) */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: rgba(13, 20, 16, 0.85);
+  color: var(--phosphor);
+  font-family: 'VT323', monospace;
+  text-align: center;
+  padding: 20px;
+}
+.game-overlay.show { display: flex; }
+.game-overlay .overlay-eyebrow {
+  font-size: 0.9rem;
+  letter-spacing: 0.28em;
+  color: rgba(74, 111, 86, 0.7);
+  margin-bottom: 8px;
+}
+.game-overlay .overlay-title {
+  font-size: 2.6rem;
+  color: var(--phosphor);
+  text-shadow: 0 0 12px var(--phosphor-glow);
+  margin-bottom: 6px;
+  letter-spacing: 0.06em;
+}
+.game-overlay .overlay-sub {
+  font-size: 1.1rem;
+  color: rgba(74, 111, 86, 0.85);
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+}
+.game-overlay .btn {
+  background: transparent;
+  border: 1px solid var(--phosphor);
+  color: var(--phosphor);
+}
+.game-overlay .btn:hover {
+  background: var(--phosphor);
+  color: #0d1410;
+}
