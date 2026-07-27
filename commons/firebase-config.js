@@ -41,6 +41,11 @@
    ============================================================ */
 
 // ── PASTE YOUR FIREBASE CONFIG HERE ─────────────────────────
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyDb4hQdii-Wdt_s_PctOjvJl0zVnxuryio",
   authDomain: "stickynotes-2084e.firebaseapp.com",
@@ -51,7 +56,8 @@ const firebaseConfig = {
   appId: "1:265003065483:web:e87aa485d181af423cb48e",
   measurementId: "G-1VNEC736ZH"
 };
-
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 // ── ADMIN KEY (SHA-256 hash of the secret string) ───────────
 // Set to null to disable admin power entirely.
 const ADMIN_KEY_HASH = null;
