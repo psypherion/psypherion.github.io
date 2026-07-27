@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Rooms — Commons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <span class="brand-name">§ commons</span>
+      <span class="brand-sub">chat rooms</span>
+    </div>
+    <nav class="site-nav">
+      <a href="notes.html">Wall</a>
+      <a href="chat.html" class="active">Chat</a>
+      <a href="index.html" class="back-link">← Home</a>
+    </nav>
+  </header>
+
+  <div class="hero" style="margin-bottom: 30px;">
+    <p class="eyebrow">Room · 02 — chat</p>
+    <h1>Start a <em>room</em>. Share the link.</h1>
+    <p class="subtitle">
+      Anyone with the link can join. Rooms are small, real-time, and public within themselves —
+      treat them like a table in a café, not a private line.
+    </p>
+  </div>
+
+  <div class="identity-strip" id="identityStrip">
+    <span class="is-label">You are</span>
+    <input type="text" class="input" id="displayNameInput" placeholder="anonymous — or type a name" maxlength="30">
+    <span class="is-admin" title="admin key recognised">◆ admin</span>
+  </div>
+
+  <div class="chat-layout">
+    <aside class="rooms-panel">
+      <div class="panel-title">Rooms</div>
+      <div class="room-create">
+        <input type="text" class="input" id="roomInput" placeholder="new room name" maxlength="40">
+        <button class="btn primary" id="joinBtn">go</button>
+      </div>
+      <div class="room-list" id="roomList">
+        <div style="color:var(--ink-faint); font-family:'IBM Plex Mono', monospace; font-size:0.7rem; padding: 10px 4px;">no rooms yet</div>
+      </div>
+      <div class="rooms-help">
+        · type a name and press "go" to open (or create) a room.<br>
+        · share the URL with anyone you want to talk to.<br>
+        · rooms are public — anyone with the link can join.
+      </div>
+    </aside>
+
+    <section class="chat-panel" id="chatPanel">
+      <div class="chat-head">
+        <div class="room-title" id="roomTitle">no room selected</div>
+        <button class="share-btn" id="shareBtn" style="display:none;">◧ copy link</button>
+      </div>
+      <div class="chat-stream" id="chatStream">
+        <div class="chat-empty">pick a room or start one on the left.</div>
+      </div>
+      <div class="chat-compose">
+        <input type="text" class="input" id="msgInput" placeholder="type a message and press enter" maxlength="600" disabled>
+        <button class="btn primary" id="sendBtn" disabled>send</button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-foot">
+    <span>© commons · a paper room · <span class="mono">rooms are public within themselves</span></span>
+  </footer>
+</div>
+
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="commons.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>

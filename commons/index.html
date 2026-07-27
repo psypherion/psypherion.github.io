@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§ commons — a small public room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <span class="brand-name">§ commons</span>
+      <span class="brand-sub">the small public room</span>
+    </div>
+    <nav class="site-nav">
+      <a href="notes.html">Wall</a>
+      <a href="chat.html">Chat</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">A small public room</p>
+    <h1>Leave a <em>note</em>. Start a <em>conversation</em>.</h1>
+    <p class="subtitle">
+      Two quiet things: a shared corkboard where anyone can pin a sticky note, and small rooms
+      where two or more people can talk in real time. Names optional. No sign-in.
+    </p>
+  </section>
+
+  <section class="section-block">
+    <div class="section-head">
+      <span class="section-tag">two doors</span>
+      <p class="section-title">Pick one</p>
+    </div>
+
+    <div class="landing-grid">
+      <a class="landing-card" href="notes.html">
+        <span class="lc-num">door · 01</span>
+        <h3>The Sticky Wall</h3>
+        <p>Pin a short note for anyone who visits to read. Anonymous or signed. You can pull down your own notes.</p>
+      </a>
+      <a class="landing-card" href="chat.html">
+        <span class="lc-num">door · 02</span>
+        <h3>Chat Rooms</h3>
+        <p>Open a room by name, share the link, and talk. Anyone who has the link can join. Rooms are ephemeral by design.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-head">
+      <span class="section-tag">a note</span>
+      <p class="section-title">What this is (and isn't)</p>
+    </div>
+    <div class="panel" style="max-width:760px;">
+      <p style="color: var(--ink-mid); margin-bottom: 12px;">
+        This is a static site — no backend of mine. All messages and notes are stored in a small
+        Firebase database that anyone with the site's key can read and write to, and everything
+        is broadcast in real time to any browser that has the page open.
+      </p>
+      <p style="color: var(--ink-mid); margin-bottom: 12px;">
+        Because there's no login, "your" note or message is bound to your browser session. Delete it
+        while you're still on the page, or lose the ability. If you'd like something removed later,
+        the admin can take it down — say the word.
+      </p>
+      <p style="color: var(--ink-muted); font-size: 0.9rem; font-style: italic;">
+        Please be gentle with the room. It's a common space.
+      </p>
+    </div>
+  </section>
+
+  <footer class="site-foot">
+    <span>© commons · a paper room · <span class="mono">public · anonymous · gentle</span></span>
+  </footer>
+</div>
+
+<script src="firebase-config.js"></script>
+<script>
+  // preload commons runtime just so firebase reports config problems here too
+</script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script defer src="commons.js"></script>
+</body>
+</html>

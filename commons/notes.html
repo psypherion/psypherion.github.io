@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sticky Wall — Commons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <span class="brand-name">§ commons</span>
+      <span class="brand-sub">the sticky wall</span>
+    </div>
+    <nav class="site-nav">
+      <a href="notes.html" class="active">Wall</a>
+      <a href="chat.html">Chat</a>
+      <a href="index.html" class="back-link">← Home</a>
+    </nav>
+  </header>
+
+  <div class="hero" style="margin-bottom: 30px;">
+    <p class="eyebrow">Room · 01 — the sticky wall</p>
+    <h1>Pin a <em>note</em> where anyone can read it.</h1>
+    <p class="subtitle">
+      Say something, sign it or don't. Everyone who opens this page sees the same wall. You can
+      always pull down your own notes.
+    </p>
+  </div>
+
+  <div class="identity-strip" id="identityStrip">
+    <span class="is-label">You are</span>
+    <input type="text" class="input" id="displayNameInput" placeholder="anonymous — or type a name" maxlength="30">
+    <span class="is-admin" title="admin key recognised">◆ admin</span>
+  </div>
+
+  <div class="notes-compose">
+    <label class="field-label" for="noteText">Leave a note</label>
+    <textarea class="input" id="noteText" placeholder="anything worth remembering, or worth saying quietly to strangers" maxlength="800"></textarea>
+    <div class="compose-row">
+      <div class="color-picks" id="colorPicks">
+        <button data-color="yellow" class="active" style="background:#f2e6b0;" title="Yellow"></button>
+        <button data-color="pink"   style="background:#f2c9c0;" title="Pink"></button>
+        <button data-color="blue"   style="background:#cfdbe0;" title="Blue"></button>
+        <button data-color="green"  style="background:#c9dcc4;" title="Green"></button>
+        <button data-color="lilac"  style="background:#ddcede;" title="Lilac"></button>
+        <button data-color="tan"    style="background:#e6d5b6;" title="Tan"></button>
+      </div>
+      <label class="anon-check">
+        <input type="checkbox" id="anonCheck"> anonymous
+      </label>
+      <span id="charCount" class="mono" style="color: var(--ink-faint); font-size: 0.7rem;">0 / 800</span>
+      <button class="btn primary" id="postBtn" disabled>▷ pin note</button>
+    </div>
+  </div>
+
+  <div class="notes-wall" id="notesWall">
+    <!-- notes rendered here -->
+  </div>
+  <div class="empty-wall" id="emptyWall" style="display:none;">
+    the wall is empty — leave the first note.
+  </div>
+
+  <footer class="site-foot">
+    <span>© commons · a paper room · <span class="mono">notes are public</span></span>
+  </footer>
+</div>
+
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="commons.js"></script>
+<script src="notes.js"></script>
+</body>
+</html>
